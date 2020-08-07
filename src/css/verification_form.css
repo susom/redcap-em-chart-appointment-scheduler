@@ -1,0 +1,59 @@
+body {
+    background-image: none;
+    background-color: #faf7f4;
+}
+
+.pagecontainer {
+    margin: 0 auto;
+    max-height: 100%;
+    padding: 0 0 10px;
+    text-align: left;
+    max-width: 800px;
+}
+
+#form, #surveyinstructions, #changeFont {
+    display: none;
+}
+
+
+#new-form {
+    padding: 50px 30px;
+    text-align: center;
+}
+
+#new-form input[type='text'] {
+    width: 45px;
+    height: 45px !important;
+    font-size: 24px !important;
+    padding: 0;
+    text-align: center;
+}
+
+#new-form h2 {
+    font-size: 21px;
+    line-height: 1.38105;
+    font-weight: 400;
+    letter-spacing: .011em;
+    font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+#new-form section {
+    padding: 0 0 30px 0;
+}
+
+#new-form section div {
+    display: inline-block;
+    float: none;
+}
+
+#new-form section .col-1 {
+    padding: 0;
+    min-width: 55px;
+    text-align: center;
+}
+
+#new-form section.verify div {
+    margin-top: 20px;
+    float: initial;
+    min-width: 70%;
+}

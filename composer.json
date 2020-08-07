@@ -1,0 +1,9 @@
+{
+  "require": {
+    "twilio/sdk": "^5.33",
+    "psr/log": "^1.1",
+    "monolog/monolog": "^1.24",
+    "phpmailer/phpmailer": "^6.1",
+    "kigkonsult/icalcreator": "^2.29"
+  }
+}

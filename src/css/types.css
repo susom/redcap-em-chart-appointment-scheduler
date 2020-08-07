@@ -1,0 +1,73 @@
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.loader {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8) url('https://redcap.stanford.edu/api/?type=module&prefix=covid_appointment_scheduler&page=src/images/progress.gif') 50% 50% no-repeat;
+    z-index: 10000;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .loader {
+    overflow: hidden;
+}
+
+body {
+    /*background-color: #F9F6EF;*/
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .loader {
+    display: block;
+}
+
+#brandbar {
+    margin-bottom: 10px;
+    min-height: 40px !important;
+}
+
+#brandbar {
+    /*background: #8c1515;*/
+    box-shadow: inset 0 -4px 8px -2px rgba(0, 0, 0, 0.2);
+    min-height: 30px;
+}
+
+#brandbar img {
+    margin-top: 9px;
+    margin-bottom: 9px;
+}
+
+.location-filter, .day-filter {
+    float: left;
+}
+
+.location-filter select, .day-filter select, .previous-filter input {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.location-filter:before {
+    content: 'Location Filter:';
+}
+
+.day-filter:before {
+    content: 'Days Filter:';
+}
+
+.previous-filter:before {
+    content: 'Hide Previous Appointments:';
+}
+
+.navbar-nav {
+    margin-top: 4%;
+}

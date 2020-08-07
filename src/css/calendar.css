@@ -1,0 +1,26 @@
+.date-picker-2, .ui-datepicker {
+    width: 100%; /*what ever width you want*/
+}
+
+.ui-datepicker .weekend .ui-state-default {
+    background: #FEA;
+}
+
+
+.ui-state-default, .ui-datepicker td {
+    min-height: 150px;
+    max-width: 150px;
+    width: 128px;
+}
+
+.ui-datepicker td a.changed:after {
+    content: attr(data-content);
+    display: block;
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+}
+
+a.ui-state-default, span.ui-state-default {
+    width: 100%;
+}

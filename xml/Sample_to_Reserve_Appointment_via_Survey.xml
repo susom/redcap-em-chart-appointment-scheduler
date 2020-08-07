@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ODM xmlns="http://www.cdisc.org/ns/odm/v1.3" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:redcap="https://projectredcap.org"
+     xsi:schemaLocation="http://www.cdisc.org/ns/odm/v1.3 schema/odm/ODM1-3-1.xsd" ODMVersion="1.3.1"
+     FileOID="000-00-0000" FileType="Snapshot" Description="Sample Survey Reservation"
+     AsOfDateTime="2020-02-05T09:34:52" CreationDateTime="2020-02-05T09:34:52" SourceSystem="REDCap"
+     SourceSystemVersion="9.5.0">
+    <Study OID="Project.SampleSurveyReservation">
+        <GlobalVariables>
+            <StudyName>Sample Survey Reservation</StudyName>
+            <StudyDescription>This file contains the metadata, events, and data for REDCap project "Sample Survey
+                Reservation".
+            </StudyDescription>
+            <ProtocolName>Sample Survey Reservation</ProtocolName>
+            <redcap:RecordAutonumberingEnabled>1</redcap:RecordAutonumberingEnabled>
+            <redcap:CustomRecordLabel></redcap:CustomRecordLabel>
+            <redcap:SecondaryUniqueField></redcap:SecondaryUniqueField>
+            <redcap:SchedulingEnabled>0</redcap:SchedulingEnabled>
+            <redcap:SurveysEnabled>1</redcap:SurveysEnabled>
+            <redcap:SurveyInvitationEmailField></redcap:SurveyInvitationEmailField>
+            <redcap:Purpose>0</redcap:Purpose>
+            <redcap:PurposeOther></redcap:PurposeOther>
+            <redcap:ProjectNotes></redcap:ProjectNotes>
+            <redcap:MissingDataCodes></redcap:MissingDataCodes>
+            <redcap:SurveysGroup>
+                <redcap:Surveys form_name="main_record" title="Main Record"
+                                instructions="&lt;p&gt;&lt;strong&gt;Please complete the survey below.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Thank you!&lt;/p&gt;"
+                                acknowledgement="&lt;p&gt;&lt;strong&gt;Thank you for taking the survey.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Have a nice day!&lt;/p&gt;" question_by_section="0" display_page_number="0" question_auto_numbering="1"
+                                survey_enabled="1" save_and_return="0" save_and_return_code_bypass="0" logo=""
+                                hide_title="0" view_results="0" min_responses_view_results="10"
+                                check_diversity_view_results="0" end_survey_redirect_url="" survey_expiration=""
+                                promis_skip_question="0" survey_auth_enabled_single="0" edit_completed_response="0"
+                                hide_back_button="0" show_required_field_text="1" confirmation_email_subject=""
+                                confirmation_email_content="" confirmation_email_from=""
+                                confirmation_email_from_display="" confirmation_email_attach_pdf="0"
+                                confirmation_email_attachment="" text_to_speech="0" text_to_speech_language="en"
+                                end_survey_redirect_next_survey="1" theme="" text_size="1" font_family="16"
+                                theme_text_buttons="" theme_bg_page="" theme_text_title="" theme_bg_title=""
+                                theme_text_sectionheader="" theme_bg_sectionheader="" theme_text_question=""
+                                theme_bg_question="" enhanced_choices="0" repeat_survey_enabled="0"
+                                repeat_survey_btn_text="" repeat_survey_btn_location="AFTER_SUBMIT" response_limit=""
+                                response_limit_include_partials="1"
+                                response_limit_custom_text="Thank you for your interest; however, the survey is closed because the maximum number of responses has been reached."
+                                survey_time_limit_days="" survey_time_limit_hours="" survey_time_limit_minutes=""
+                                email_participant_field="" end_of_survey_pdf_download="0" pdf_auto_archive="0"
+                                pdf_econsent_version="" pdf_econsent_type="" pdf_econsent_firstname_field=""
+                                pdf_econsent_firstname_event_id="" pdf_econsent_lastname_field=""
+                                pdf_econsent_lastname_event_id="" pdf_econsent_dob_field="" pdf_econsent_dob_event_id=""
+                                pdf_econsent_allow_edit="0" pdf_econsent_signature_field1=""
+                                pdf_econsent_signature_field2="" pdf_econsent_signature_field3=""
+                                pdf_econsent_signature_field4="" pdf_econsent_signature_field5=""/>
+                <redcap:Surveys form_name="main_survey" title="Main Survey"
+                                instructions="&lt;p&gt;&lt;strong&gt;Please complete the survey below.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Thank you!&lt;/p&gt;"
+                                acknowledgement="&lt;p&gt;&lt;strong&gt;Thank you for taking the survey.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Have a nice day!&lt;/p&gt;" question_by_section="0" display_page_number="0" question_auto_numbering="1"
+                                survey_enabled="1" save_and_return="0" save_and_return_code_bypass="0" logo=""
+                                hide_title="0" view_results="0" min_responses_view_results="10"
+                                check_diversity_view_results="0" end_survey_redirect_url="" survey_expiration=""
+                                promis_skip_question="0" survey_auth_enabled_single="0" edit_completed_response="0"
+                                hide_back_button="0" show_required_field_text="1" confirmation_email_subject=""
+                                confirmation_email_content="" confirmation_email_from=""
+                                confirmation_email_from_display="" confirmation_email_attach_pdf="0"
+                                confirmation_email_attachment="" text_to_speech="0" text_to_speech_language="en"
+                                end_survey_redirect_next_survey="0" theme="" text_size="1" font_family="16"
+                                theme_text_buttons="" theme_bg_page="" theme_text_title="" theme_bg_title=""
+                                theme_text_sectionheader="" theme_bg_sectionheader="" theme_text_question=""
+                                theme_bg_question="" enhanced_choices="0" repeat_survey_enabled="0"
+                                repeat_survey_btn_text="" repeat_survey_btn_location="AFTER_SUBMIT" response_limit=""
+                                response_limit_include_partials="1"
+                                response_limit_custom_text="Thank you for your interest; however, the survey is closed because the maximum number of responses has been reached."
+                                survey_time_limit_days="" survey_time_limit_hours="" survey_time_limit_minutes=""
+                                email_participant_field="email" end_of_survey_pdf_download="0" pdf_auto_archive="0"
+                                pdf_econsent_version="" pdf_econsent_type="" pdf_econsent_firstname_field=""
+                                pdf_econsent_firstname_event_id="" pdf_econsent_lastname_field=""
+                                pdf_econsent_lastname_event_id="" pdf_econsent_dob_field="" pdf_econsent_dob_event_id=""
+                                pdf_econsent_allow_edit="0" pdf_econsent_signature_field1=""
+                                pdf_econsent_signature_field2="" pdf_econsent_signature_field3=""
+                                pdf_econsent_signature_field4="" pdf_econsent_signature_field5=""/>
+            </redcap:SurveysGroup>
+            <redcap:UserRolesGroup>
+                <redcap:UserRoles role_name="Data Entry" lock_record="0" lock_record_multiform="0"
+                                  lock_record_customize="0" data_export_tool="0" data_import_tool="1"
+                                  data_comparison_tool="0" data_logging="0" file_repository="1" double_data="0"
+                                  user_rights="0" data_access_groups="0" graphical="1" reports="1" design="0"
+                                  calendar="1" data_entry="[my_first_instrument,1]" api_export="0" api_import="0"
+                                  mobile_app="0" mobile_app_download_data="0" record_create="1" record_rename="0"
+                                  record_delete="0" dts="0" participants="1" data_quality_design="0"
+                                  data_quality_execute="0" data_quality_resolution="1" random_setup="0"
+                                  random_dashboard="0" random_perform="0" realtime_webservice_mapping="0"
+                                  realtime_webservice_adjudicate="0" external_module_config="0"/>
+                <redcap:UserRoles role_name="Export w/o Identifiers" lock_record="0" lock_record_multiform="0"
+                                  lock_record_customize="0" data_export_tool="3" data_import_tool="0"
+                                  data_comparison_tool="0" data_logging="0" file_repository="1" double_data="0"
+                                  user_rights="0" data_access_groups="0" graphical="1" reports="1" design="0"
+                                  calendar="0" data_entry="[my_first_instrument,1]" api_export="1" api_import="0"
+                                  mobile_app="0" mobile_app_download_data="0" record_create="0" record_rename="0"
+                                  record_delete="0" dts="0" participants="1" data_quality_design="0"
+                                  data_quality_execute="0" data_quality_resolution="1" random_setup="0"
+                                  random_dashboard="0" random_perform="0" realtime_webservice_mapping="0"
+                                  realtime_webservice_adjudicate="0" external_module_config="0"/>
+                <redcap:UserRoles role_name="Project Admins" lock_record="2" lock_record_multiform="1"
+                                  lock_record_customize="1" data_export_tool="1" data_import_tool="1"
+                                  data_comparison_tool="1" data_logging="1" file_repository="1" double_data="0"
+                                  user_rights="1" data_access_groups="1" graphical="1" reports="1" design="1"
+                                  calendar="1" data_entry="[my_first_instrument,1]" api_export="1" api_import="1"
+                                  mobile_app="1" mobile_app_download_data="1" record_create="1" record_rename="1"
+                                  record_delete="1" dts="0" participants="1" data_quality_design="1"
+                                  data_quality_execute="1" data_quality_resolution="1" random_setup="1"
+                                  random_dashboard="0" random_perform="1" realtime_webservice_mapping="0"
+                                  realtime_webservice_adjudicate="0" external_module_config="0"/>
+                <redcap:UserRoles role_name="Read Only" lock_record="0" lock_record_multiform="0"
+                                  lock_record_customize="0" data_export_tool="0" data_import_tool="0"
+                                  data_comparison_tool="0" data_logging="0" file_repository="1" double_data="0"
+                                  user_rights="0" data_access_groups="0" graphical="1" reports="1" design="0"
+                                  calendar="0" data_entry="[my_first_instrument,1]" api_export="0" api_import="0"
+                                  mobile_app="0" mobile_app_download_data="0" record_create="0" record_rename="0"
+                                  record_delete="0" dts="0" participants="1" data_quality_design="0"
+                                  data_quality_execute="0" data_quality_resolution="1" random_setup="0"
+                                  random_dashboard="0" random_perform="0" realtime_webservice_mapping="0"
+                                  realtime_webservice_adjudicate="0" external_module_config="0"/>
+            </redcap:UserRolesGroup>
+        </GlobalVariables>
+        <MetaDataVersion OID="Metadata.SampleSurveyReservation_2020-02-05_0934" Name="Sample Survey Reservation"
+                         redcap:RecordIdField="participations_id">
+            <Protocol>
+                <StudyEventRef StudyEventOID="Event.reservations_arm_1" OrderNumber="1" Mandatory="No"/>
+                <StudyEventRef StudyEventOID="Event.slots_arm_2" OrderNumber="2" Mandatory="No"/>
+            </Protocol>
+            <StudyEventDef OID="Event.reservations_arm_1" Name="Reservations (Arm 1: Reservations)" Type="Common"
+                           Repeating="No" redcap:EventName="Reservations" redcap:CustomEventLabel=""
+                           redcap:UniqueEventName="reservations_arm_1" redcap:ArmNum="1" redcap:ArmName="Reservations"
+                           redcap:DayOffset="1" redcap:OffsetMin="0" redcap:OffsetMax="0">
+                <FormRef FormOID="Form.main_record" OrderNumber="1" Mandatory="No" redcap:FormName="main_record"/>
+                <FormRef FormOID="Form.main_survey" OrderNumber="2" Mandatory="No" redcap:FormName="main_survey"/>
+                <FormRef FormOID="Form.reservation" OrderNumber="3" Mandatory="No" redcap:FormName="reservation"/>
+            </StudyEventDef>
+            <StudyEventDef OID="Event.slots_arm_2" Name="Slots (Arm 2: Slots)" Type="Common" Repeating="No"
+                           redcap:EventName="Slots" redcap:CustomEventLabel="Reservations"
+                           redcap:UniqueEventName="slots_arm_2" redcap:ArmNum="2" redcap:ArmName="Slots"
+                           redcap:DayOffset="1" redcap:OffsetMin="0" redcap:OffsetMax="0">
+                <FormRef FormOID="Form.slot" OrderNumber="1" Mandatory="No" redcap:FormName="slot"/>
+            </StudyEventDef>
+            <FormDef OID="Form.main_record" Name="Main Record" Repeating="No" redcap:FormName="main_record">
+                <ItemGroupRef ItemGroupOID="main_record.participations_id" Mandatory="No"/>
+                <ItemGroupRef ItemGroupOID="main_record.main_record_timestamp" Mandatory="No"/>
+                <ItemGroupRef ItemGroupOID="main_record.main_record_complete" Mandatory="No"/>
+            </FormDef>
+            <FormDef OID="Form.main_survey" Name="Main Survey" Repeating="No" redcap:FormName="main_survey">
+                <ItemGroupRef ItemGroupOID="main_survey.main_survey_timestamp" Mandatory="No"/>
+                <ItemGroupRef ItemGroupOID="main_survey.main_survey_complete" Mandatory="No"/>
+            </FormDef>
+            <FormDef OID="Form.slot" Name="Slot" Repeating="No" redcap:FormName="slot">
+                <ItemGroupRef ItemGroupOID="slot.start" Mandatory="No"/>
+                <ItemGroupRef ItemGroupOID="slot.end" Mandatory="No"/>
+                <ItemGroupRef ItemGroupOID="slot.slot_complete" Mandatory="No"/>
+            </FormDef>
+            <FormDef OID="Form.reservation" Name="Reservation" Repeating="No" redcap:FormName="reservation">
+                <ItemGroupRef ItemGroupOID="reservation.slot_id" Mandatory="No"/>
+                <ItemGroupRef ItemGroupOID="reservation.reservation_complete" Mandatory="No"/>
+            </FormDef>
+            <ItemGroupDef OID="main_record.participations_id" Name="Main Record" Repeating="No">
+                <ItemRef ItemOID="participations_id" Mandatory="No" redcap:Variable="participations_id"/>
+                <ItemRef ItemOID="redcap_survey_identifier" Mandatory="No" redcap:Variable="redcap_survey_identifier"/>
+                <ItemRef ItemOID="main_record_timestamp" Mandatory="No" redcap:Variable="main_record_timestamp"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="main_record.main_record_timestamp" Name="Main Record" Repeating="No">
+                <ItemRef ItemOID="main_record_timestamp" Mandatory="No" redcap:Variable="main_record_timestamp"/>
+                <ItemRef ItemOID="consent_form" Mandatory="No" redcap:Variable="consent_form"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="main_record.main_record_complete" Name="Form Status" Repeating="No">
+                <ItemRef ItemOID="main_record_complete" Mandatory="No" redcap:Variable="main_record_complete"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="main_survey.main_survey_timestamp" Name="Main Survey" Repeating="No">
+                <ItemRef ItemOID="main_survey_timestamp" Mandatory="No" redcap:Variable="main_survey_timestamp"/>
+                <ItemRef ItemOID="complementary_email" Mandatory="No" redcap:Variable="complementary_email"/>
+                <ItemRef ItemOID="complementary_name" Mandatory="No" redcap:Variable="complementary_name"/>
+                <ItemRef ItemOID="complementary_mobile" Mandatory="No" redcap:Variable="complementary_mobile"/>
+                <ItemRef ItemOID="complementary_notes" Mandatory="No" redcap:Variable="complementary_notes"/>
+                <ItemRef ItemOID="test" Mandatory="No" redcap:Variable="test"/>
+                <ItemRef ItemOID="survey_reservation_id" Mandatory="No" redcap:Variable="survey_reservation_id"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="main_survey.main_survey_complete" Name="Form Status" Repeating="No">
+                <ItemRef ItemOID="main_survey_complete" Mandatory="No" redcap:Variable="main_survey_complete"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="slot.start" Name="Appointment Details
+(define ahead of time and upload)" Repeating="No">
+                <ItemRef ItemOID="start" Mandatory="No" redcap:Variable="start"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="slot.end" Name="Slot" Repeating="No">
+                <ItemRef ItemOID="end" Mandatory="No" redcap:Variable="end"/>
+                <ItemRef ItemOID="instructor" Mandatory="No" redcap:Variable="instructor"/>
+                <ItemRef ItemOID="location" Mandatory="No" redcap:Variable="location"/>
+                <ItemRef ItemOID="attending_options" Mandatory="No" redcap:Variable="attending_options"/>
+                <ItemRef ItemOID="notes" Mandatory="No" redcap:Variable="notes"/>
+                <ItemRef ItemOID="log" Mandatory="No" redcap:Variable="log"/>
+                <ItemRef ItemOID="number_of_participants" Mandatory="No" redcap:Variable="number_of_participants"/>
+                <ItemRef ItemOID="slot_status" Mandatory="No" redcap:Variable="slot_status"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="slot.slot_complete" Name="Form Status" Repeating="No">
+                <ItemRef ItemOID="slot_complete" Mandatory="No" redcap:Variable="slot_complete"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="reservation.slot_id" Name="Reservation" Repeating="No">
+                <ItemRef ItemOID="slot_id" Mandatory="No" redcap:Variable="slot_id"/>
+                <ItemRef ItemOID="sunet_id" Mandatory="No" redcap:Variable="sunet_id"/>
+                <ItemRef ItemOID="name" Mandatory="No" redcap:Variable="name"/>
+                <ItemRef ItemOID="email" Mandatory="No" redcap:Variable="email"/>
+                <ItemRef ItemOID="mobile" Mandatory="No" redcap:Variable="mobile"/>
+                <ItemRef ItemOID="participant_notes" Mandatory="No" redcap:Variable="participant_notes"/>
+                <ItemRef ItemOID="private" Mandatory="No" redcap:Variable="private"/>
+                <ItemRef ItemOID="participant_status" Mandatory="No" redcap:Variable="participant_status"/>
+                <ItemRef ItemOID="participant_location" Mandatory="No" redcap:Variable="participant_location"/>
+                <ItemRef ItemOID="department" Mandatory="No" redcap:Variable="department"/>
+                <ItemRef ItemOID="project_id" Mandatory="No" redcap:Variable="project_id"/>
+            </ItemGroupDef>
+            <ItemGroupDef OID="reservation.reservation_complete" Name="Form Status" Repeating="No">
+                <ItemRef ItemOID="reservation_complete" Mandatory="No" redcap:Variable="reservation_complete"/>
+            </ItemGroupDef>
+            <ItemDef OID="participations_id" Name="participations_id" DataType="text" Length="999"
+                     redcap:Variable="participations_id" redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Record ID</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="redcap_survey_identifier" Name="redcap_survey_identifier" DataType="text" Length="999"
+                     redcap:Variable="redcap_survey_identifier">
+                <Question>
+                    <TranslatedText>Survey Identifier</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="main_record_timestamp" Name="main_record_timestamp" DataType="datetime" Length="999"
+                     redcap:Variable="main_record_timestamp">
+                <Question>
+                    <TranslatedText>Survey Timestamp</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="main_record_timestamp" Name="main_record_timestamp" DataType="datetime" Length="999"
+                     redcap:Variable="main_record_timestamp">
+                <Question>
+                    <TranslatedText>Survey Timestamp</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="consent_form" Name="consent_form" DataType="text" Length="999" redcap:Variable="consent_form"
+                     redcap:FieldType="descriptive">
+                <Question>
+                    <TranslatedText>Consent Form</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="main_record_complete" Name="main_record_complete" DataType="text" Length="1"
+                     redcap:Variable="main_record_complete" redcap:FieldType="select"
+                     redcap:SectionHeader="Form Status">
+                <Question>
+                    <TranslatedText>Complete?</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="main_record_complete.choices"/>
+            </ItemDef>
+            <ItemDef OID="main_survey_timestamp" Name="main_survey_timestamp" DataType="datetime" Length="999"
+                     redcap:Variable="main_survey_timestamp">
+                <Question>
+                    <TranslatedText>Survey Timestamp</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="complementary_email" Name="complementary_email" DataType="text" Length="999"
+                     redcap:Variable="complementary_email" redcap:FieldType="text" redcap:TextValidationType="email">
+                <Question>
+                    <TranslatedText>Email</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="complementary_name" Name="complementary_name" DataType="text" Length="999"
+                     redcap:Variable="complementary_name" redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Name</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="complementary_mobile" Name="complementary_mobile" DataType="text" Length="999"
+                     redcap:Variable="complementary_mobile" redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Mobile</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="complementary_notes" Name="complementary_notes" DataType="text" Length="999"
+                     redcap:Variable="complementary_notes" redcap:FieldType="textarea">
+                <Question>
+                    <TranslatedText>Notes</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="test" Name="test" DataType="boolean" Length="1" redcap:Variable="test"
+                     redcap:FieldType="yesno">
+                <Question>
+                    <TranslatedText>Do you want to schedule an appointment?</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="test.choices"/>
+            </ItemDef>
+            <ItemDef OID="survey_reservation_id" Name="survey_reservation_id" DataType="text" Length="999"
+                     redcap:Variable="survey_reservation_id" redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Reservation</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="main_survey_complete" Name="main_survey_complete" DataType="text" Length="1"
+                     redcap:Variable="main_survey_complete" redcap:FieldType="select"
+                     redcap:SectionHeader="Form Status">
+                <Question>
+                    <TranslatedText>Complete?</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="main_survey_complete.choices"/>
+            </ItemDef>
+            <ItemDef OID="start" Name="start" DataType="datetime" Length="999" redcap:Variable="start"
+                     redcap:FieldType="text" redcap:TextValidationType="datetime_seconds_ymd" redcap:SectionHeader="Appointment Details
+(define ahead of time and upload)">
+                <Question>
+                    <TranslatedText>Start Time/Date</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="end" Name="end" DataType="datetime" Length="999" redcap:Variable="end" redcap:FieldType="text"
+                     redcap:TextValidationType="datetime_seconds_ymd">
+                <Question>
+                    <TranslatedText>End Time/Date</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="instructor" Name="instructor" DataType="text" Length="999" redcap:Variable="instructor"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>instructor</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="location" Name="location" DataType="text" Length="999" redcap:Variable="location"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Location</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="attending_options" Name="attending_options" DataType="text" Length="1"
+                     redcap:Variable="attending_options" redcap:FieldType="select">
+                <Question>
+                    <TranslatedText>Attending Options</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="attending_options.choices"/>
+            </ItemDef>
+            <ItemDef OID="notes" Name="notes" DataType="text" Length="999" redcap:Variable="notes"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Notes</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="log" Name="log" DataType="text" Length="999" redcap:Variable="log" redcap:FieldType="textarea"
+                     redcap:CustomAlignment="LV">
+                <Question>
+                    <TranslatedText>Log</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="number_of_participants" Name="number_of_participants" DataType="text" Length="999"
+                     redcap:Variable="number_of_participants" redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Number of Participants</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="slot_status" Name="slot_status" DataType="text" Length="999" redcap:Variable="slot_status"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Slot Status</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="slot_complete" Name="slot_complete" DataType="text" Length="1" redcap:Variable="slot_complete"
+                     redcap:FieldType="select" redcap:SectionHeader="Form Status">
+                <Question>
+                    <TranslatedText>Complete?</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="slot_complete.choices"/>
+            </ItemDef>
+            <ItemDef OID="slot_id" Name="slot_id" DataType="text" Length="999" redcap:Variable="slot_id"
+                     redcap:FieldType="text" redcap:FieldAnnotation="@HIDDEN-SURVEY">
+                <Question>
+                    <TranslatedText>Slot ID</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="sunet_id" Name="sunet_id" DataType="text" Length="999" redcap:Variable="sunet_id"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>SUNet ID</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="name" Name="name" DataType="text" Length="999" redcap:Variable="name" redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>name</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="email" Name="email" DataType="text" Length="999" redcap:Variable="email"
+                     redcap:FieldType="text" redcap:TextValidationType="email">
+                <Question>
+                    <TranslatedText>email</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="mobile" Name="mobile" DataType="text" Length="999" redcap:Variable="mobile"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>mobile</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="participant_notes" Name="participant_notes" DataType="text" Length="999"
+                     redcap:Variable="participant_notes" redcap:FieldType="textarea">
+                <Question>
+                    <TranslatedText>Please type your question.</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="private" Name="private" DataType="text" Length="1" redcap:Variable="private"
+                     redcap:FieldType="select">
+                <Question>
+                    <TranslatedText>private</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="private.choices"/>
+            </ItemDef>
+            <ItemDef OID="participant_status" Name="participant_status" DataType="text" Length="1"
+                     redcap:Variable="participant_status" redcap:FieldType="select">
+                <Question>
+                    <TranslatedText>status</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="participant_status.choices"/>
+            </ItemDef>
+            <ItemDef OID="participant_location" Name="participant_location" DataType="text" Length="1"
+                     redcap:Variable="participant_location" redcap:FieldType="select">
+                <Question>
+                    <TranslatedText>Location</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="participant_location.choices"/>
+            </ItemDef>
+            <ItemDef OID="department" Name="department" DataType="text" Length="999" redcap:Variable="department"
+                     redcap:FieldType="text"
+                     redcap:FieldNote="@SUNET_LOOKUP={&quot;department&quot;:&quot;department&quot;}">
+                <Question>
+                    <TranslatedText>Department</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="project_id" Name="project_id" DataType="text" Length="999" redcap:Variable="project_id"
+                     redcap:FieldType="text">
+                <Question>
+                    <TranslatedText>Project Id</TranslatedText>
+                </Question>
+            </ItemDef>
+            <ItemDef OID="reservation_complete" Name="reservation_complete" DataType="text" Length="1"
+                     redcap:Variable="reservation_complete" redcap:FieldType="select"
+                     redcap:SectionHeader="Form Status">
+                <Question>
+                    <TranslatedText>Complete?</TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="reservation_complete.choices"/>
+            </ItemDef>
+            <CodeList OID="main_record_complete.choices" Name="main_record_complete" DataType="text"
+                      redcap:Variable="main_record_complete">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Incomplete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Unverified</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Complete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="test.choices" Name="test" DataType="boolean" redcap:Variable="test">
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Yes</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>No</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="main_survey_complete.choices" Name="main_survey_complete" DataType="text"
+                      redcap:Variable="main_survey_complete">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Incomplete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Unverified</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Complete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="attending_options.choices" Name="attending_options" DataType="text"
+                      redcap:Variable="attending_options">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Campus and Online</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Online Only</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Campus Only</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="slot_complete.choices" Name="slot_complete" DataType="text" redcap:Variable="slot_complete">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Incomplete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Unverified</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Complete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="private.choices" Name="private" DataType="text" redcap:Variable="private">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>No</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Yes</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="participant_status.choices" Name="participant_status" DataType="text"
+                      redcap:Variable="participant_status">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Available</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Reserved</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Canceled</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3">
+                    <Decode>
+                        <TranslatedText>No Show</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="participant_location.choices" Name="participant_location" DataType="text"
+                      redcap:Variable="participant_location">
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Campus</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Virtual</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="reservation_complete.choices" Name="reservation_complete" DataType="text"
+                      redcap:Variable="reservation_complete">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Incomplete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Unverified</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Complete</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+        </MetaDataVersion>
+    </Study>
+    <ClinicalData StudyOID="Project.SampleSurveyReservation"
+                  MetaDataVersionOID="Metadata.SampleSurveyReservation_2020-02-05_0934">
+        <SubjectData SubjectKey="1" redcap:RecordIdField="participations_id">
+            <StudyEventData StudyEventOID="Event.slots_arm_2" StudyEventRepeatKey="1"
+                            redcap:UniqueEventName="slots_arm_2">
+                <FormData FormOID="Form.slot" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="slot.start" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="start" Value="2020-02-04T15:00:00"/>
+                    </ItemGroupData>
+                    <ItemGroupData ItemGroupOID="slot.end" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="end" Value="2020-02-04T15:30:00"/>
+                        <ItemData ItemOID="instructor" Value="Jane Daw"/>
+                        <ItemData ItemOID="location" Value="Online"/>
+                        <ItemData ItemOID="attending_options" Value="0"/>
+                        <ItemData ItemOID="number_of_participants" Value="1"/>
+                    </ItemGroupData>
+                    <ItemGroupData ItemGroupOID="slot.slot_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="slot_complete" Value="0"/>
+                    </ItemGroupData>
+                </FormData>
+            </StudyEventData>
+        </SubjectData>
+        <SubjectData SubjectKey="2" redcap:RecordIdField="participations_id">
+            <StudyEventData StudyEventOID="Event.reservations_arm_1" StudyEventRepeatKey="1"
+                            redcap:UniqueEventName="reservations_arm_1">
+                <FormData FormOID="Form.main_record" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="main_record.participations_id" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="participations_id" Value="2"/>
+                        <ItemData ItemOID="main_record_timestamp" Value="2020-02-04 14:20:54"/>
+                    </ItemGroupData>
+                    <ItemGroupData ItemGroupOID="main_record.main_record_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="main_record_complete" Value="2"/>
+                    </ItemGroupData>
+                </FormData>
+                <FormData FormOID="Form.main_survey" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="main_survey.main_survey_timestamp" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="main_survey_timestamp" Value="2020-02-04 14:21:58"/>
+                        <ItemData ItemOID="complementary_email" Value="ihab.zeedia@stanford.edu"/>
+                        <ItemData ItemOID="complementary_name" Value="Ihab Zeedia"/>
+                        <ItemData ItemOID="complementary_mobile" Value="3306222938"/>
+                        <ItemData ItemOID="complementary_notes" Value="Test "/>
+                        <ItemData ItemOID="test" Value="1"/>
+                        <ItemData ItemOID="survey_reservation_id" Value="2"/>
+                    </ItemGroupData>
+                    <ItemGroupData ItemGroupOID="main_survey.main_survey_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="main_survey_complete" Value="2"/>
+                    </ItemGroupData>
+                </FormData>
+                <FormData FormOID="Form.reservation" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="reservation.slot_id" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="slot_id" Value="1"/>
+                        <ItemData ItemOID="sunet_id" Value="USERID"/>
+                        <ItemData ItemOID="name" Value="Ihab Zeedia"/>
+                        <ItemData ItemOID="email" Value="ihab.zeedia@stanford.edu"/>
+                        <ItemData ItemOID="mobile" Value="3306222938"/>
+                        <ItemData ItemOID="participant_status" Value="1"/>
+                        <ItemData ItemOID="participant_location" Value="2"/>
+                    </ItemGroupData>
+                    <ItemGroupData ItemGroupOID="reservation.reservation_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="reservation_complete" Value="0"/>
+                    </ItemGroupData>
+                </FormData>
+            </StudyEventData>
+        </SubjectData>
+        <SubjectData SubjectKey="3" redcap:RecordIdField="participations_id">
+            <StudyEventData StudyEventOID="Event.reservations_arm_1" StudyEventRepeatKey="1"
+                            redcap:UniqueEventName="reservations_arm_1">
+                <FormData FormOID="Form.main_record" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="main_record.participations_id" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="participations_id" Value="3"/>
+                        <ItemData ItemOID="main_record_timestamp" Value="2020-02-05 09:33:07"/>
+                    </ItemGroupData>
+                    <ItemGroupData ItemGroupOID="main_record.main_record_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="main_record_complete" Value="2"/>
+                    </ItemGroupData>
+                </FormData>
+                <FormData FormOID="Form.main_survey" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="main_survey.main_survey_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="main_survey_complete" Value="0"/>
+                    </ItemGroupData>
+                </FormData>
+                <FormData FormOID="Form.reservation" FormRepeatKey="1">
+                    <ItemGroupData ItemGroupOID="reservation.reservation_complete" ItemGroupRepeatKey="1">
+                        <ItemData ItemOID="reservation_complete" Value="0"/>
+                    </ItemGroupData>
+                </FormData>
+            </StudyEventData>
+        </SubjectData>
+    </ClinicalData>
+</ODM>
