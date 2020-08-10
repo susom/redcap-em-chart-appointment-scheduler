@@ -547,7 +547,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $temp = array();
         $result = array();
         foreach ($records as $id => $record) {
-            $date = date('Y-m-d H:i:s', strtotime($record[$eventId]['start']));
+            $date = date('Y-m-d H:i:s', strtotime($record[$eventId]['slot_start']));
             $temp[$date][$id] = $record;
         }
         ksort($temp);
@@ -575,7 +575,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         try {
             if ($eventId) {
 
-                $variable = 'start' . $this->getSuffix();
+                $variable = 'slot_start' . $this->getSuffix();
                 if ($month != '' && $year != '') {
                     $start = "$year-$month-01";
                     $end = date('Y-m-t', strtotime($start));
@@ -621,7 +621,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             /*
                  * TODO Check if date within allowed window
                  */
-            $filter = "[start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
+            $filter = "[slot_start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
             $param = array(
                 'project_id' => $this->getProjectId(),
                 'filterLogic' => $filter,
@@ -1041,18 +1041,19 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                     $status = $reservation[$reservationId][$reservationEventId]['reservation_participant_status'];
                     switch ($status) {
                         case CANCELED:
-                            echo "Your reservation at " . date('M/d/Y', strtotime($record['start'])) . ' was canceled';
+                            echo "Your reservation at " . date('M/d/Y',
+                                    strtotime($record['slot_start'])) . ' was canceled';
                             break;
                         case NO_SHOW:
                             echo "You missed your reservation at " . date('M/d/Y',
-                                    strtotime($record['start'])) . ' and Marked as No Show';
+                                    strtotime($record['slot_start'])) . ' and Marked as No Show';
                             break;
                         default:
                             require __DIR__ . '/src/survey.php';
                             echo "You have a reservation on " . date('M/d/Y',
-                                    strtotime($record['start'])) . " between " . date('H:i',
-                                    strtotime($record['start'])) . " and " . date('H:i',
-                                    strtotime($record['end'])) . " <a class='manage' href='javascript:;'>Click Here</a> edit your reservation.";
+                                    strtotime($record['slot_start'])) . " between " . date('H:i',
+                                    strtotime($record['slot_start'])) . " and " . date('H:i',
+                                    strtotime($record['slot_end'])) . " <a class='manage' href='javascript:;'>Click Here</a> edit your reservation.";
                             break;
                     }
 
@@ -1326,7 +1327,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $record = $reservation[$reservationEventId];
             $reservationSlot = self::getSlot($record['reservation_slot_id'], $slotEventId, $this->getProjectId(),
                 $this->getPrimaryRecordFieldName());
-            $reservationSlotDate = date('Y-m-d', strtotime($reservationSlot['start']));
+            $reservationSlotDate = date('Y-m-d', strtotime($reservationSlot['slot_start']));
             if ($reservationSlotDate == $slotDate) {
                 throw new \LogicException("you cant book more than one reservation on same date. please select another date");
             }
@@ -1466,7 +1467,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         /**
          * skip past slots.
          */
-        if (time() > strtotime($slot['start' . $suffix])) {
+        if (time() > strtotime($slot['slot_start' . $suffix])) {
             return true;
         }
         return false;
@@ -1647,7 +1648,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if (isset($row[$match])) {
                 if ($match == 'location') {
                     $text = $this->insertLocationInEmailBody($row['location'], $text);
-                } elseif ($match == 'start') {
+                } elseif ($match == 'slot_start') {
                     $text = str_replace($match, date('F jS, Y', strtotime($row[$match])), $text);
                 } else {
                     $text = str_replace($match, $row[$match], $text);

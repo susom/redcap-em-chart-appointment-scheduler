@@ -41,7 +41,7 @@ if (isset($_GET['date'])) {
                     ?>
                     <button type="button"
                             data-record-id="<?php echo $recordId ?>" <?php echo $slot['booked'] ? 'disabled' : '' ?>
-                            data-date="<?php echo date('Ymd', strtotime($slot['start'])) ?>"
+                            data-date="<?php echo date('Ymd', strtotime($slot['slot_start'])) ?>"
                             data-event-id="<?php echo $eventId ?>"
                             data-notes-label="<?php echo $module->getNoteLabel(); ?>"
                             data-show-projects="<?php echo $module->showProjectIds(); ?>"
@@ -50,18 +50,20 @@ if (isset($_GET['date'])) {
                             data-show-attending-default="<?php echo $module->getDefaultAttendingOption(); ?>"
                             data-show-notes="<?php echo $module->showNotes(); ?>"
                             data-show-locations="<?php echo(empty($slot['attending_options']) ? CAMPUS_AND_VIRTUAL : $slot['attending_options']); ?>"
-                            data-start="<?php echo date('Hi', strtotime($slot['start'])) ?>"
-                            data-end="<?php echo date('Hi', strtotime($slot['end'])) ?>"
+                            data-start="<?php echo date('Hi', strtotime($slot['slot_start'])) ?>"
+                            data-end="<?php echo date('Hi', strtotime($slot['slot_end'])) ?>"
                             data-modal-title="<?php echo date('h:i A',
-                                strtotime($slot['start'])) ?> – <?php echo date('h:i A', strtotime($slot['end'])) ?>"
+                                strtotime($slot['slot_start'])) ?> – <?php echo date('h:i A',
+                                strtotime($slot['slot_end'])) ?>"
                             class="time-slot btn btn-block <?php echo $slot['booked'] ? 'disabled btn-secondary' : 'btn-success' ?>"><?php echo $module->getLocationLabel($slot['location']) . '(Slots left: ' . (int)($slot['number_of_participants'] - $counter['counter']) . ')<br>' . date('h:i A',
-                                strtotime($slot['start'])) ?> – <?php echo date('h:i A',
-                            strtotime($slot['end'])) ?></button>
+                                strtotime($slot['slot_start'])) ?> – <?php echo date('h:i A',
+                            strtotime($slot['slot_end'])) ?></button>
                     <?php
                 } else {
                     ?>
                     <div class="alert alert-warning text-center"><?php echo $typeText . '<br>' . date('h:i A',
-                                strtotime($slot['start'])) ?> – <?php echo date('h:i A', strtotime($slot['end'])) ?> is
+                                strtotime($slot['slot_start'])) ?> – <?php echo date('h:i A',
+                            strtotime($slot['slot_end'])) ?> is
                         FULL
                     </div>
                     <?php

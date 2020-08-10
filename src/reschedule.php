@@ -21,8 +21,9 @@ try {
     if (!$module::isUserHasManagePermission()) {
         throw new \LogicException('You should not be here');
     } else {
-        $data['start' . $suffix] = date('Y-m-d H:i:s', strtotime(preg_replace("([^0-9/])", "", $_POST['start'])));
-        $data['end' . $suffix] = date('Y-m-d H:i:s', strtotime(preg_replace("([^0-9/])", "", $_POST['end'])));
+        $data['slot_start' . $suffix] = date('Y-m-d H:i:s',
+            strtotime(preg_replace("([^0-9/])", "", $_POST['slot_start'])));
+        $data['slot_end' . $suffix] = date('Y-m-d H:i:s', strtotime(preg_replace("([^0-9/])", "", $_POST['slot_end'])));
         $data['notes' . $suffix] = filter_var($_POST['notes'], FILTER_SANITIZE_STRING);
         $data['instructor' . $suffix] = filter_var($_POST['instructor'], FILTER_SANITIZE_STRING);
         $data['location' . $suffix] = filter_var($_POST['location'], FILTER_SANITIZE_STRING);
@@ -33,7 +34,7 @@ try {
             throw new \LogicException(implode("\n", $response['errors']));
         } else {
             $message['subject'] = $message['body'] = 'Your ' . $module->getUniqueEventName($data['event_id']) . ' at' . date('m/d/Y',
-                    strtotime($data['start' . $suffix])) . ' has been updated';
+                    strtotime($data['slot_start' . $suffix])) . ' has been updated';
             $module->notifyParticipants($data['record_id'], $reservationEventId, $message);
             echo json_encode(array('status' => 'ok', 'message' => 'Slot Updated successfully!'));
         }

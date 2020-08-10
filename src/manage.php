@@ -64,13 +64,13 @@ try {
                                     <div class="p-3 mb-2 col-lg-4 text-dark"><?php echo $slot['location' . $suffix] ?></div>
                                     <div class="p-3 mb-2 col-lg-4 text-dark">
                                         <?php echo date('m/d/Y',
-                                            strtotime($slot['start' . $suffix])) ?>
+                                            strtotime($slot['slot_start' . $suffix])) ?>
                                         <br><?php echo date('h:i A',
-                                            strtotime($slot['start' . $suffix])) ?> – <?php echo date('h:i A',
-                                            strtotime($slot['end' . $suffix])) ?></div>
+                                            strtotime($slot['slot_start' . $suffix])) ?> – <?php echo date('h:i A',
+                                            strtotime($slot['slot_end' . $suffix])) ?></div>
                                     <div class="p-3 mb-2 col-lg-4 text-dark">
                                         <?php
-                                        if (strtotime($slot['start' . $suffix]) > time()) {
+                                        if (strtotime($slot['slot_start' . $suffix]) > time()) {
                                             ?>
                                             <button type="button"
                                                     data-participation-id="<?php echo $reserved[$module->getPrimaryRecordFieldName()] ?>"
@@ -110,10 +110,10 @@ try {
                                     <div class="p-3 mb-2 col-lg-4 text-dark"><?php echo $slot['location' . $suffix] ?></div>
                                     <div class="p-3 mb-2 col-lg-4 text-dark">
                                         <?php echo date('m/d/Y',
-                                            strtotime($slot['start' . $suffix])) ?>
+                                            strtotime($slot['slot_start' . $suffix])) ?>
                                         <br><?php echo date('h:i A',
-                                            strtotime($slot['start' . $suffix])) ?> – <?php echo date('h:i A',
-                                            strtotime($slot['end' . $suffix])) ?></div>
+                                            strtotime($slot['slot_start' . $suffix])) ?> – <?php echo date('h:i A',
+                                            strtotime($slot['slot_end' . $suffix])) ?></div>
                                     <div class="p-3 mb-2 col-lg-4 text-dark"><?php echo
                                             $canceled['notes' . $suffix] . ($slot['notes' . $suffix] != '' ? '<br>Instructor Notes:' . $slot['notes' . $suffix] : '') ?></div>
                                 </div>
@@ -143,10 +143,10 @@ try {
                                     <div class="p-3 mb-2 col-lg-4 text-dark"><?php echo $slot['location' . $suffix] ?></div>
                                     <div class="p-3 mb-2 col-lg-4 text-dark">
                                         <?php echo date('m/d/Y',
-                                            strtotime($slot['start' . $suffix])) ?>
+                                            strtotime($slot['slot_start' . $suffix])) ?>
                                         <br><?php echo date('h:i A',
-                                            strtotime($slot['start' . $suffix])) ?> – <?php echo date('h:i A',
-                                            strtotime($slot['end' . $suffix])) ?></div>
+                                            strtotime($slot['slot_start' . $suffix])) ?> – <?php echo date('h:i A',
+                                            strtotime($slot['slot_end' . $suffix])) ?></div>
                                     <div class="p-3 mb-2 col-lg-4 text-dark"><?php echo
                                             $canceled['notes' . $suffix] . ($slot['notes' . $suffix] != '' ? '<br>Instructor Notes:' . $slot['notes' . $suffix] : '') ?></div>
                                 </div>

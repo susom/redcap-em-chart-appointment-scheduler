@@ -40,7 +40,7 @@ foreach ($data as $slot) {
     /**
      * group by day
      */
-    $day = (int)date('d', strtotime($slot['start']));
+    $day = (int)date('d', strtotime($slot['slot_start']));
 
     $days[$day]['available'] += (int)($slot['number_of_participants'] - $counter['counter']);
 

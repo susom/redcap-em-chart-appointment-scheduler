@@ -136,16 +136,26 @@ class Participant
      * @param int $record_id
      * @return bool|\mysqli_result
      */
-    public function getAllReservedSlots($projectId)
+    public function getAllReservedSlots($projectId, $events = null)
     {
         try {
 
             $filter = "[reservation_participant_status] ='" . RESERVED . "'";
-            $param = array(
-                'project_id' => $projectId,
-                //'filterLogic' => $filter,
-                'return_format' => 'array'
-            );
+            if (!is_null($events)) {
+                $param = array(
+                    'project_id' => $projectId,
+                    //'filterLogic' => $filter,
+                    'return_format' => 'array',
+                    'events' => $events
+                );
+            } else {
+                $param = array(
+                    'project_id' => $projectId,
+                    //'filterLogic' => $filter,
+                    'return_format' => 'array'
+                );
+            }
+
             $records = \REDCap::getData($param);
             return $records;
         } catch (\LogicException $e) {

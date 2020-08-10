@@ -53,11 +53,11 @@ try {
                             <?php echo $module->getLocationLabel($slot['location' . $suffix]) ?></td>
                         <td>
                             <?php echo date('m/d/Y',
-                                strtotime($slot['start' . $suffix])) ?>
+                                strtotime($slot['slot_start' . $suffix])) ?>
                         </td>
                         <td><?php echo date('H:i',
-                                strtotime($slot['start' . $suffix])) ?> – <?php echo date('H:i',
-                                strtotime($slot['end' . $suffix])) ?></td>
+                                strtotime($slot['slot_start' . $suffix])) ?> – <?php echo date('H:i',
+                                strtotime($slot['slot_end' . $suffix])) ?></td>
                         <td><?php
                             if ($slot['slot_status' . $suffix] == CANCELED) {
                                 ?>
@@ -78,10 +78,10 @@ try {
                                     data-event-id="<?php echo $slot['event_id'] ?>"
                                     data-location="<?php echo $slot['location' . $suffix] ?>"
                                     data-date="<?php echo date('m/d/Y',
-                                        strtotime($slot['start' . $suffix])) ?>"
+                                        strtotime($slot['slot_start' . $suffix])) ?>"
                                     data-start="<?php echo date('h:i A',
-                                        strtotime($slot['start' . $suffix])) ?>"
-                                    data-end="<?php echo date('h:i A', strtotime($slot['end' . $suffix])) ?>"
+                                        strtotime($slot['slot_start' . $suffix])) ?>"
+                                    data-end="<?php echo date('h:i A', strtotime($slot['slot_end' . $suffix])) ?>"
                                     data-instructor="<?php echo $slot['instructor'] ?>"
                                     class="reschedule-slot"><i class="fas fa-edit"></i>
                             </button>
@@ -89,9 +89,9 @@ try {
                                     data-record-id="<?php echo $slot[$primary] ?>"
                                     data-event-id="<?php echo $slot['event_id'] ?>"
                                     data-modal-title="<?php echo date('m/d/Y',
-                                        strtotime($slot['start' . $suffix])) ?> <?php echo date('h:i A',
-                                        strtotime($slot['start' . $suffix])) ?> – <?php echo date('h:i A',
-                                        strtotime($slot['end' . $suffix])) ?>"
+                                        strtotime($slot['slot_start' . $suffix])) ?> <?php echo date('h:i A',
+                                        strtotime($slot['slot_start' . $suffix])) ?> – <?php echo date('h:i A',
+                                        strtotime($slot['slot_end' . $suffix])) ?>"
                                     class="participants-list"><i class="fas fa-list"></i>
                             </button>
                         </td>

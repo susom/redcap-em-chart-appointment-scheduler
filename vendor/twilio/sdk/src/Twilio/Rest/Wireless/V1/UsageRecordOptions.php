@@ -37,7 +37,7 @@ class ReadUsageRecordOptions extends Options {
      *                            aggregated by
      */
     public function __construct($end = Values::NONE, $start = Values::NONE, $granularity = Values::NONE) {
-        $this->options['end'] = $end;
+        $this->options['slot_end'] = $end;
         $this->options['start'] = $start;
         $this->options['granularity'] = $granularity;
     }
@@ -50,7 +50,7 @@ class ReadUsageRecordOptions extends Options {
      * @return $this Fluent Builder
      */
     public function setEnd($end) {
-        $this->options['end'] = $end;
+        $this->options['slot_end'] = $end;
         return $this;
     }
 

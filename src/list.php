@@ -24,7 +24,7 @@ if (!empty($data)) {
         /**
          * group by day
          */
-        $day = date('d', strtotime($slot['start' . $suffix]));
+        $day = date('d', strtotime($slot['slot_start' . $suffix]));
 
         /**
          * skip past slots.
@@ -69,21 +69,22 @@ if (!empty($data)) {
                                         data-show-attending-default="' . $module->getDefaultAttendingOption() . '"
                                         data-show-locations="' . (empty($slot['attending_options' . $suffix]) ? CAMPUS_AND_VIRTUAL : $slot['attending_options' . $suffix]) . '"
                                         data-show-notes="' . $module->showNotes() . '"
-                                        data-date="' . date('Ymd', strtotime($slot['start' . $suffix])) . '"
-                                        data-start="' . date('Hi', strtotime($slot['start' . $suffix])) . '"
-                                        data-end="' . date('Hi', strtotime($slot['end' . $suffix])) . '"
+                                        data-date="' . date('Ymd', strtotime($slot['slot_start' . $suffix])) . '"
+                                        data-start="' . date('Hi', strtotime($slot['slot_start' . $suffix])) . '"
+                                        data-end="' . date('Hi', strtotime($slot['slot_end' . $suffix])) . '"
                                         data-modal-title="' . date('M/d/Y',
-                    strtotime($slot['start' . $suffix])) . ' ' . date('h:i A',
-                    strtotime($slot['start' . $suffix])) . ' - ' . date('h:i A', strtotime($slot['end' . $suffix])) . '"
+                    strtotime($slot['slot_start' . $suffix])) . ' ' . date('h:i A',
+                    strtotime($slot['slot_start' . $suffix])) . ' - ' . date('h:i A',
+                    strtotime($slot['slot_end' . $suffix])) . '"
                                         class="time-slot btn btn-block btn-success">Book
                                 </button>';
         }
 
         $row = array();
-        $row[] = date('m/d/Y', strtotime($slot['start' . $suffix]));
+        $row[] = date('m/d/Y', strtotime($slot['slot_start' . $suffix]));
         $row[] = $module->getLocationLabel($slot['location' . $suffix]);;
-        $row[] = date('h:i A', strtotime($slot['start' . $suffix])) . ' - ' . date('h:i A',
-                strtotime($slot['end' . $suffix]));;
+        $row[] = date('h:i A', strtotime($slot['slot_start' . $suffix])) . ' - ' . date('h:i A',
+                strtotime($slot['slot_end' . $suffix]));;
         $row[] = '<h5 class="text-center">' . $available . '</h5>';;
         $row[] = $bookButton . $cancelButton;;
 
