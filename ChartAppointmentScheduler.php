@@ -62,6 +62,12 @@ define('REDCAP_COMPLETE', 2);
 
 
 /**
+ * code delivery types
+ */
+define('EMAIL', 1);
+define('CELL_PHONE', 2);
+
+/**
  * Complementary Constants (if you change in config.json you MUST update below constants accordingly)
  */
 define('COMPLEMENTARY_EMAIL', 'complementary_email');
@@ -784,7 +790,9 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
     {
         $this->emailClient->setTo($email);
         $this->emailClient->setFrom($senderEmail);
+        $this->emailClient->setCalendarOrganizerEmail($senderEmail);
         $this->emailClient->setFromName($senderName);
+        $this->emailClient->setCalendarOrganizer($senderName);
         $this->emailClient->setSubject($subject);
         $this->emailClient->setBody($body);
         $this->emailClient->setUrlString("<a href='" . $this->getSchedulerURL() . "'>View Appointment Scheduler</a>");
@@ -1498,22 +1506,20 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 //        if(!isset($_COOKIE[$name])){
 //            return false;
 //        }
-        if (defined('USERID')) {
-            $right = REDCap::getUserRights();
-            $user = $right[USERID];
-            $this->emLog($user['forms']);
-        }
+
         // when manager hits user page. they must be logged in and have right permission on redcap.
-        if (defined('USERID') && isset($_GET['code']) && isset($_GET['zip']) && self::isUserHasManagePermission()) {
+        if (defined('USERID') && isset($_GET[$this->getProjectSetting('validation-field')]) && self::isUserHasManagePermission()) {
             $param = array(
                 'project_id' => $this->getProjectId(),
-                'return_format' => 'array',
-                'records' => [filter_var($_GET['code'], FILTER_SANITIZE_STRING)]
+                'return_format' => 'array'
             );
             $records = REDCap::getData($param);
             foreach ($records as $id => $record) {
-                if (filter_var($_GET['code'], FILTER_SANITIZE_STRING) == $id) {
-                    $this->setUserCookie('login', $this->generateUniqueCodeHash($id));
+                if (filter_var($_GET[$this->getProjectSetting('validation-field')],
+                        FILTER_SANITIZE_STRING) == $record[$this->getFirstEventId()][$this->getProjectSetting('validation-field')]) {
+                    $this->setUserCookie('login',
+                        $this->generateUniqueCodeHash(filter_var($_GET[$this->getProjectSetting('validation-field')],
+                            FILTER_SANITIZE_STRING)));
                     return array('id' => $id, 'record' => $record);
                 }
             }
@@ -1525,7 +1531,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             );
             $records = REDCap::getData($param);
             foreach ($records as $id => $record) {
-                $hash = $this->generateUniqueCodeHash(filter_var($id, FILTER_SANITIZE_STRING));
+                $hash = $this->generateUniqueCodeHash($record[$this->getFirstEventId()][$this->getProjectSetting('validation-field')]);
                 if ($hash == $_COOKIE[$name]) {
                     return array('id' => $id, 'record' => $record);
                 }
@@ -1545,21 +1551,21 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
     public function getEventMonthYear($offset)
     {
-        $year = date('Y');
-        $baseLine = $this->getProjectSetting('baseline-month', $this->getProjectId());
-        if ($offset > 0) {
-            $o = $offset / 30;
-            $month = $baseLine + $o;
-        } else {
-            $month = $baseLine;
-        }
-
-        // got next year
-        if ($month > 12) {
-            $month = 1;
-            $year += 1;
-        }
-        return array($month, $year);
+//        $year = date('Y');
+//        $baseLine = $this->getProjectSetting('baseline-month', $this->getProjectId());
+//        if ($offset > 0) {
+//            $o = $offset / 30;
+//            $month = $baseLine + $o;
+//        } else {
+//            $month = $baseLine;
+//        }
+//
+//        // got next year
+//        if ($month > 12) {
+//            $month = 1;
+//            $year += 1;
+//        }
+//        return array($month, $year);
     }
 
     public function getScheduleActionButton($month, $year, $url, $user, $eventId, $offset = 0)
@@ -1657,6 +1663,5 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             return false;
         }
     }
-
 
 }

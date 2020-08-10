@@ -1,7 +1,7 @@
 {
-  "name": "Track COVID-19 Appointment Scheduler",
+  "name": "CHART Appointment Scheduler",
   "namespace": "Stanford\\ChartAppointmentScheduler",
-  "description": "Allow users to Schedule COVID-19 testing.",
+  "description": "Allow users to Schedule CHART COVID-19 testing.",
   "authors": [
     {
       "name": "Ihab Zeedia",
@@ -35,6 +35,8 @@
     "src/user",
     "src/user_list",
     "src/verify",
+    "src/request_code",
+    "src/send_code",
     "src/login"
   ],
   "links": {
@@ -74,60 +76,10 @@
       "type": "event-list"
     },
     {
-      "key": "baseline-month",
-      "name": "<h3>Select Baseline month to build scheduler based on that. </h3>",
+      "key": "validation-field",
+      "name": "<b>Select the field that user information will be validated against.</b>",
       "required": true,
-      "type": "dropdown",
-      "choices": [
-        {
-          "name": "Jnauary",
-          "value": "1"
-        },
-        {
-          "name": "February",
-          "value": "2"
-        },
-        {
-          "name": "March",
-          "value": "3"
-        },
-        {
-          "name": "April",
-          "value": "4"
-        },
-        {
-          "name": "May",
-          "value": "5"
-        },
-        {
-          "name": "June",
-          "value": "6"
-        },
-        {
-          "name": "July",
-          "value": "7"
-        },
-        {
-          "name": "August",
-          "value": "8"
-        },
-        {
-          "name": "September",
-          "value": "9"
-        },
-        {
-          "name": "October",
-          "value": "10"
-        },
-        {
-          "name": "November",
-          "value": "11"
-        },
-        {
-          "name": "December",
-          "value": "12"
-        }
-      ]
+      "type": "field-list"
     },
     {
       "key": "instance",

@@ -146,7 +146,7 @@ try {
 
         <?php
     } else {
-        redirect($module->getUrl('src/login.php', true, true) . '&pid=' . $module->getProjectId() . '&NOAUTH');
+       throw new \Exception("cant log to user page");
     }
 
     require_once 'models.php';
