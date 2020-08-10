@@ -1661,7 +1661,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $text = str_replace("[", "", $text);
             return $text;
         } else {
-            return false;
+            return $origin;
         }
     }
 
