@@ -49,9 +49,9 @@ try {
                         //$module->setBaseLineDate(date('Y-m-d H:i:s',strtotime($user['record'][$module->getFirstEventId()]['consent_date'])));
                     }
 
-                    // prevent cancel if appointment is in less than 48 hours
-                    if (strtotime($slot['slot_start']) - time() < 172812 && strtotime($slot['slot_start']) - time() > 0) {
-                        $action = 'This Appointment is in less than 48 hours please call to cancel!';
+                    // prevent cancel if appointment is in less than 24 hours
+                    if (strtotime($slot['slot_start']) - time() < 86400 && strtotime($slot['slot_start']) - time() > 0) {
+                        $action = 'This Appointment is in less than 24 hours please call to cancel!';
                     } elseif (strtotime($slot['slot_start']) - time() < 0) {
                         $action = 'Appointment Completed';
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == CANCELED) {
