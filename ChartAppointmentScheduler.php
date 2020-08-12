@@ -581,9 +581,9 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                     $end = date('Y-m-t', strtotime($start));
                 } elseif ($baseline) {
                     $add = $offset * 60 * 60 * 24;
-                    $week = 604800;
-                    $start = date('Y-m-d', strtotime($baseline) + $add - $week);
-                    $end = date('Y-m-d', strtotime($baseline) + $add + $week);
+                    $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
+                    $start = date('Y-m-d', strtotime($baseline) + $add - $window);
+                    $end = date('Y-m-d', strtotime($baseline) + $add + $window);
                 } else {
                     $start = date('Y-m-d', strtotime('+7 days'));
                     # change logic to get the next 21 days instead o just the end of this month.
@@ -1576,9 +1576,9 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if ($this->getBaseLineDate()) {
                 if ($offset > 0) {
                     $add = $offset * 60 * 60 * 24;
-                    $week = 604800;
-                    $start = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add - $week);
-                    $end = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add + $week);
+                    $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
+                    $start = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add - $window);
+                    $end = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add + $window);
                 } else {
                     $start = date('Y-m-d', strtotime('+7 days'));
                     $end = date('Y-m-d', strtotime('+30 days'));
@@ -1589,7 +1589,12 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                 $end = date('Y-m-d', strtotime('+30 days'));
             }
 
-            return '<button data-baseline="' . $this->getBaseLineDate() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
+            // if more than 7 days passed after the follow up visit date then skip it.
+            if (time() - strtotime($start) > 60 * 60 * 24 * 7) {
+                return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
+            } else {
+                return '<button data-baseline="' . $this->getBaseLineDate() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
+            }
         } else {
             return 'Please schedule Baseline Visit First to be able to schedule other visits!';
         }

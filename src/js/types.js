@@ -57,7 +57,7 @@ jQuery(document).on('click', '.type', function (e) {
                 data: data.data,
                 pageLength: 50,
                 "bDestroy": true,
-                "aaSorting": [[0, "asc"]],
+                //"aaSorting": [[0, "asc"]],
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ]

@@ -255,7 +255,7 @@ User = {
                     "aaSorting": [[0, "asc"]],
                     initComplete: function () {
                         // we only need day and location filter.
-                        this.api().columns([1]).every(function (index) {
+                        this.api().columns([2]).every(function (index) {
                             // below function will add filter to remove previous/completed appointments
                             var column = this;
                             $('<input type="checkbox" id="previous-filter" name="old" checked/>')

@@ -10,6 +10,7 @@ try {
         $url = $module->getUrl('src/list.php', true, true,
                 true) . '&event_id=' . $module->getSlotsEventId() . '&' . COMPLEMENTARY_SUFFIX . '=' . $module->getSuffix();
         $result = array();
+        $pointer = 1;
         foreach ($events as $eventId => $event) {
             if ($event['day_offset'] == 0) {
                 $module->setBaseLine(true);
@@ -68,12 +69,15 @@ try {
                 $time = '';
                 $action = $module->getScheduleActionButton($month, $year, $url, $user, $eventId, $event['day_offset']);
             }
+
+            $row[] = $pointer;
             $row[] = $event['descrip'];
             $row[] = $status;
             $row[] = $time;
             $row[] = $location;
             $row[] = $action;
             $result['data'][] = $row;
+            $pointer++;
         }
         header('Content-Type: application/json');
         echo json_encode($result);
