@@ -62,10 +62,19 @@ try {
 
         $data['reservation_datetime'] = $slot['slot_start'];
         $data['reservation_date'] = date('Y-m-d', strtotime($slot['slot_start']));
+        $data['reservation_created_at'] = date('Y-m-d H:i:s');
 
         $data['redcap_event_name'] = $module->getUniqueEventName($reservationEventId);
         $data[$module->getPrimaryRecordFieldName()] = filter_var($_POST['participant_id'],
             FILTER_SANITIZE_STRING);
+
+
+        // if this appointment was scheduled before make sure to count that.
+        $rescheduleCounter = $module->getRecordRescheduleCounter($data[$module->getPrimaryRecordFieldName()],
+            $reservationEventId);
+        if ($rescheduleCounter != '') {
+            $data['reservation_reschedule_counter'] = $rescheduleCounter + 1;
+        }
 
         $response = \REDCap::saveData($module->getProjectId(), 'json', json_encode(array($data)));
         if (empty($response['errors'])) {
