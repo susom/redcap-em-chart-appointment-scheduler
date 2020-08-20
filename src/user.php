@@ -31,11 +31,11 @@ try {
         <div id="brandbar">
             <div class="container">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-2">
                         <a href="http://www.stanford.edu"><img
                                     src="<?php echo $module->getUrl('src/images/chart_logo.png', true,
                                         true) ?>"
-                                    alt="TrackCovid" class="w-100 h-auto"></a>
+                                    alt="TrackCovid" class="img-fluid img-thumbnail h-auto"></a>
                     </div>
                     <div class="col-9">
                         <nav class="navbar-expand-sm  navbar-light">
