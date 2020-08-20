@@ -65,8 +65,7 @@ if (!isset($_COOKIE['participant_login'])) {
 
         #trackcovid-background {
             float: none;
-            margin: 0px auto;
-            left: 8%;
+            left: 5%;
             right: 50%;
         }
 
@@ -96,77 +95,20 @@ if (!isset($_COOKIE['participant_login'])) {
         }
     </style>
     <div id="pagecontainer">
-        <div class="row col-10 center-block" id="trackcovid-background">
+        <div class="row offset-3 col-5 center-block" id="trackcovid-background">
             <div class="row">
                 <div style="padding:10px 0 0;"><img id="survey_logo"
-                                                    src="https://redcap.stanford.edu/surveys/index.php?pid=20184&amp;doc_id_hash=a825369bc1de8a7ce50ec7a5765c7fee0a79fc65&amp;__passthru=DataEntry%2Fimage_view.php&amp;s=DPXJ7FAJCX&amp;id=924268"
-                                                    alt="image" title="image"
-                                                    style="max-width:600px;width:559px;max-width:559px;height:145px;max-height:145px;">
+                                                    src="https://redcap.stanford.edu/api/?type=module&prefix=chart_appointment_scheduler&page=src%2Fimages%2Fchart_logo.png"
+                                                    alt="image" title="Chart Logo" class="img-fluid h-auto">
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <h1 id="title">TrackCOVID Login</h1>
+            <h1 id="title">CHART Login</h1>
         </div>
         <div id="new-form" class="container ">
-
-            <div id="errors" class="row col-10 offset-1 text-left alert alert-danger" style="display: none"></div>
-            <section>
-                <h2 class="code_info">Enter your ID<br><span class="help_text">Where is my ID</span> <i
-                            class="far fa-question-circle"></i></h2>
-                <div class="row">
-                    <div class="col-1"><input data-num="1" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0" type="text" maxLength="1"
-                                              size="5" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="2" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" " />
-                    </div>
-                    <div class="col-1"><input data-num="3" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5"/></div>
-                    <div class="col-1"><input data-num="4" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="5" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="6" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="7" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="8" data-type="newuniq"
-                                              class="newuniq overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" pattern="[0-9]{1}"/></div>
-                </div>
-            </section>
-            <section><h2>Postal Code</h2>
-                <div class="row">
-                    <div class="col-1"><input data-num="1" data-type="zipcode"
-                                              class="zipcode overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" min="0" max="9" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="2" data-type="zipcode"
-                                              class="zipcode overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" min="0" max="9" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="3" data-type="zipcode"
-                                              class="zipcode overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" min="0" max="9" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="4" data-type="zipcode"
-                                              class="zipcode overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" min="0" max="9" pattern="[0-9]{1}"/></div>
-                    <div class="col-1"><input data-num="5" data-type="zipcode"
-                                              class="zipcode overflow-auto form-control p-0 " type="text" maxLength="1"
-                                              size="5" min="0" max="9" pattern="[0-9]{1}"/></div>
-                </div>
-            </section>
-            <section class="verify">
-                <div class="row">
-                    <button id="verify" type="button" class="btn btn-info btn-lg btn-block">Login</button>
-                </div>
-            </section>
+            <h3>Please click on your survey link that was emailed to login to your scheduer.</h3>
         </div>
 
     </div>
