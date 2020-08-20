@@ -33,7 +33,7 @@ try {
                 <div class="row">
                     <div class="col-3">
                         <a href="http://www.stanford.edu"><img
-                                    src="<?php echo $module->getUrl('src/images/trackcovid_logo.png', true,
+                                    src="<?php echo $module->getUrl('src/images/chart_logo.png', true,
                                         true) ?>"
                                     alt="TrackCovid" class="w-100 h-auto"></a>
                     </div>
