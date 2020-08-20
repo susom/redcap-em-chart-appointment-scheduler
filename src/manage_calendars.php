@@ -20,14 +20,13 @@ try {
     $primary = $module->getPrimaryRecordFieldName();
     if ($instructors) {
         ?>
-        <div class="container">
+        <div class="container-fluid">
 
             <div class="row"><h3>Manage Time Slots</h3></div>
             <table id="manage-calendars" class="display">
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Instructor</th>
                     <th>Location</th>
                     <th>Date</th>
                     <th>Time</th>
@@ -48,7 +47,6 @@ try {
                     ?>
                     <tr>
                         <td><?php echo $slot[$primary] ?></td>
-                        <td><?php echo $slot['instructor'] ?></td>
                         <td>
                             <?php echo $module->getLocationLabel($slot['location' . $suffix]) ?></td>
                         <td>

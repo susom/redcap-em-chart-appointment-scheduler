@@ -550,11 +550,55 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
 
                 jQuery('#manage-calendars').DataTable(
                     {
+                        dom: '<"day-filter-slots"><"location-filter-slots"><lf<t>ip>',
                         pageLength: 50,
                         "aaSorting": [[3, "asc"], [4, "asc"]],
                         columnDefs: [
                             {"type": "date", "targets": 3}
-                        ]
+                        ],
+                        initComplete: function () {
+                            this.api().columns([1, 2]).every(function (index) {
+
+                                var column = this;
+                                if (index === 2) {
+                                    var select = $('<select id="day-options-manager"><option value=""></option></select>')
+                                        .appendTo($('.day-filter-slots'))
+                                        .on('change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+
+                                            // set preferred location so it will be selected next time.
+                                            column
+                                                .search(val ? '^' + val + '$' : '', true, false)
+                                                .draw();
+                                        });
+                                }
+                                if (index === 1) {
+                                    var select = $('<select id="location-options-manager"><option value=""></option></select>')
+                                        .appendTo($('.location-filter-slots'))
+                                        .on('change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+
+                                            // set preferred location so it will be selected next time.
+                                            setCookie('preferred-location', val, 365);
+                                            column
+                                                .search(val ? '^' + val + '$' : '', true, false)
+                                                .draw();
+                                        });
+                                }
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>')
+                                });
+
+                                // if preferred location is saved then select that
+                                if (getCookie('preferred-location') != null) {
+                                    $("#location-options").val(getCookie('preferred-location')).trigger('change');
+                                }
+                            });
+                        }
                     }
                 );
             },

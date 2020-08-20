@@ -29,11 +29,11 @@ require_once 'urls.php';
 <div id="brandbar">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-3">
+            <div class="col-1">
                 <a href="http://www.stanford.edu"><img
-                            src="<?php echo $module->getUrl('src/images/trackcovid_logo.png', true,
+                            src="<?php echo $module->getUrl('src/images/chart_logo.png', true,
                                 true) ?>"
-                            alt="TrackCovid" class="h-auto"></a>
+                            alt="CHART logo" class="img-fluid img-thumbnail h-auto"></a>
             </div>
             <div class="col-9">
                 <nav class="navbar-expand-sm navbar-light">
@@ -58,7 +58,7 @@ require_once 'urls.php';
     </div>
 </div>
 <!-- below code need to be hidden to trigger jquery click -->
-<div class="container" style="display: none">
+<div class="container-fluid" style="display: none">
     <nav class="navbar navbar-expand-sm bg-light navbar-light">
 
         <div class="collapse navbar-collapse justify-content-end hidden" id="navbarCollapse">
