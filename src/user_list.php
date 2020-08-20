@@ -36,6 +36,7 @@ try {
                         $event['day_offset']);
                 } else {
 
+                    //if no slot defined use imported reservation datetime.
                     $time = !empty($slot) ? date('D m/d/Y H:i', strtotime($slot['slot_start'])) . ' - ' . date('H:i',
                             strtotime($slot['slot_end'])) : $user['record'][$eventId]['reservation_datetime'];
                     $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
