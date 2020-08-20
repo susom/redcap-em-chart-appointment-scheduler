@@ -29,7 +29,8 @@ try {
             $status = 'Not Scheduled';
             if (isset($user['record'][$eventId])) {
                 $slot = $module->getReservationArray($user['record'][$eventId]);
-                if (empty($slot)) {
+                // if no slots found and no reservation already imported.
+                if (empty($slot) && $user['record'][$eventId]['reservation_datetime'] == '') {
                     $time = '';
                     $action = $module->getScheduleActionButton($month, $year, $url, $user, $eventId,
                         $event['day_offset']);
@@ -43,7 +44,10 @@ try {
 
                     if ($module->isBaseLine()) {
                         //use baseline appointment
-                        $module->setBaseLineDate($slot['slot_start']);
+                        //$module->setBaseLineDate($slot['slot_start']);
+
+                        //special case for imported data. use the already defined scheduled date in the reservation record.
+                        $module->setBaseLineDate($user['record'][$eventId]['reservation_datetime']);
 
                         //use consent date
                         //$module->setBaseLineDate(date('Y-m-d H:i:s',strtotime($user['record'][$module->getFirstEventId()]['consent_date'])));
