@@ -25,6 +25,7 @@ try {
         throw new \LogicException('Event ID is missing');
     } else {
 
+
         if ($data['reservation_participant_status'] == AVAILABLE) {
             $data['reservation_datetime'] = false;
             $data['reservation_date'] = false;
@@ -40,7 +41,27 @@ try {
         $response = \REDCap::saveData($module->getProjectId(), 'json', json_encode(array($data)), 'overwrite');
 
         if (empty($response['errors'])) {
-            //TODO notify instructor about the cancellation
+
+            //notify user when canceled.
+            if ($data['reservation_participant_status'] == CANCELED) {
+                $instance = $module->getEventInstance();
+                $user = $module->getParticipant()->getUserInfo($data[$primaryField], $module->getFirstEventId());
+                $reservation = $module::getSlot(filter_var($data[$primaryField], FILTER_SANITIZE_STRING), $eventId,
+                    $module->getProjectId(), $primaryField);
+                $slot = $module::getSlot(filter_var($reservation['reservation_slot_id'], FILTER_SANITIZE_STRING),
+                    $module->getSlotEventIdFromReservationEventId($eventId),
+                    $module->getProjectId(), $primaryField);
+                $module->sendEmail($user['email'],
+                    ($instance['sender_email'] != '' ? $instance['sender_email'] : DEFAULT_EMAIL),
+                    ($instance['sender_name'] != '' ? $instance['sender_name'] : DEFAULT_NAME),
+                    '--CONFIRMATION-- Your appointment is canceled at ' . date('m/d/Y',
+                        strtotime($slot['slot_start'])),
+                    '--CONFIRMATION-- Your appointment is canceled at ' . date('m/d/Y',
+                        strtotime($slot['slot_start']))
+                );
+            }
+
+
             echo json_encode(array('status' => 'ok', 'message' => 'Appointment status updated'));
         } else {
             if (is_array($response['errors'])) {
