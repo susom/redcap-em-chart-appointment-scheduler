@@ -105,6 +105,7 @@ define("PARTICIPANT_STATUS", "reservation_participant_status");
  * @property int $mainSurveyId
  * @property int $projectId
  * @property int $recordId
+ * @property int $defaultAffiliation
  * @property \Project $project
  * @property boolean $baseLine
  * @property string $baseLineDate
@@ -178,6 +179,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
     private $baseLineDate = '';
 
     public $locationRecords;
+
+    private $defaultAffiliation;
 
     /**
      * ChartAppointmentScheduler constructor.
@@ -570,8 +573,14 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
      * @param null $year
      * @return mixed
      */
-    public function getMonthSlots($eventId, $year = null, $month = null, $baseline = '', $offset = 0)
-    {
+    public function getMonthSlots(
+        $eventId,
+        $year = null,
+        $month = null,
+        $baseline = '',
+        $offset = 0,
+        $affiliation = false
+    ) {
         try {
             if ($eventId) {
 
@@ -599,7 +608,16 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                 $records = REDCap::getData($param);
                 foreach ($records as $record) {
                     if (strtotime($record[$eventId][$variable]) > strtotime($start) && strtotime($record[$eventId][$variable]) < strtotime($end) && $record[$eventId]['slot_status'] != CANCELED) {
-                        $data[] = $record;
+                        if ($affiliation) {
+                            $locations = $this->getLocationRecords();
+                            $location = end($locations['SITE' . $record[$eventId]['location']]);
+                            if ($location['site_affiliation'] == $affiliation) {
+                                $data[] = $record;
+                            }
+
+                        } else {
+                            $data[] = $record;
+                        }
                     }
                 }
                 return $this->sortRecordsByDate($data, $eventId);
@@ -1640,7 +1658,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if (time() - strtotime($start) > 60 * 60 * 24 * 7) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
-                return '<button data-baseline="' . $this->getBaseLineDate() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
+                return '<button data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
             }
         } else {
             return 'Please schedule Baseline Visit First to be able to schedule other visits!';
@@ -1731,4 +1749,22 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         }
         return false;
     }
+
+    /**
+     * @return int
+     */
+    public function getDefaultAffiliation()
+    {
+        return $this->defaultAffiliation;
+    }
+
+    /**
+     * @param int $defaultAffiliation
+     */
+    public function setDefaultAffiliation($defaultAffiliation)
+    {
+        $this->defaultAffiliation = $defaultAffiliation;
+    }
+
+
 }

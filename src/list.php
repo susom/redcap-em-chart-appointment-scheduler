@@ -10,7 +10,8 @@ $eventId = filter_var($_GET['event_id'], FILTER_SANITIZE_NUMBER_INT);
 //$year = filter_var($_GET['year'], FILTER_SANITIZE_NUMBER_INT);
 $baseline = filter_var($_GET['baseline'], FILTER_SANITIZE_STRING);
 $offset = filter_var($_GET['offset'], FILTER_VALIDATE_INT);
-$data = $module->getMonthSlots($eventId, null, null, $baseline, $offset);
+$affiliation = filter_var($_GET['affiliation'], FILTER_VALIDATE_INT);
+$data = $module->getMonthSlots($eventId, null, null, $baseline, $offset, $affiliation);
 $result = array();
 $result['data'] = array();
 if (!empty($data)) {

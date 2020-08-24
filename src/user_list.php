@@ -52,6 +52,10 @@ try {
 
                         //use consent date
                         //$module->setBaseLineDate(date('Y-m-d H:i:s',strtotime($user['record'][$module->getFirstEventId()]['consent_date'])));
+
+                        // also we need to define the default affiliation to be enforced for next appointments.
+                        $defaultAffiliate = $user['record'][$eventId]['employer'];
+                        $module->setDefaultAffiliation($defaultAffiliate);
                     }
 
                     // prevent cancel if appointment is in less than 24 hours

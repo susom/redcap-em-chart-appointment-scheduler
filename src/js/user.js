@@ -47,7 +47,7 @@ User = {
             User.currentOffset = jQuery(this).data('offset');
             ;
             jQuery.ajax({
-                'url': User.listURL + "&event_id=" + User.slotsEventId + "&baseline=" + jQuery(this).data('baseline') + "&offset=" + jQuery(this).data('offset'),
+                'url': User.listURL + "&event_id=" + User.slotsEventId + "&baseline=" + jQuery(this).data('baseline') + "&offset=" + jQuery(this).data('offset') + "&affiliation=" + jQuery(this).data('affiliation'),
                 'type': 'GET',
                 'beforeSend': function () {
                     /**
