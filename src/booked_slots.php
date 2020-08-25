@@ -81,11 +81,11 @@ try {
                                     ?>
                                 </select>
                                 <div class="clear"></div>
-                                <!--                                <strong><a target="_blank" href="-->
+                                <strong><a target="_blank" href="
                                 <?php echo rtrim(APP_PATH_WEBROOT_FULL,
-                                        '/') . APP_PATH_WEBROOT . 'DataEntry/index.php?pid=' . $module->getProjectId() . '&page=chart_visit_summary&id=' . $id . '&event_id=' . $eventId ?>
+                                            '/') . APP_PATH_WEBROOT . 'DataEntry/index.php?pid=' . $module->getProjectId() . '&page=chart_visit_summary&id=' . $id . '&event_id=' . $eventId ?>
                                 ">Go
-                                to Visit Summary</a></strong>
+                                        to Visit Summary</a></strong>
                                 <div class="clear"></div>
                                 <strong><a target="_blank" href="<?php echo $module->getUrl('src/user.php', false,
                                             true) . '&' . $module->getProjectSetting('validation-field') . '=' . $user[$module->getProjectSetting('validation-field')] ?>">Go
