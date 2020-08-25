@@ -452,7 +452,7 @@ jQuery(document).on('click', '.booked-slots', function (e) {
                                             .draw();
                                     });
                             }
-                            if (index === 3 && column.data().any() === true) {
+                            if (index === 3 && column.data().any() === true && checkColumnDataHasEmptyValues(column.data()) === false) {
                                 console.log(column.data())
                                 var select = $('<select id="location-options"><option value=""></option></select>')
                                     .appendTo($('.location-filter'))
@@ -648,6 +648,15 @@ function loadDefaultView(view) {
 //Calendar functions
 function popupCal(cal_id, width) {
     window.open(app_path_webroot + 'Calendar/calendar_popup.php?pid=' + pid + '&width=' + width + '&cal_id=' + cal_id, 'myWin', 'width=' + width + ', height=250, toolbar=0, menubar=0, location=0, status=0, scrollbars=1, resizable=1');
+}
+
+function checkColumnDataHasEmptyValues(data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i] == "") {
+            return true;
+        }
+    }
+    return false;
 }
 
 function setCookie(name, value, days) {
