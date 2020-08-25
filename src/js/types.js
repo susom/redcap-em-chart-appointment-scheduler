@@ -468,9 +468,12 @@ jQuery(document).on('click', '.booked-slots', function (e) {
                                             .draw();
                                     });
                             }
-                            column.data().unique().sort().each(function (d, j) {
-                                select.append('<option value="' + d + '">' + d + '</option>')
-                            });
+                            if (column.data().any() === true && checkColumnDataHasEmptyValues(column.data()) === false) {
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>')
+                                });
+                            }
+
 
                             // if preferred location is saved then select that
                             if (getCookie('preferred-location') != null) {
