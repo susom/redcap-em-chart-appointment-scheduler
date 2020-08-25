@@ -437,10 +437,11 @@ jQuery(document).on('click', '.booked-slots', function (e) {
                         this.api().columns([4, 3]).every(function (index) {
 
                             var column = this;
-                            if (index === 4) {
+                            if (index === 4 && column.data().any() === true) {
                                 var select = $('<select id="day-options"><option value=""></option></select>')
                                     .appendTo($('.day-filter'))
                                     .on('change', function () {
+
                                         var val = $.fn.dataTable.util.escapeRegex(
                                             $(this).val()
                                         );
@@ -451,7 +452,7 @@ jQuery(document).on('click', '.booked-slots', function (e) {
                                             .draw();
                                     });
                             }
-                            if (index === 3) {
+                            if (index === 3 && column.data().any() === true) {
                                 var select = $('<select id="location-options"><option value=""></option></select>')
                                     .appendTo($('.location-filter'))
                                     .on('change', function () {
@@ -560,7 +561,7 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
                             this.api().columns([1, 2]).every(function (index) {
 
                                 var column = this;
-                                if (index === 2) {
+                                if (index === 2 && column.data().any() === true) {
                                     var select = $('<select id="day-options-manager"><option value=""></option></select>')
                                         .appendTo($('.day-filter-slots'))
                                         .on('change', function () {
@@ -574,7 +575,7 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
                                                 .draw();
                                         });
                                 }
-                                if (index === 1) {
+                                if (index === 1 && column.data().any() === true) {
                                     var select = $('<select id="location-options-manager"><option value=""></option></select>')
                                         .appendTo($('.location-filter-slots'))
                                         .on('change', function () {
