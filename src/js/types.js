@@ -453,6 +453,7 @@ jQuery(document).on('click', '.booked-slots', function (e) {
                                     });
                             }
                             if (index === 3 && column.data().any() === true) {
+                                console.log(column.data())
                                 var select = $('<select id="location-options"><option value=""></option></select>')
                                     .appendTo($('.location-filter'))
                                     .on('change', function () {
