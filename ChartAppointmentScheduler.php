@@ -1567,7 +1567,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         setcookie($name, $value, time() + $time);
     }
 
-    public function verifyCookie($name)
+    public function verifyCookie($name, $recordID = false)
     {
 //        if(!isset($_COOKIE[$name])){
 //            return false;
@@ -1590,11 +1590,20 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                 }
             }
         } else {
-            $param = array(
-                'project_id' => $this->getProjectId(),
-                'return_format' => 'array',
-                //'events' => [$this->getFirstEventId()]
-            );
+            if ($recordID) {
+                $param = array(
+                    'project_id' => $this->getProjectId(),
+                    'return_format' => 'array',
+                    'records' => [$recordID]
+                );
+            } else {
+                $param = array(
+                    'project_id' => $this->getProjectId(),
+                    'return_format' => 'array',
+                    //'events' => [$this->getFirstEventId()]
+                );
+            }
+
             $records = REDCap::getData($param);
             foreach ($records as $id => $record) {
                 $hash = $this->generateUniqueCodeHash($record[$this->getFirstEventId()][$this->getProjectSetting('validation-field')]);

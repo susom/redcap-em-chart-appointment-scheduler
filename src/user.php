@@ -5,8 +5,8 @@ namespace Stanford\ChartAppointmentScheduler;
 /** @var \Stanford\ChartAppointmentScheduler\ChartAppointmentScheduler $module */
 
 try {
-
-    if ($user = $module->verifyCookie('login')) {
+    $id = filter_var($_GET['id'], FILTER_SANITIZE_STRING);
+    if ($user = $module->verifyCookie('login', $id)) {
         //JS and CSS with inputs URLs
         $recordId = $user['id'];
         $url = $module->getUrl('src/list.php', true, true,
