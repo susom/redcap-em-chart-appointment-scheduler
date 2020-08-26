@@ -16,6 +16,10 @@ try {
     //get records for all reservations.
     $records = $module->getParticipant()->getAllReservedSlots($module->getProjectId(), $module->getReservationEvents());
 
+
+    $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
+    $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['monthly_followup_survey_complete']['element_enum']);
+
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
     if ($records) {
@@ -40,23 +44,25 @@ try {
                 foreach ($records as $id => $events) {
                     $user = $module->getParticipant()->getUserInfo($id, $module->getFirstEventId());
                     foreach ($events as $eventId => $record) {
-//                        //exception for imported reservation.
-//                        if (empty($record['reservation_slot_id'])) {
-//                            $slot['slot_start'] = $record['reservation_datetime'];
-//                            // because we do not know the end of the lost we assumed its 15 minutes after the start
-//                            $slot['slot_end'] = date('Y-m-d H:i:s', strtotime($record['reservation_datetime']) + 900);
-//                        } else {
-//
-//                        }
-                        //if past reservation we do not want to see it.
-                        if (!array_key_exists($record['reservation_slot_id'], $slots)) {
+                        //skip past or empty reservation
+                        if (empty($record['reservation_datetime']) || $module->isReservationInPast($record['reservation_datetime'])) {
                             continue;
-                        } else {
-                            $slot = end($slots[$record['reservation_slot_id']]);
                         }
 
-                        $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
-                        $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['monthly_followup_survey_complete']['element_enum']);
+                        //exception for imported reservation.
+                        if (empty($record['reservation_slot_id'])) {
+                            $slot['slot_start'] = $record['reservation_datetime'];
+                            // because we do not know the end of the lost we assumed its 15 minutes after the start
+                            $slot['slot_end'] = date('Y-m-d H:i:s', strtotime($record['reservation_datetime']) + 900);
+                        } else {
+                            //if past reservation we do not want to see it.
+                            if (!array_key_exists($record['reservation_slot_id'], $slots)) {
+                                continue;
+                            } else {
+                                $slot = end($slots[$record['reservation_slot_id']]);
+                            }
+                        }
+
                         ?>
                         <tr>
                             <td><?php echo $id ?></td>

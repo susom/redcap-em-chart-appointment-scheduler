@@ -1527,7 +1527,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         return $_SESSION['APPOINTMENT_SCHEDULER_IS_SUPER_USER'];
     }
 
-    public function isSlotInPast($slot, $suffix)
+    public function isSlotInPast($slot, $suffix = '')
     {
         /**
          * skip past slots.
@@ -1538,6 +1538,17 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         return false;
     }
 
+
+    public function isReservationInPast($date)
+    {
+        /**
+         * skip past reseravtion.
+         */
+        if (time() > strtotime($date)) {
+            return true;
+        }
+        return false;
+    }
 
     public function verifyUser($newuniq, $zipcode_abs)
     {
