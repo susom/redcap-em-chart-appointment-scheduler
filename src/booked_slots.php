@@ -29,6 +29,7 @@ try {
                 <thead>
                 <tr>
                     <th>Record ID</th>
+                    <th>Participant ID</th>
                     <th>Demographics Information</th>
                     <th>Visit type</th>
                     <th>Location</th>
@@ -63,14 +64,24 @@ try {
                             }
                         }
 
+                        if ($record['stanford_mrn']) {
+                            $mrn = $record['stanford_mrn'];
+                        } elseif ($record['ucsf_mrn']) {
+                            $mrn = $record['ucsf_mrn'];
+                        } elseif ($record['zsfg_mrn']) {
+                            $mrn = $record['zsfg_mrn'];
+                        }
+
                         ?>
                         <tr>
                             <td><?php echo $id ?></td>
+                            <td><?php echo $record['participant_id'] ?></td>
                             <td>
                                 <div class="row"><?php echo $user['name'] ?>
                                     DOB:<?php echo $user['dob'] ? date('m/d/Y', strtotime($user['dob'])) : '' ?></div>
                                 <div class="row"><?php echo $user['email'] ?> </div>
-                                <div class="row"><?php echo $user['phone_number'] ?></div>
+                                <div class="row"><?php echo $user['phone'] ?></div>
+                                <div class="row"><?php echo $mrn ?></div>
                             </td>
                             <td><?php echo $module->getProject()->events[1]['events'][$eventId]['descrip'] ?></td>
                             <!--                            <td>-->
