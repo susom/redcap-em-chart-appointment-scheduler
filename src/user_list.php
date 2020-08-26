@@ -5,7 +5,8 @@ namespace Stanford\ChartAppointmentScheduler;
 /** @var \Stanford\ChartAppointmentScheduler\ChartAppointmentScheduler $module */
 
 try {
-    if ($user = $module->verifyCookie('login')) {
+    $id = filter_var($_GET['id'], FILTER_SANITIZE_STRING);
+    if ($user = $module->verifyCookie('login', $id)) {
         $events = $module->getProject()->events['1']['events'];
         $url = $module->getUrl('src/list.php', true, true,
                 true) . '&event_id=' . $module->getSlotsEventId() . '&' . COMPLEMENTARY_SUFFIX . '=' . $module->getSuffix();
