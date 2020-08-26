@@ -41,12 +41,20 @@ try {
                 foreach ($records as $id => $events) {
                     $user = $module->getParticipant()->getUserInfo($id, $module->getFirstEventId());
                     foreach ($events as $eventId => $record) {
-                        //if past reservation we do not want to see it.
-                        if (!array_key_exists($record['reservation_slot_id'], $slots)) {
-                            continue;
+                        // especial case for reservation with no slot
+                        if (empty($record['reservation_slot_id'])) {
+                            $slot['slot_start'] = $record['reservation_datetime'];
+                            $slot['slot_end'] = $record['reservation_datetime'];
                         } else {
-                            $slot = end($slots[$record['reservation_slot_id']]);
+                            //if past reservation we do not want to see it.
+                            if (!array_key_exists($record['reservation_slot_id'], $slots)) {
+                                continue;
+                            } else {
+                                $slot = end($slots[$record['reservation_slot_id']]);
+                            }
                         }
+
+
                         $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
                         $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['monthly_followup_survey_complete']['element_enum']);
                         ?>
