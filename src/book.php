@@ -7,7 +7,8 @@ use REDCap;
 
 
 try {
-    if ($user = $module->verifyCookie('login')) {
+    $id = filter_var($_POST['participant_id'], FILTER_SANITIZE_STRING);;
+    if ($user = $module->verifyCookie('login', $id)) {
         /**
          * if survey booking with NOAUTH ignore login validation.
          */
