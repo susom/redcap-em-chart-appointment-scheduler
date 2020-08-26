@@ -1781,6 +1781,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         foreach ($this->getInstances() as $instance) {
             $result[] = $instance['reservation_event_id'];
         }
+        $this->emLog($result);
         return $result;
     }
 }
