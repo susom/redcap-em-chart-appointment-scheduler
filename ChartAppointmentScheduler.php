@@ -1586,10 +1586,19 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
         // when manager hits user page. they must be logged in and have right permission on redcap.
         if (defined('USERID') && isset($_GET[$this->getProjectSetting('validation-field')]) && self::isUserHasManagePermission()) {
-            $param = array(
-                'project_id' => $this->getProjectId(),
-                'return_format' => 'array'
-            );
+            if ($recordID) {
+                $param = array(
+                    'project_id' => $this->getProjectId(),
+                    'return_format' => 'array',
+                    'records' => [$recordID]
+                );
+            } else {
+                $param = array(
+                    'project_id' => $this->getProjectId(),
+                    'return_format' => 'array',
+                    //'events' => [$this->getFirstEventId()]
+                );
+            }
             $records = REDCap::getData($param);
             foreach ($records as $id => $record) {
                 if (filter_var($_GET[$this->getProjectSetting('validation-field')],
