@@ -14,8 +14,7 @@ try {
     }
 
     //get records for all reservations.
-    $records = $module->getParticipant()->getAllReservedSlots($module->getProjectId(),
-        array_keys($module->getProject()->events['1']['events']));
+    $records = $module->getParticipant()->getAllReservedSlots($module->getProjectId(), $module->getReservationEvents());
 
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
@@ -41,12 +40,21 @@ try {
                 foreach ($records as $id => $events) {
                     $user = $module->getParticipant()->getUserInfo($id, $module->getFirstEventId());
                     foreach ($events as $eventId => $record) {
-                        //if past reservation we do not want to see it.
-                        if (!array_key_exists($record['reservation_slot_id'], $slots)) {
-                            continue;
+                        //exception for imported reservation.
+                        if (empty($record['reservation_slot_id'])) {
+                            $slot['slot_start'] = $record['reservation_datetime'];
+                            // because we do not know the end of the lost we assumed its 15 minutes after the start
+                            $slot['slot_end'] = date('Y-m-d H:i:s', strtotime($record['reservation_datetime']) + 900);
                         } else {
-                            $slot = end($slots[$record['reservation_slot_id']]);
+                            //if past reservation we do not want to see it.
+                            if (!array_key_exists($record['reservation_slot_id'], $slots)) {
+                                continue;
+                            } else {
+                                $slot = end($slots[$record['reservation_slot_id']]);
+                            }
                         }
+
+
                         $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
                         $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['monthly_followup_survey_complete']['element_enum']);
                         ?>

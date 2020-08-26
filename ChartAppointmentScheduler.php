@@ -1775,5 +1775,12 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $this->defaultAffiliation = $defaultAffiliation;
     }
 
-
+    public function getReservationEvents()
+    {
+        $result = array();
+        foreach ($this->getInstances() as $instance) {
+            $result[] = $instance['reservation_event_id'];
+        }
+        return $result;
+    }
 }
