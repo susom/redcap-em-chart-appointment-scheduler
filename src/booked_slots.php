@@ -102,7 +102,7 @@ try {
                                         to Visit Summary</a></strong>
                                 <div class="clear"></div>
                                 <strong><a target="_blank" href="<?php echo $module->getUrl('src/user.php', false,
-                                            true) . '&' . $module->getProjectSetting('validation-field') . '=' . $user[$module->getProjectSetting('validation-field')] ?>">Go
+                                            true) . '&' . $module->getProjectSetting('validation-field') . '=' . $user[$module->getProjectSetting('validation-field')] . '&id=' . $id ?>">Go
                                         to Scheduling Page</a></strong>
                             </td>
                         </tr>
