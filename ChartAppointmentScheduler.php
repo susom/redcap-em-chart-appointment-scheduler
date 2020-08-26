@@ -1593,7 +1593,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $param = array(
                 'project_id' => $this->getProjectId(),
                 'return_format' => 'array',
-                'events' => array_keys($this->getProject()->events['1']['events'])
+                'events' => [$this->getFirstEventId()]
             );
             $records = REDCap::getData($param);
             foreach ($records as $id => $record) {
