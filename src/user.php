@@ -44,11 +44,11 @@ try {
                                 <ul class="navbar-nav"><?php
                                     $r = $module->getParticipant()->getUserInfo($user['id'],
                                         $module->getFirstEventId());
-                                    if ($r['first_name']) {
+                                    if ($r['name']) {
                                         ?>
                                         <li class="nav-item active">
                                             <a class="nav-link" href="#">
-                                                <h5><?php echo $r['first_name'] . ' ' . $r['last_name'] ?></h5>
+                                                <h5><?php echo $r['name'] ?></h5>
                                             </a>
                                         </li>
                                         <?php

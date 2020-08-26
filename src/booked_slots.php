@@ -67,7 +67,7 @@ try {
                         <tr>
                             <td><?php echo $id ?></td>
                             <td>
-                                <div class="row"><?php echo $user['first_name'] . ' ' . $user['last_name'] ?>
+                                <div class="row"><?php echo $user['name'] ?>
                                     DOB:<?php echo $user['dob'] ? date('m/d/Y', strtotime($user['dob'])) : '' ?></div>
                                 <div class="row"><?php echo $user['email'] ?> </div>
                                 <div class="row"><?php echo $user['phone_number'] ?></div>
