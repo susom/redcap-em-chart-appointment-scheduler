@@ -1692,12 +1692,10 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             list($start, $end) = $this->getWindowStartEndDates($this->getBaseLineDate(), $offset);
 
             $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
-            $this->emLog((int)$this->getProjectSetting('allowed-window'));
             $this->emLog($start);
-            $this->emLog($window);
-            $this->emLog(time());
+            $this->emLog($end);
             // if more than 7 days passed after the follow up visit date then skip it.
-            if (time() - strtotime($start) + $window > 60 * 60 * 24 * (int)$this->getProjectSetting('allowed-window')) {
+            if (time() - strtotime($end) + $window > 60 * 60 * 24 * (int)$this->getProjectSetting('allowed-window')) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
                 return '<button data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
@@ -1814,7 +1812,6 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         foreach ($this->getInstances() as $instance) {
             $result[] = $instance['reservation_event_id'];
         }
-        $this->emLog($result);
         return $result;
     }
 
