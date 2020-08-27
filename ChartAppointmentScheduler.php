@@ -1668,8 +1668,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if ($offset > 0) {
                 $add = $offset * 60 * 60 * 24;
                 $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
-                $start = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add - $window);
-                $end = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add + $window);
+                $start = date('Y-m-d', strtotime($baseline) + $add - $window);
+                $end = date('Y-m-d', strtotime($baseline) + $add + $window);
             } elseif ($offset == 0) {
                 $start = date('Y-m-d', strtotime('+7 days'));
                 $end = date('Y-m-d', strtotime('+30 days'));
