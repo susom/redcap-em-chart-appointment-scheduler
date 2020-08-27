@@ -44,6 +44,7 @@ try {
                 <?php
                 foreach ($records as $id => $events) {
                     $user = $module->getParticipant()->getUserInfo($id, $module->getFirstEventId());
+                    $mrn = $module->getMRN($events[$module->getFirstEventId()]);
                     foreach ($events as $eventId => $record) {
                         //skip past or empty reservation
                         if (empty($record['reservation_datetime']) || $module->isReservationInPast($record['reservation_datetime'])) {
@@ -62,14 +63,6 @@ try {
                             } else {
                                 $slot = end($slots[$record['reservation_slot_id']]);
                             }
-                        }
-
-                        if ($record['stanford_mrn']) {
-                            $mrn = $record['stanford_mrn'];
-                        } elseif ($record['ucsf_mrn']) {
-                            $mrn = $record['ucsf_mrn'];
-                        } elseif ($record['zsfg_mrn']) {
-                            $mrn = $record['zsfg_mrn'];
                         }
 
                         ?>

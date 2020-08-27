@@ -1804,4 +1804,16 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $this->emLog($result);
         return $result;
     }
+
+    public function getMRN($record)
+    {
+        if ($record['stanford_mrn']) {
+            $mrn = $record['stanford_mrn'];
+        } elseif ($record['ucsf_mrn']) {
+            $mrn = $record['ucsf_mrn'];
+        } elseif ($record['zsfg_mrn']) {
+            $mrn = $record['zsfg_mrn'];
+        }
+        return $mrn;
+    }
 }
