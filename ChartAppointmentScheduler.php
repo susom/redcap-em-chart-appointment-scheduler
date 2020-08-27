@@ -108,6 +108,7 @@ define("PARTICIPANT_STATUS", "reservation_participant_status");
  * @property int $defaultAffiliation
  * @property \Project $project
  * @property boolean $baseLine
+ * @property boolean $bonusVisit
  * @property string $baseLineDate
  * @property array $locationRecords
  */
@@ -182,6 +183,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
     private $defaultAffiliation;
 
+    private $bonusVisit = false;
     /**
      * ChartAppointmentScheduler constructor.
      */
@@ -588,15 +590,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                 if ($month != '' && $year != '') {
                     $start = "$year-$month-01";
                     $end = date('Y-m-t', strtotime($start));
-                } elseif ($baseline) {
-                    $add = $offset * 60 * 60 * 24;
-                    $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
-                    $start = date('Y-m-d', strtotime($baseline) + $add - $window);
-                    $end = date('Y-m-d', strtotime($baseline) + $add + $window);
                 } else {
-                    $start = date('Y-m-d', strtotime('+7 days'));
-                    # change logic to get the next 21 days instead o just the end of this month.
-                    $end = date('Y-m-d', strtotime('+30 days'));
+                    list($start, $end) = $this->getWindowStartEndDates($baseline, $offset);
                 }
 
                 $param = array(
@@ -1667,28 +1662,38 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 //        return array($month, $year);
     }
 
+    public function getWindowStartEndDates($baseline, $offset)
+    {
+        if ($baseline) {
+            if ($offset > 0) {
+                $add = $offset * 60 * 60 * 24;
+                $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
+                $start = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add - $window);
+                $end = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add + $window);
+            } elseif ($offset == 0) {
+                $start = date('Y-m-d', strtotime('+7 days'));
+                $end = date('Y-m-d', strtotime('+30 days'));
+            } elseif ($offset < 0) {
+                $start = date('Y-m-d');
+                $end = date('Y-m-d', strtotime('+200 days'));
+            }
+
+        } else {
+            $start = date('Y-m-d', strtotime('+7 days'));
+            $end = date('Y-m-d', strtotime('+30 days'));
+        }
+        return array($start, $end);
+    }
+
     public function getScheduleActionButton($month, $year, $url, $user, $eventId, $offset = 0)
     {
         if ($this->isBaseLine() || $this->getBaseLineDate()) {
 
-            if ($this->getBaseLineDate()) {
-                if ($offset > 0) {
-                    $add = $offset * 60 * 60 * 24;
-                    $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
-                    $start = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add - $window);
-                    $end = date('Y-m-d', strtotime($this->getBaseLineDate()) + $add + $window);
-                } else {
-                    $start = date('Y-m-d', strtotime('+7 days'));
-                    $end = date('Y-m-d', strtotime('+30 days'));
-                }
+            list($start, $end) = $this->getWindowStartEndDates($this->getBaseLineDate(), $offset);
 
-            } else {
-                $start = date('Y-m-d', strtotime('+7 days'));
-                $end = date('Y-m-d', strtotime('+30 days'));
-            }
-
+            $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
             // if more than 7 days passed after the follow up visit date then skip it.
-            if (time() - strtotime($start) > 60 * 60 * 24 * 7) {
+            if (time() - strtotime($start) + $window > 60 * 60 * 24 * (int)$this->getProjectSetting('allowed-window')) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
                 return '<button data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
@@ -1820,4 +1825,22 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         }
         return $mrn;
     }
+
+    /**
+     * @return bool
+     */
+    public function isBonusVisit()
+    {
+        return $this->bonusVisit;
+    }
+
+    /**
+     * @param bool $bonusVisit
+     */
+    public function setBonusVisit($bonusVisit)
+    {
+        $this->bonusVisit = $bonusVisit;
+    }
+
+
 }

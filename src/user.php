@@ -22,7 +22,7 @@ try {
                     true) . '&pid=' . $module->getProjectId()  ?>"
             User.cancelURL = "<?php echo $module->getUrl('src/cancel.php', true,
                     true) . '&pid=' . $module->getProjectId() ?>"
-            User.userListURL = "<?php echo $module->getUrl('src/user_list.php', true, true) . '&id=' . $id?>"
+            User.userListURL = "<?php echo $module->getUrl('src/user_list.php', defined('USERID') ? false : true, true) . '&id=' . $id?>"
             User.loginURL = "<?php echo $module->getUrl('src/login.php', true, true) ?>"
             User.locationsEventId = "<?php echo $module->getProjectSetting('testing-sites-event') ?>"
             User.locations = <?php echo json_encode($module->locationRecords) ?>

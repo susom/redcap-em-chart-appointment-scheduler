@@ -12,7 +12,19 @@ try {
                 true) . '&event_id=' . $module->getSlotsEventId() . '&' . COMPLEMENTARY_SUFFIX . '=' . $module->getSuffix();
         $result = array();
         $pointer = 1;
+        $regularUser = !defined('USERID') && !$module::isUserHasManagePermission();
         foreach ($events as $eventId => $event) {
+            // for regular user skip the bonus visits. but not for coordinator
+            if ($event['day_offset'] >= 200 && $regularUser && $user['record'][$eventId]['reservation_datetime'] == '') {
+                continue;
+            } elseif ($event['day_offset'] >= 200) {
+                $event['day_offset'] = -1;
+                $module->setBonusVisit(true);
+            } else {
+                $module->setBonusVisit(false);
+            }
+
+
             if ($event['day_offset'] == 0) {
                 $module->setBaseLine(true);
             } else {
@@ -61,14 +73,16 @@ try {
                     }
 
                     // prevent cancel if appointment is in less than 24 hours
-                    if (strtotime($slot['slot_start']) - time() < 86400 && strtotime($slot['slot_start']) - time() > 0) {
+                    if (strtotime($slot['slot_start']) - time() < 86400 && strtotime($slot['slot_start']) - time() > 0 && !$module->isBonusVisit()) {
                         $action = 'This Appointment is in less than 24 hours please call to cancel!';
-                    } elseif (strtotime($slot['slot_start']) - time() < 0) {
+                    } elseif ((strtotime($slot['slot_start']) + 86400) - time() < 0) {
                         $action = 'Appointment Completed';
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == CANCELED) {
                         $action = '';
-                    } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED) {
+                    } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED && !$module->isBonusVisit()) {
                         $action = $module->getCancelActionButton($user, $eventId, $slot);
+                    } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED && $module->isBonusVisit()) {
+                        $action = 'This is a bonus visit because you tested positive. To cancel please call us!';
                     }
 
                     // determine the status
