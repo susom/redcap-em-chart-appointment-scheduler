@@ -29,13 +29,7 @@ try {
             // check if user has record for this event
             $status = 'Not Scheduled';
             if (isset($user['record'][$eventId])) {
-                if (empty($user['record'][$eventId]['reservation_datetime'])) {
-                    $slot['slot_start'] = $user['record'][$eventId]['reservation_datetime'];
-                    // because we do not know the end of the lost we assumed its 15 minutes after the start
-                    $slot['slot_end'] = date('Y-m-d H:i:s', strtotime($user['record'][$eventId]['reservation_datetime']) + 900);
-                } else {
-                    $slot = $module->getReservationArray($user['record'][$eventId]);
-                }
+                $slot = $module->getReservationArray($user['record'][$eventId]);
                 // if no slots found and no reservation already imported.
                 if (empty($slot) && $user['record'][$eventId]['reservation_datetime'] == '') {
                     $time = '';
