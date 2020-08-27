@@ -1542,9 +1542,13 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
     public function isReservationInPast($date)
     {
         /**
+         * open the window one day for manager page
+         */
+        $d = date('Y-m-d', strtotime($date));
+        /**
          * skip past reseravtion.
          */
-        if (time() > strtotime($date)) {
+        if (time() > strtotime('+1 day', strtotime($d))) {
             return true;
         }
         return false;
