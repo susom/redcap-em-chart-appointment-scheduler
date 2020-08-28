@@ -429,7 +429,7 @@ jQuery(document).on('click', '.booked-slots', function (e) {
                 jQuery('#booked-slots').DataTable({
                     dom: '<"day-filter"><"location-filter"><lf<t>ip>',
                     pageLength: 50,
-                    order: [[4, "asc"], [5, "asc"]],
+                    order: [[5, "asc"], [6, "asc"]],
                     columnDefs: [
                         {"type": "date", "targets": 3}
                     ],
