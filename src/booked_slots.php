@@ -18,7 +18,7 @@ try {
 
 
     $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
-    $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['monthly_followup_survey_complete']['element_enum']);
+    $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['chart_study_followup_survey']['element_enum']);
 
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
@@ -82,8 +82,8 @@ try {
                             <td><?php echo date('m/d/Y', strtotime($slot['slot_start'])) ?></td>
                             <td><?php echo date('H:i', strtotime($slot['slot_start'])) . ' - ' . date('H:i',
                                         strtotime($slot['slot_end'])) ?></td>
-                            <td><?php echo $user['consent_date'] ? 'Completed' : 'Incomplete' ?></td>
-                            <td><?php echo $record['monthly_followup_survey_complete'] ? $trackcovid_monthly_followup_survey_complete_statuses[$record['monthly_followup_survey_complete']] : 'Incomplete' ?></td>
+                            <td><?php echo $user['calc_consent_valid'] ? 'Completed' : 'Incomplete' ?></td>
+                            <td><?php echo $record['chart_study_followup_survey'] ? $trackcovid_monthly_followup_survey_complete_statuses[$record['chart_study_followup_survey']] : 'Incomplete' ?></td>
                             <td>
                                 <select data-participant-id="<?php echo $id ?>"
                                         data-event-id="<?php echo $eventId ?>"
