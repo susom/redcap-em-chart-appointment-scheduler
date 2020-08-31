@@ -1667,9 +1667,18 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         if ($baseline) {
             if ($offset > 0) {
                 $add = $offset * 60 * 60 * 24;
-                $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
+                // try first the ideal window
+                $window = (int)$this->getProjectSetting('ideal-window') * 60 * 60 * 24;
                 $start = date('Y-m-d', strtotime($baseline) + $add - $window);
                 $end = date('Y-m-d', strtotime($baseline) + $add + $window);
+
+                // if ideal end date already passed then use the allowed window.
+                if (time() > strtotime($end)) {
+                    $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
+                    $start = date('Y-m-d', strtotime($baseline) + $add - $window);
+                    $end = date('Y-m-d', strtotime($baseline) + $add + $window);
+                }
+
             } elseif ($offset == 0) {
                 $start = date('Y-m-d', strtotime('+7 days'));
                 $end = date('Y-m-d', strtotime('+30 days'));
@@ -1691,11 +1700,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
             list($start, $end) = $this->getWindowStartEndDates($this->getBaseLineDate(), $offset);
 
-            $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
-            $this->emLog($start);
-            $this->emLog($end);
             // if more than 7 days passed after the follow up visit date then skip it.
-            if (time() - strtotime($end) + $window > 60 * 60 * 24 * (int)$this->getProjectSetting('allowed-window')) {
+            if (time() - strtotime($end) > 0) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
                 return '<button data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';

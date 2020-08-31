@@ -82,6 +82,12 @@
       "type": "field-list"
     },
     {
+      "key": "ideal-window",
+      "name": "<b>Type the number of days of ideal window to schedule a follow up visit.</b>",
+      "required": true,
+      "type": "text"
+    },
+    {
       "key": "allowed-window",
       "name": "<b>Type the number of days of allowed window to schedule a follow up visit.</b>",
       "required": true,
