@@ -43,8 +43,7 @@ try {
                 <tbody>
                 <?php
                 foreach ($records as $id => $events) {
-                    $user = $module->getParticipant()->getUserInfo($id, $module->getFirstEventId());
-                    $mrn = $module->getMRN($events[$module->getFirstEventId()]);
+                    $user = $events[$module->getFirstEventId()];
                     foreach ($events as $eventId => $record) {
                         //skip past or empty reservation
                         if (empty($record['reservation_datetime']) || $module->isReservationInPast($record['reservation_datetime'])) {
