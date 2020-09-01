@@ -23,11 +23,11 @@ if (!isset($module)) {
                        cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Time(PDT)</th>
-                        <th>Available Slots</th>
-                        <th>Action</th>
+                        <th class="col-1">Date</th>
+                        <th class="col-6">Location</th>
+                        <th class="col-2">Time(PDT)</th>
+                        <th class="col-1">Available Slots</th>
+                        <th class="col-2">Action</th>
                     </tr>
                     </thead>
                 </table>
