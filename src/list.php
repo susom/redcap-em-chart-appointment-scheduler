@@ -60,7 +60,7 @@ if (!empty($data)) {
                                                                       class="cancel-appointment btn btn-block btn-danger">Cancel
                             </button>';
         } else {
-            $bookButton = '<button type="button"
+            $bookButton = '<div style="float: left; width: 80%;"><button type="button"
                                         data-record-id="' . $slot['record_id'] . '"
                                         data-event-id="' . $eventId . '"
                                         data-notes-label="' . $module->getNoteLabel() . '"
@@ -78,7 +78,7 @@ if (!empty($data)) {
                     strtotime($slot['slot_start' . $suffix])) . ' - ' . date('h:i A',
                     strtotime($slot['slot_end' . $suffix])) . '"
                                         class="time-slot btn btn-block btn-success">Book
-                                </button>';
+                                </button></div>';
         }
 
         $row = array();
@@ -87,7 +87,7 @@ if (!empty($data)) {
         $row[] = date('h:i A', strtotime($slot['slot_start' . $suffix])) . ' - ' . date('h:i A',
                 strtotime($slot['slot_end' . $suffix]));;
         $row[] = '<h5 class="text-center">' . $available . '</h5>';;
-        $row[] = $bookButton . $cancelButton;;
+        $row[] = $bookButton . $cancelButton . $module->getSlotLogo($baseline, $offset, $slot['slot_start']);;
 
         $result['data'][] = $row;
     }

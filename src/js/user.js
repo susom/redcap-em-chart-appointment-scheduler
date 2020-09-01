@@ -45,7 +45,7 @@ User = {
 
             // we need this to determine displaying the complete button or not.
             User.currentOffset = jQuery(this).data('offset');
-            ;
+            var target = jQuery(this).data('target-date');
             jQuery.ajax({
                 'url': User.listURL + "&event_id=" + User.slotsEventId + "&baseline=" + jQuery(this).data('baseline') + "&offset=" + jQuery(this).data('offset') + "&affiliation=" + jQuery(this).data('affiliation'),
                 'type': 'GET',
@@ -59,7 +59,7 @@ User = {
                     $('#list-result').DataTable().clear().destroy()
                     if (data != '') {
 
-                        $('#generic-modal').find('.modal-title').html("Appointments");
+                        $('#generic-modal').find('.modal-title').html("<div class='alert alert-danger'>Appointments with Target Date: " + target + "</div>");
                         $('#list-result').DataTable({
                             dom: '<"day-filter"><"location-filter"><lf<t>ip>',
                             data: data.data,

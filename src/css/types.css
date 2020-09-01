@@ -71,3 +71,25 @@ body.loading .loader {
 .navbar-nav {
     margin-top: 4%;
 }
+
+.logo-tooltip {
+    opacity: 1 !important;
+    float: right;
+}
+
+.logo-tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 7px 10px;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.logo-tooltip:hover .tooltiptext {
+    visibility: visible;
+}

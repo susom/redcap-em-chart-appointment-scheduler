@@ -184,6 +184,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
     private $defaultAffiliation;
 
     private $bonusVisit = false;
+
     /**
      * ChartAppointmentScheduler constructor.
      */
@@ -582,7 +583,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $baseline = '',
         $offset = 0,
         $affiliation = false
-    ) {
+    )
+    {
         try {
             if ($eventId) {
 
@@ -1041,7 +1043,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $survey_hash,
         $response_id = null,
         $repeat_instance = 1
-    ) {
+    )
+    {
         /*$instances = $this->getInstances();
         $survey = filter_var($_GET['page'], FILTER_SANITIZE_STRING);
         $uri = '';
@@ -1304,7 +1307,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $survey_hash,
         $response_id = null,
         $repeat_instance = 1
-    ) {
+    )
+    {
 
         // check if the instrument is defined as survey instrument in EM
         $surveyInstruments = end($this->getProjectSetting("instrument_id_for_complementary_appointment"));
@@ -1667,17 +1671,11 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         if ($baseline) {
             if ($offset > 0) {
                 $add = $offset * 60 * 60 * 24;
-                // try first the ideal window
-                $window = (int)$this->getProjectSetting('ideal-window') * 60 * 60 * 24;
+                // try first the allowed window
+                $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
                 $start = date('Y-m-d', strtotime($baseline) + $add - $window);
                 $end = date('Y-m-d', strtotime($baseline) + $add + $window);
 
-                // if ideal end date already passed then use the allowed window.
-                if (time() > strtotime($end)) {
-                    $window = (int)$this->getProjectSetting('allowed-window') * 60 * 60 * 24;
-                    $start = date('Y-m-d', strtotime($baseline) + $add - $window);
-                    $end = date('Y-m-d', strtotime($baseline) + $add + $window);
-                }
 
             } elseif ($offset == 0) {
                 $start = date('Y-m-d', strtotime('+7 days'));
@@ -1704,7 +1702,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if (time() - strtotime($end) > 0) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
-                return '<button data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
+                return '<button data-target-date="' . date('m-d-Y', strtotime($this->getBaseLineDate()) + $offset * 60 * 60 * 24) . '" data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
             }
         } else {
             return 'Please schedule Baseline Visit First to be able to schedule other visits!';
@@ -1849,5 +1847,42 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $this->bonusVisit = $bonusVisit;
     }
 
+    public function getSlotLogo($baseline, $offset, $slot)
+    {
+        list($start, $end) = $this->getWindowStartEndDates($baseline, $offset);
+        $add = $offset * 60 * 60 * 24;
+        // try first the allowed window
+        $window = (int)$this->getProjectSetting('ideal-window') * 60 * 60 * 24;
+        $idealStart = date('Y-m-d', strtotime($baseline) + $add - $window);
+        $idealEnd = date('Y-m-d', strtotime($baseline) + $add + $window);
+
+        // target date
+        if (date('Y-m-d', strtotime($baseline) + $add) == date('Y-m-d', strtotime($slot))) {
+            return '<div class="logo-tooltip"> <i class="fas fa-thumbs-up"></i>
+                      <span class="tooltiptext">Target slot to schedule.</span>
+                    </div>';
+        }
+
+        //early case between allowed start and ideal start
+        if (strtotime($slot) > strtotime($start) && strtotime($slot) < strtotime($idealStart)) {
+            return '<div class="logo-tooltip"> <i class="fas fa-user-clock"></i>
+                      <span class="tooltiptext">This is an early slot</span>
+                    </div>';
+        }
+
+        //within ideal time
+        if (strtotime($slot) > strtotime($idealStart) && strtotime($slot) < strtotime($idealEnd)) {
+            return '<div class="logo-tooltip"> <i class="fas fa-lightbulb"></i>
+                      <span class="tooltiptext">This is an ideal slot.</span>
+                    </div>';
+        }
+
+        //late time slot
+        if (strtotime($slot) > strtotime($idealEnd) && strtotime($slot) < strtotime($end)) {
+            return '<div class="logo-tooltip"> <i class="fas fa-running"></i>
+                      <span class="tooltiptext">This is a late slot.</span>
+                    </div>';
+        }
+    }
 
 }

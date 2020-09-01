@@ -94,12 +94,12 @@ class Participant
                     if (is_array($eventId)) {
                         foreach ($eventId as $event) {
                             if ($record[$event]["reservation_participant_status"] == RESERVED) {
-                                if (self::canUserUpdateReservations($record[$event]["employee_id"])) {
-                                    //capture record id for cancellation
-                                    $record[$event]['record_id'] = $id;
-                                    $userBookThisSlot[] = $record[$event];
-                                    $this->counter[$record[$event]["reservation_slot_id"]]["userBookThisSlot"][] = $record[$event];;
-                                }
+//                                if (self::canUserUpdateReservations($record[$event]["employee_id"])) {
+//                                    //capture record id for cancellation
+//                                    $record[$event]['record_id'] = $id;
+//                                    $userBookThisSlot[] = $record[$event];
+//                                    $this->counter[$record[$event]["reservation_slot_id"]]["userBookThisSlot"][] = $record[$event];;
+//                                }
                                 $this->counter[$record[$event]["reservation_slot_id"]]["counter"]++;
                             }
                         }
