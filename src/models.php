@@ -27,7 +27,7 @@ if (!isset($module)) {
                         <th class="col-6">Location</th>
                         <th class="col-2">Time(PDT)</th>
                         <th class="col-1">Available Slots</th>
-                        <th class="col-2">Action</th>
+                        <th class="col-2">Action/Tooltip</th>
                     </tr>
                     </thead>
                 </table>
