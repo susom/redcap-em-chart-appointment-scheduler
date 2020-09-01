@@ -29,6 +29,7 @@ try {
         if ($data['reservation_participant_status'] == AVAILABLE) {
             $data['reservation_datetime'] = false;
             $data['reservation_date'] = false;
+            $data['reservation_slot_id'] = false;
 
             // no not rescheduled before then make value zero to increase it in the next schedule
             $rescheduleCounter = $module->getRecordRescheduleCounter($data[$primaryField],
