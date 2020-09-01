@@ -89,22 +89,47 @@ class Participant
                     'events' => $eventId
                 );
                 $records = \REDCap::getData($param);
-                $this->counter = $records;
-            } else {
-                $records = $this->counter;
-            }
-
-            foreach ($records as $id => $record) {
-                if ($record[$eventId]["reservation_slot_id$suffix"] == $slotId && $record[$eventId]["reservation_participant_status$suffix"] == RESERVED) {
-                    if (self::canUserUpdateReservations($record[$eventId]["employee_id"])) {
-                        //capture record id for cancellation
-                        $record[$eventId]['record_id'] = $id;
-                        $userBookThisSlot[] = $record[$eventId];
+                foreach ($records as $id => $record) {
+                    // if array then loop over that to events
+                    if (is_array($eventId)) {
+                        foreach ($eventId as $event) {
+                            if ($record[$event]["reservation_participant_status"] == RESERVED) {
+                                if (self::canUserUpdateReservations($record[$event]["employee_id"])) {
+                                    //capture record id for cancellation
+                                    $record[$event]['record_id'] = $id;
+                                    $userBookThisSlot[] = $record[$event];
+                                    $this->counter[$record[$event]["reservation_slot_id"]]["userBookThisSlot"][] = $record[$event];;
+                                }
+                                $this->counter[$record[$event]["reservation_slot_id"]]["counter"]++;
+                            }
+                        }
+                    } else {
+                        if ($record[$eventId]["reservation_participant_status"] == RESERVED) {
+                            if (self::canUserUpdateReservations($record[$eventId]["employee_id"])) {
+                                //capture record id for cancellation
+                                $record[$eventId]['record_id'] = $id;
+                                $userBookThisSlot[] = $record[$eventId];
+                                $this->counter[$record[$eventId]["reservation_slot_id"]]["userBookThisSlot"][] = $record[$eventId];;
+                            }
+                            $this->counter[$record[$eventId]["reservation_slot_id"]]["counter"]++;
+                        }
                     }
-                    $counter++;
                 }
+
             }
-            return array('counter' => $counter, 'userBookThisSlot' => $userBookThisSlot);
+            return $this->counter[$slotId];
+//
+//            foreach ($records as $id => $record) {
+//                if ($record[$eventId]["reservation_slot_id$suffix"] == $slotId && $record[$eventId]["reservation_participant_status$suffix"] == RESERVED) {
+//                    if (self::canUserUpdateReservations($record[$eventId]["employee_id"])) {
+//                        //capture record id for cancellation
+//                        $record[$eventId]['record_id'] = $id;
+//                        $userBookThisSlot[] = $record[$eventId];
+//                    }
+//                    $counter++;
+//                }
+//            }
+//            return array('counter' => $counter, 'userBookThisSlot' => $userBookThisSlot);
         } catch (\LogicException $e) {
             echo $e->getMessage();
         }
