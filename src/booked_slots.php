@@ -19,7 +19,10 @@ try {
 
     $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
     $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['chart_study_followup_survey']['element_enum']);
+    $reservation_statuses = parseEnum($module->getProject()->metadata['reservation_participant_status']['element_enum']);
 
+    $url = $module->getUrl('src/user.php', false,
+        true);
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
     if ($records) {
@@ -89,7 +92,7 @@ try {
                                         class="participants-no-show">
                                     <option>CHANGE STATUS</option>
                                     <?php
-                                    foreach ($module->getParticipantStatus() as $key => $status) {
+                                    foreach ($reservation_statuses as $key => $status) {
                                         // list all statuses from reservation instrument. update comment.
                                         ?>
                                         <option value="<?php echo $key ?>" <?php echo($record['reservation_participant_status'] == $key ? 'selected' : '') ?>><?php echo $status ?></option>
@@ -104,8 +107,8 @@ try {
                                 ">Go
                                         to Visit Summary</a></strong>
                                 <div class="clear"></div>
-                                <strong><a target="_blank" href="<?php echo $module->getUrl('src/user.php', false,
-                                            true) . '&' . $module->getProjectSetting('validation-field') . '=' . $user[$module->getProjectSetting('validation-field')] . '&id=' . $id ?>">Go
+                                <strong><a target="_blank"
+                                           href="<?php echo $url . '&' . $module->getProjectSetting('validation-field') . '=' . $user[$module->getProjectSetting('validation-field')] . '&id=' . $id ?>">Go
                                         to Scheduling Page</a></strong>
                             </td>
                         </tr>
