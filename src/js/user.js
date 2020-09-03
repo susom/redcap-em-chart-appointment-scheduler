@@ -106,7 +106,7 @@ User = {
                                         select.append('<option value="' + d + '">' + d + '</option>')
                                     });
 
-                                    // make sure the cookie exist and the value saved exist in returned data.
+                                    // if preferred location is saved then select that
                                     if (getCookie('preferred-location') != null) {
                                         // need to check the preferred location does exist in the list.
                                         var exists = false;
