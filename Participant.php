@@ -211,23 +211,6 @@ class Participant
     }
 
     /**
-     * @param int $event_id
-     * @param int $record_id
-     * @return bool
-     */
-    public function isThereAvailableSpotsInAppointment($event_id, $record_id, $projectId, $primary)
-    {
-        $slot = ChartAppointmentScheduler::getSlot($record_id, $event_id, $projectId, $primary);
-        if ($slot['number_of_participants'] > $this->getSlotActualCountReservedSpots($record_id, $event_id, '',
-                $projectId)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    /**
      * @param $sunetID
      * @param $suffix
      * @param $projectId

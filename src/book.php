@@ -34,7 +34,7 @@ try {
         // check if any slot is available
         $counter = $module->getParticipant()->getSlotActualCountReservedSpots(filter_var($_POST['record_id'],
             FILTER_SANITIZE_STRING),
-            $reservationEventId, '', $module->getProjectId());
+            $module->getReservationEvents(), '', $module->getProjectId());
 
         if ((int)($slot['number_of_participants'] - $counter['counter']) <= 0) {
             throw new \Exception("All time slots are booked please try different time");

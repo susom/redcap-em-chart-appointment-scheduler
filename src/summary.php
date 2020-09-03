@@ -36,7 +36,7 @@ foreach ($data as $slot) {
     }
 
     $counter = $module->getParticipant()->getSlotActualCountReservedSpots($slot['record_id'],
-        $reservationEventId, '', $module->getProjectId());
+        $module->getReservationEvents(), '', $module->getProjectId());
     /**
      * group by day
      */
