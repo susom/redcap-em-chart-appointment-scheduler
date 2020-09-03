@@ -42,6 +42,7 @@ jQuery(document).on('click', '.reschedule-slot', function (e) {
     slot.end = jQuery(this).data('end');
     slot.instructor = jQuery(this).data('instructor');
     slot.location = jQuery(this).data('location');
+    slot.number_of_participants = jQuery(this).data('number-of-participants');
     slot.event_id = jQuery(this).data('event-id');
     slot.record_id = jQuery(this).data('record-id');
 
@@ -63,6 +64,7 @@ function fillSlotForm(data, callback) {
     jQuery('#start').val(data.date + ' ' + data.start);
     jQuery('#end').val(data.date + ' ' + data.end);
     jQuery('#instructor').val(data.instructor);
+    jQuery('#number-of-participants').val(data.number_of_participants);
     jQuery('#location').val(data.location);
     callback();
 }
@@ -79,6 +81,7 @@ jQuery(document).on('click', '#submit-reschedule-form', function (e) {
     slot.instructor = jQuery("#instructor").val();
     slot.notes = jQuery("#reschedule-notes").val();
     slot.location = jQuery("#location").val();
+    slot.number_of_participants = jQuery("#number-of-participants").val();
 
     var url = jQuery("#reschedule-submit-url").val();
     jQuery.ajax({

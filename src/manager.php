@@ -169,6 +169,12 @@ require_once 'urls.php';
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="number-of-participants">Number of Participants</label>
+                        <input type="text" name="number-of-participants" class="form-control"
+                               id="number-of-participants"
+                               placeholder="Instructor SUNet ID" required>
+                    </div>
+                    <div class="form-group">
                         <label for="notes">Notes</label>
                         <textarea class="form-control" name="reschedule-notes" id="reschedule-notes"
                                   rows="3"></textarea>

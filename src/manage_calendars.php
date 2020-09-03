@@ -28,6 +28,7 @@ try {
                 <tr>
                     <th>#</th>
                     <th>Location</th>
+                    <th>Number of Participants</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Actions</th>
@@ -49,6 +50,8 @@ try {
                         <td><?php echo $slot[$primary] ?></td>
                         <td>
                             <?php echo $module->getLocationLabel($slot['location' . $suffix]) ?></td>
+                        <td>
+                            <?php echo $slot['number_of_participants' . $suffix] ?></td>
                         <td>
                             <?php echo date('m/d/Y',
                                 strtotime($slot['slot_start' . $suffix])) ?>
@@ -75,6 +78,7 @@ try {
                                     data-record-id="<?php echo $slot[$primary] ?>"
                                     data-event-id="<?php echo $slot['event_id'] ?>"
                                     data-location="<?php echo $slot['location' . $suffix] ?>"
+                                    data-number-of-participants="<?php echo $slot['number_of_participants' . $suffix] ?>"
                                     data-date="<?php echo date('m/d/Y',
                                         strtotime($slot['slot_start' . $suffix])) ?>"
                                     data-start="<?php echo date('h:i A',
