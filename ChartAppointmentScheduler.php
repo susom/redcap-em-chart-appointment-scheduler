@@ -40,6 +40,8 @@ define('RESERVED', 1);
 define('CANCELED', 2);
 define('NO_SHOW', 3);
 define('NOT_SCHEDULED', 4);
+define('COMPLETE', 5);
+define('SKIPPED', 6);
 
 /**
  * Constants for statuses  text
@@ -1709,6 +1711,13 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         }
 
     }
+
+
+    public function getSkipActionButton($user, $eventId)
+    {
+        return '<br><button data-participant-id="' . $user['id'] . '" data-event-id="' . $eventId . '"  class="skip-appointment btn btn-warning">Skip</button>';
+    }
+
 
     public function getCancelActionButton($user, $eventId, $reservation)
     {

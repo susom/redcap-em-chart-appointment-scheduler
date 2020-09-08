@@ -231,6 +231,50 @@ User = {
             }
         });
 
+
+        /**
+         * No Show appointment
+         */
+        jQuery(document).on('click', '.participants-no-show', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var participation_id = jQuery(this).data('participant-id');
+            var event_id = jQuery(this).data('event-id');
+            var url = jQuery('#participants-no-show-url').val();
+            var status = jQuery(this).data('status');
+            var notes = jQuery("#skip-notes").val();
+            if (confirm("Are you sure you want to update the status of this reservation")) {
+
+                /**
+                 * Get Manage modal to let user manage their saved appointments
+                 */
+                jQuery.ajax({
+                    url: url + '&participations_id=' + participation_id + "&event_id=" + event_id + "&reservation_participant_status=" + status + "&notes=" + notes,
+                    type: 'GET',
+                    datatype: 'json',
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        alert(data.message);
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    },
+                    'complete': function () {
+                        User.loadUserVisits();
+                        $('#skip-note-modal').modal('hide');
+                    }
+                });
+            }
+        });
+
+        jQuery(document).on('click', '.skip-appointment', function (e) {
+            $("#skip-appointment-form").attr('data-participant-id', $(this).data('participant-id'))
+            $("#skip-appointment-form").attr('data-event-id', $(this).data('event-id'))
+            $('#skip-note-modal').modal('show');
+        });
+
+
         jQuery("#complete-schedule").click(function () {
             $('#complete-modal').modal('show');
         });
@@ -266,11 +310,11 @@ User = {
                                     );
                                     if (document.getElementById('previous-filter').checked) {
                                         column
-                                            .search("Not Scheduled|Reserved", true, false)
+                                            .search("Not Scheduled|Reserved|Skipped", true, false)
                                             .draw();
                                     } else {
                                         column
-                                            .search("Available|Not Scheduled|Reserved|Canceled|Complete|No Show", true, false)
+                                            .search("Available|Not Scheduled|Reserved|Canceled|Complete|No Show|Skipped", true, false)
                                             .draw();
                                     }
 

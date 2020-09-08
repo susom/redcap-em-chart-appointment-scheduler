@@ -272,3 +272,36 @@ if (!isset($module)) {
 </div>
 <!-- End Complete Modal -->
 
+<!-- Complete Modal -->
+<div class="modal" id="skip-note-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Skip Appointment</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="notes">Please list the reason for skipping this appointment?</label>
+                    <textarea class="form-control" name="skip-notes" id="skip-notes"
+                              rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button data-participant-id="" data-event-id="" type="submit" id="skip-appointment-form" data-status="6"
+                        class="participants-no-show btn btn-primary">Submit
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- End Complete Modal -->
+

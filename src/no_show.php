@@ -25,7 +25,13 @@ try {
         throw new \LogicException('Event ID is missing');
     } else {
 
-
+        if ($data['reservation_participant_status'] == SKIPPED) {
+            $data['reservation_participant_id'] = filter_var($_GET['participations_id'], FILTER_SANITIZE_STRING);
+            $data['reservation_datetime'] = date('Y-m-d H:i:s');
+            $data['reservation_date'] = date('Y-m-d');
+            $data['reservation_created_at'] = date('Y-m-d H:i:s');
+            $data['summary_notes'] = filter_var($_GET['notes'], FILTER_SANITIZE_STRING);
+        }
         if ($data['reservation_participant_status'] == AVAILABLE) {
             $data['reservation_datetime'] = false;
             $data['reservation_date'] = false;

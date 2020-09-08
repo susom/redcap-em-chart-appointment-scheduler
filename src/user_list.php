@@ -47,6 +47,11 @@ try {
                     $time = '';
                     $action = $module->getScheduleActionButton($month, $year, $url, $user, $eventId,
                         $event['day_offset']);
+                } elseif ($user['record'][$eventId]['reservation_participant_status'] == SKIPPED) {
+                    $action = 'This appointment is skipped';
+                    $noSkip = true;
+                    $statuses = parseEnum($module->getProject()->metadata['reservation_participant_status']["element_enum"]);
+                    $status = $statuses[$user['record'][$eventId]['reservation_participant_status']];
                 } else {
 
                     //if no slot defined use imported reservation datetime.
@@ -77,12 +82,16 @@ try {
                         $action = 'This Appointment is in less than 24 hours please call to cancel!';
                     } elseif ((strtotime($slot['slot_start']) + 86400) - time() < 0) {
                         $action = 'Appointment Completed';
+                        $noSkip = true;
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == CANCELED) {
                         $action = '';
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED && !$module->isBonusVisit()) {
                         $action = $module->getCancelActionButton($user, $eventId, $slot);
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED && $module->isBonusVisit()) {
                         $action = 'This is a bonus visit because you tested positive. To cancel please call us!';
+                    } elseif ($user['record'][$eventId]['reservation_participant_status'] == SKIPPED) {
+                        $action = 'This appointment is skipped';
+                        $noSkip = true;
                     }
 
                     // determine the status
@@ -95,6 +104,11 @@ try {
                 $action = $module->getScheduleActionButton($month, $year, $url, $user, $eventId, $event['day_offset']);
             }
 
+            //when manager is viewing this page give the option to skip this visit.
+            if (!$regularUser && !$noSkip) {
+                $action .= $module->getSkipActionButton($user, $eventId);
+            }
+
             $row[] = $pointer;
             $row[] = $event['descrip'];
             $row[] = $status;
@@ -103,6 +117,8 @@ try {
             $row[] = $action;
             $result['data'][] = $row;
             $pointer++;
+            $noSkip = false;
+            $action = '';
         }
         header('Content-Type: application/json');
         echo json_encode($result);
