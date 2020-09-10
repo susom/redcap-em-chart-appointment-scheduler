@@ -78,7 +78,7 @@ try {
                     }
 
                     // prevent cancel if appointment is in less than 24 hours
-                    if (strtotime($slot['slot_start']) - time() < 86400 && strtotime($slot['slot_start']) - time() > 0 && !$module->isBonusVisit()) {
+                    if (strtotime($slot['slot_start']) - time() < 0 && strtotime($slot['slot_start']) - time() > 0 && !$module->isBonusVisit()) {
                         $action = 'This Appointment is in less than 24 hours please call to cancel!';
                     } elseif ((strtotime($slot['slot_start']) + 86400) - time() < 0) {
                         $action = 'Appointment Completed';
