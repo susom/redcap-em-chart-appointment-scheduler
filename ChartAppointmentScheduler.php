@@ -492,38 +492,38 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         }
     }
 
-    /**
-     * Get available time slots for specific date
-     * @param string $date
-     * @param int $event_id
-     * @return array
-     */
-    public function getDateAvailableSlots($date, $event_id)
-    {
-        try {
-            if (!empty($date)) {
-
-                /*
-                 * TODO Check if date within allowed window
-                 */
-                $filter = "[start] > '" . date('Y-m-d', strtotime($date)) . "' AND " . "[start] < '" . date('Y-m-d',
-                        strtotime($date . ' + 1 DAY')) . "' AND [slot_status] != '" . CANCELED . "'";
-                $param = array(
-                    'project_id' => $this->getProjectId(),
-                    'filterLogic' => $filter,
-                    'return_format' => 'array',
-                    'events' => $event_id
-                );
-                $data = REDCap::getData($param);
-                $x = $this->sortRecordsByDate($data, $event_id);
-                return $x;
-            } else {
-                throw new \LogicException('Not a valid date, Aborting!');
-            }
-        } catch (\LogicException $e) {
-            echo $e->getMessage();
-        }
-    }
+//    /**
+//     * Get available time slots for specific date
+//     * @param string $date
+//     * @param int $event_id
+//     * @return array
+//     */
+//    public function getDateAvailableSlots($date, $event_id)
+//    {
+//        try {
+//            if (!empty($date)) {
+//
+//                /*
+//                 * TODO Check if date within allowed window
+//                 */
+//                $filter = "[start] > '" . date('Y-m-d', strtotime($date)) . "' AND " . "[start] < '" . date('Y-m-d',
+//                        strtotime($date . ' + 1 DAY')) . "' AND [slot_status] != '" . CANCELED . "'";
+//                $param = array(
+//                    'project_id' => $this->getProjectId(),
+//                    'filterLogic' => $filter,
+//                    'return_format' => 'array',
+//                    'events' => $event_id
+//                );
+//                $data = REDCap::getData($param);
+//                $x = $this->sortRecordsByDate($data, $event_id);
+//                return $x;
+//            } else {
+//                throw new \LogicException('Not a valid date, Aborting!');
+//            }
+//        } catch (\LogicException $e) {
+//            echo $e->getMessage();
+//        }
+//    }
 
     /**
      * @param int $event_id
@@ -905,7 +905,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
     public function forceCancellation($recordId, $eventId)
     {
-        $data['reservation_participant_status'] = CANCELED;
+        $data['reservation_participant_status'] = false;
         $data[$this->getPrimaryRecordFieldName()] = $recordId;
         $data['redcap_event_name'] = \REDCap::getEventNames(true, true, $eventId);
         $response = \REDCap::saveData('json', json_encode(array($data)));
@@ -1033,119 +1033,6 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         return $result;
     }
 
-    /**
-     * call REDCap hook
-     */
-    public function redcap_survey_complete(
-        $project_id,
-        $record = null,
-        $instrument,
-        $event_id,
-        $group_id = null,
-        $survey_hash,
-        $response_id = null,
-        $repeat_instance = 1
-    )
-    {
-        /*$instances = $this->getInstances();
-        $survey = filter_var($_GET['page'], FILTER_SANITIZE_STRING);
-        $uri = '';
-        foreach ($instances as $instance) {
-            if ($instance['instrument_id_for_complementary_appointment'] == $survey) {
-                $uri = $this->buildSurveyComplementaryInputsURI($instance);
-                break;
-            }
-        }
-        $url = $this->getUrl('src/types.php', false, true) . $uri;*/
-        /**
-         * get survey record
-         */
-        $this->setMainSurveyId($instrument);
-        $primary = $this->getPrimaryRecordFieldName();
-        $filter = "[$primary] = '" . $record . "'";
-        $param = array(
-            'project_id' => $this->getProjectId(),
-            'filterLogic' => $filter,
-            'return_format' => 'array',
-            'events' => $event_id
-        );
-        $survey = REDCap::getData($param);
-        if (!empty($survey)) {
-            /**
-             * get reservation record for the survey
-             */
-            $reservationId = $survey[$record][$event_id][SURVEY_RESERVATION_FIELD];
-            $reservationEventId = $this->getReservationEventId();
-            $filter = "[$primary] = '" . $reservationId . "'";
-            $param = array(
-                'project_id' => $this->getProjectId(),
-                'filterLogic' => $filter,
-                'return_format' => 'array',
-                'events' => $reservationEventId
-            );
-            $reservation = REDCap::getData($param);
-
-            if (!empty($reservation)) {
-                /**
-                 * get slot record for the reservation.
-                 */
-                $slotId = $reservation[$reservationId][$reservationEventId][RESERVATION_SLOT_FIELD];
-                $slotEventId = $this->getSlotsEventId();
-
-                $filter = "[$primary] = '" . $slotId . "'";
-                $param = array(
-                    'project_id' => $this->getProjectId(),
-                    'filterLogic' => $filter,
-                    'return_format' => 'array',
-                    'events' => $slotEventId
-                );
-                $slot = REDCap::getData($param);
-                if (!empty($slot)) {
-                    require __DIR__ . '/src/survey.php';
-                    $record = $slot[$slotId][$slotEventId];
-                    $status = $reservation[$reservationId][$reservationEventId]['reservation_participant_status'];
-                    switch ($status) {
-                        case CANCELED:
-                            echo "Your reservation at " . date('M/d/Y',
-                                    strtotime($record['slot_start'])) . ' was canceled';
-                            break;
-                        case NO_SHOW:
-                            echo "You missed your reservation at " . date('M/d/Y',
-                                    strtotime($record['slot_start'])) . ' and Marked as No Show';
-                            break;
-                        default:
-                            require __DIR__ . '/src/survey.php';
-                            echo "You have a reservation on " . date('M/d/Y',
-                                    strtotime($record['slot_start'])) . " between " . date('H:i',
-                                    strtotime($record['slot_start'])) . " and " . date('H:i',
-                                    strtotime($record['slot_end'])) . " <a class='manage' href='javascript:;'>Click Here</a> edit your reservation.";
-                            break;
-                    }
-
-                }
-            }
-        }
-    }
-
-    /**
-     * @param array $instance
-     * @return string
-     */
-    private function buildSurveyComplementaryInputsURI($instance)
-    {
-        $email = filter_var($_POST[$instance[COMPLEMENTARY_EMAIL]], FILTER_SANITIZE_STRING);
-        $result = '&' . COMPLEMENTARY_EMAIL . '=' . $email;
-        $name = filter_var($_POST[$instance[COMPLEMENTARY_NAME]], FILTER_SANITIZE_STRING);
-        $result .= '&' . COMPLEMENTARY_NAME . '=' . $name;
-        $mobile = filter_var($_POST[$instance[COMPLEMENTARY_MOBILE]], FILTER_SANITIZE_NUMBER_INT);
-        $result .= '&' . COMPLEMENTARY_MOBILE . '=' . $mobile;
-        $notes = filter_var($_POST[$instance[COMPLEMENTARY_NOTES]], FILTER_SANITIZE_STRING);
-        $result .= '&' . COMPLEMENTARY_NOTES . '=' . $notes;
-        $result .= '&complementary=true';
-        $result .= '&complementary_suffix=' . $instance[COMPLEMENTARY_SUFFIX];
-
-        return $result;
-    }
 
     /**
      * @param int $eventId
@@ -1680,7 +1567,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
 
             } elseif ($offset == 0) {
-                $start = date('Y-m-d', strtotime('+7 days'));
+                #$start = date('Y-m-d', strtotime('+7 days'));
+                $start = date('Y-m-d');
                 $end = date('Y-m-d', strtotime('+30 days'));
             } elseif ($offset < 0) {
                 $start = date('Y-m-d');
@@ -1688,7 +1576,8 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             }
 
         } else {
-            $start = date('Y-m-d', strtotime('+7 days'));
+            # $start = date('Y-m-d', strtotime('+7 days'));
+            $start = date('Y-m-d');
             $end = date('Y-m-d', strtotime('+30 days'));
         }
         return array($start, $end);
@@ -1704,7 +1593,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if (time() - strtotime($end) > 0) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
-                return '<button data-target-date="' . date('m-d-Y', strtotime($this->getBaseLineDate()) + $offset * 60 * 60 * 24) . '" data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
+                return '<button data-target-date="' . date('m-d-Y', strtotime($this->getBaseLineDate()) + $offset * 60 * 60 * 24) . '" data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-sm btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
             }
         } else {
             return 'Please schedule Baseline Visit First to be able to schedule other visits!';
@@ -1715,13 +1604,13 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
     public function getSkipActionButton($user, $eventId)
     {
-        return '<br><button data-participant-id="' . $user['id'] . '" data-event-id="' . $eventId . '"  class="skip-appointment btn btn-warning">Skip</button>';
+        return '<br><button data-participant-id="' . $user['id'] . '" data-event-id="' . $eventId . '"  class="skip-appointment btn btn-sm btn-warning">Skip</button>';
     }
 
 
     public function getCancelActionButton($user, $eventId, $reservation)
     {
-        return '<button data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-slot-id="' . $reservation['reservation_slot_id'] . '" class="cancel-appointment btn btn-danger">Cancel</button>';
+        return '<button data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-slot-id="' . $reservation['reservation_slot_id'] . '" class="cancel-appointment btn btn-sm btn-danger">Cancel</button>';
     }
 
     public function getBaseLineEventID()
@@ -1799,6 +1688,20 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         $data = REDCap::getData($param);
         if (isset($data[$recordId][$eventId]['reservation_reschedule_counter'])) {
             return $data[$recordId][$eventId]['reservation_reschedule_counter'];
+        }
+        return false;
+    }
+
+    public function getRecordSummaryNotes($recordId, $eventId)
+    {
+        $param = array(
+            'project_id' => $this->getProjectId(),
+            'events' => [$eventId],
+            'recocrds' => [$recordId]
+        );
+        $data = REDCap::getData($param);
+        if (isset($data[$recordId][$eventId]['summary_notes'])) {
+            return $data[$recordId][$eventId]['summary_notes'];
         }
         return false;
     }
@@ -1894,4 +1797,16 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         }
     }
 
+
+    public function getSkippedIndex()
+    {
+        $statuses = parseEnum($this->getProject()->metadata['visit_status']["element_enum"]);
+        return array_search('Skipped', $statuses);
+    }
+
+
+    public function isAppointmentSkipped($status)
+    {
+        return $status == $this->getSkippedIndex();
+    }
 }
