@@ -20,6 +20,7 @@ try {
     $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
     $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['chart_study_followup_survey_complete']['element_enum']);
     $reservation_statuses = parseEnum($module->getProject()->metadata['reservation_participant_status']['element_enum']);
+    $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
 
     $url = $module->getUrl('src/user.php', false,
         true);
@@ -40,6 +41,7 @@ try {
                     <th>Appointment time</th>
                     <th>Consent status</th>
                     <th>Survey status</th>
+                    <th>Visit status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -48,8 +50,8 @@ try {
                 foreach ($records as $id => $events) {
                     $user = $events[$module->getFirstEventId()];
                     foreach ($events as $eventId => $record) {
-                        //skip past or empty reservation
-                        if (empty($record['reservation_datetime']) || $module->isReservationInPast($record['reservation_datetime'])) {
+                        //skip past, skipped or empty reservation
+                        if (empty($record['reservation_datetime']) || $module->isReservationInPast($record['reservation_datetime']) || $module->isAppointmentSkipped($record['visit_status'])) {
                             continue;
                         }
 
@@ -86,20 +88,13 @@ try {
                                         strtotime($slot['slot_end'])) ?></td>
                             <td><?php echo $user['calc_consent_valid'] ? 'Completed' : 'Incomplete' ?></td>
                             <td><?php echo $record['chart_study_followup_survey_complete'] ? $trackcovid_monthly_followup_survey_complete_statuses[$record['chart_study_followup_survey_complete']] : 'Incomplete' ?></td>
+                            <td><?php echo $statuses[$record['visit_status']]; ?></td>
                             <td>
-                                <select data-participant-id="<?php echo $id ?>"
+                                <button data-participant-id="<?php echo $id ?>"
                                         data-event-id="<?php echo $eventId ?>"
-                                        class="participants-no-show">
-                                    <option>CHANGE STATUS</option>
-                                    <?php
-                                    foreach ($reservation_statuses as $key => $status) {
-                                        // list all statuses from reservation instrument. update comment.
-                                        ?>
-                                        <option value="<?php echo $key ?>" <?php echo($record['reservation_participant_status'] == $key ? 'selected' : '') ?>><?php echo $status ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
+                                        data-status="<?php echo false ?>"
+                                        class="participants-no-show btn btn-sm btn-danger">Cancel
+                                </button>
                                 <div class="clear"></div>
                                 <strong><a target="_blank" href="
                                 <?php echo rtrim(APP_PATH_WEBROOT_FULL,

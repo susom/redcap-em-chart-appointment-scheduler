@@ -28,7 +28,8 @@ try {
                 <tr>
                     <th>#</th>
                     <th>Location</th>
-                    <th>Number of Participants</th>
+                    <th>Number of Slots</th>
+                    <th>Available Slots</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Actions</th>
@@ -45,13 +46,18 @@ try {
                     if ($module->isSlotInPast($slot, $suffix)) {
                         continue;
                     }
+
+                    $counter = $module->getParticipant()->getSlotActualCountReservedSpots($slot['record_id'],
+                        $module->getReservationEvents(), $suffix, $module->getProjectId());
                     ?>
                     <tr>
                         <td><?php echo $slot[$primary] ?></td>
                         <td>
                             <?php echo $module->getLocationLabel($slot['location' . $suffix]) ?></td>
                         <td>
-                            <?php echo $slot['number_of_participants' . $suffix] ?></td>
+                            <?php echo $slot['number_of_participants'] ?></td>
+                        <td>
+                            <?php echo (int)($slot['number_of_participants' . $suffix] - $counter['counter']) ?></td>
                         <td>
                             <?php echo date('m/d/Y',
                                 strtotime($slot['slot_start' . $suffix])) ?>

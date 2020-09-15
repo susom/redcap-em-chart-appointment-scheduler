@@ -25,17 +25,25 @@ try {
         throw new \LogicException('Event ID is missing');
     } else {
 
-        if ($data['reservation_participant_status'] == SKIPPED) {
+        if ($module->isAppointmentSkipped($data['reservation_participant_status'])) {
             $data['reservation_participant_id'] = filter_var($_GET['participations_id'], FILTER_SANITIZE_STRING);
             $data['reservation_datetime'] = date('Y-m-d H:i:s');
             $data['reservation_date'] = date('Y-m-d');
             $data['reservation_created_at'] = date('Y-m-d H:i:s');
             $data['summary_notes'] = filter_var($_GET['notes'], FILTER_SANITIZE_STRING);
-        }
-        if ($data['reservation_participant_status'] == AVAILABLE) {
+
+
+            $data['visit_status'] = $data['reservation_participant_status'];
+        } else {
+            $data['reservation_slot_id'] = false;
+            $data['reservation_participant_id'] = false;
             $data['reservation_datetime'] = false;
             $data['reservation_date'] = false;
-            $data['reservation_slot_id'] = false;
+            $data['reservation_participant_location'] = false;
+            $data['reservation_participant_status'] = false;
+            $data['visit_status'] = false;
+            $data['summary_notes'] = $module->getRecordSummaryNotes($data[$primaryField],
+                    $eventId) . '\n[' . date('Y-m-d H:i:s') . ']: Appointment was canceled';
 
             // no not rescheduled before then make value zero to increase it in the next schedule
             $rescheduleCounter = $module->getRecordRescheduleCounter($data[$primaryField],
@@ -49,22 +57,33 @@ try {
 
         if (empty($response['errors'])) {
 
+            $reservation = $module::getSlot(filter_var($data[$primaryField], FILTER_SANITIZE_STRING), $eventId,
+                $module->getProjectId(), $primaryField);
+
+            $instance = $module->getEventInstance();
+            $user = $module->getParticipant()->getUserInfo($data[$primaryField], $module->getFirstEventId());
             //notify user when canceled.
-            if ($data['reservation_participant_status'] == CANCELED) {
-                $instance = $module->getEventInstance();
-                $user = $module->getParticipant()->getUserInfo($data[$primaryField], $module->getFirstEventId());
-                $reservation = $module::getSlot(filter_var($data[$primaryField], FILTER_SANITIZE_STRING), $eventId,
-                    $module->getProjectId(), $primaryField);
+            if ($module->isAppointmentSkipped($data['reservation_participant_status'])) {
+                $eventName = $module->getProject()->events[$eventId]['name'];
+                $body = '--CONFIRMATION-- Your appointment for ' . $eventName . ' has been skipped';
+                $module->sendEmail($user['email'],
+                    ($instance['sender_email'] != '' ? $instance['sender_email'] : DEFAULT_EMAIL),
+                    ($instance['sender_name'] != '' ? $instance['sender_name'] : DEFAULT_NAME),
+                    $body, $body
+                );
+            } else {
                 $slot = $module::getSlot(filter_var($reservation['reservation_slot_id'], FILTER_SANITIZE_STRING),
                     $module->getSlotEventIdFromReservationEventId($eventId),
                     $module->getProjectId(), $primaryField);
+                $eventName = $module->getProject()->events[$eventId]['name'];
+                $body = '--CONFIRMATION-- ' . $eventName . ' has been skipped';
                 $module->sendEmail($user['email'],
                     ($instance['sender_email'] != '' ? $instance['sender_email'] : DEFAULT_EMAIL),
                     ($instance['sender_name'] != '' ? $instance['sender_name'] : DEFAULT_NAME),
                     '--CONFIRMATION-- Your appointment is canceled at ' . date('m/d/Y',
-                        strtotime($slot['slot_start'])),
+                        strtotime($slot['start'])),
                     '--CONFIRMATION-- Your appointment is canceled at ' . date('m/d/Y',
-                        strtotime($slot['slot_start']))
+                        strtotime($slot['start']))
                 );
             }
 

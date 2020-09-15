@@ -13,6 +13,7 @@ try {
         $result = array();
         $pointer = 1;
         $regularUser = !defined('USERID') && !$module::isUserHasManagePermission();
+        $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
         foreach ($events as $eventId => $event) {
             // for regular user skip the bonus visits. but not for coordinator
             if ($event['day_offset'] >= 200 && $regularUser && $user['record'][$eventId]['reservation_datetime'] == '') {
@@ -39,7 +40,7 @@ try {
                 continue;
             }
             // check if user has record for this event
-            $status = 'Not Scheduled';
+            $status = '';
             if (isset($user['record'][$eventId])) {
                 $slot = $module->getReservationArray($user['record'][$eventId]);
                 // if no slots found and no reservation already imported.
@@ -47,11 +48,11 @@ try {
                     $time = '';
                     $action = $module->getScheduleActionButton($month, $year, $url, $user, $eventId,
                         $event['day_offset']);
-                } elseif ($user['record'][$eventId]['reservation_participant_status'] == SKIPPED) {
+                } elseif ($module->isAppointmentSkipped($user['record'][$eventId]['visit_status'])) {
                     $action = 'This appointment is skipped';
                     $noSkip = true;
-                    $statuses = parseEnum($module->getProject()->metadata['reservation_participant_status']["element_enum"]);
-                    $status = $statuses[$user['record'][$eventId]['reservation_participant_status']];
+                    $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
+                    $status = $statuses[$user['record'][$eventId]['visit_status']];
                 } else {
 
                     //if no slot defined use imported reservation datetime.
@@ -83,20 +84,18 @@ try {
                     } elseif ((strtotime($slot['slot_start']) + 86400) - time() < 0) {
                         $action = 'Appointment Completed';
                         $noSkip = true;
-                    } elseif ($user['record'][$eventId]['reservation_participant_status'] == CANCELED) {
-                        $action = '';
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED && !$module->isBonusVisit()) {
                         $action = $module->getCancelActionButton($user, $eventId, $slot);
                     } elseif ($user['record'][$eventId]['reservation_participant_status'] == RESERVED && $module->isBonusVisit()) {
                         $action = 'This is a bonus visit because you tested positive. To cancel please call us!';
-                    } elseif ($user['record'][$eventId]['reservation_participant_status'] == SKIPPED) {
+                    } elseif ($module->isAppointmentSkipped($user['record'][$eventId]['visit_status'])) {
                         $action = 'This appointment is skipped';
                         $noSkip = true;
                     }
 
                     // determine the status
-                    $statuses = parseEnum($module->getProject()->metadata['reservation_participant_status']["element_enum"]);
-                    $status = $statuses[$user['record'][$eventId]['reservation_participant_status']];
+                    $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
+                    $status = $statuses[$user['record'][$eventId]['visit_status']];
                 }
 
             } else {

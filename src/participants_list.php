@@ -71,14 +71,6 @@ try {
                                     ?>
                                 </select>
                                 <?php
-                            } elseif ($participant['reservation_participant_status' . $suffix] == CANCELED) {
-                                ?>
-                                User cancelled this appointment!
-                                <?php
-                            } elseif ($participant['reservation_participant_status' . $suffix] == NO_SHOW) {
-                                ?>
-                                Instructor Marked this Participant as no show
-                                <?php
                             }
                             ?>
                         </td>

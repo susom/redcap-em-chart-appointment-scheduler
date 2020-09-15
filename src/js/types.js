@@ -567,15 +567,15 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
                     {
                         dom: '<"day-filter-slots"><"location-filter-slots"><lf<t>ip>',
                         pageLength: 50,
-                        "aaSorting": [[3, "asc"], [4, "asc"]],
+                        "aaSorting": [[4, "asc"], [5, "asc"]],
                         columnDefs: [
                             {"type": "date", "targets": 3}
                         ],
                         initComplete: function () {
-                            this.api().columns([1, 2]).every(function (index) {
+                            this.api().columns([4, 1]).every(function (index) {
 
                                 var column = this;
-                                if (index === 2 && column.data().any() === true) {
+                                if (index === 1 && column.data().any() === true) {
                                     var select = $('<select id="day-options-manager"><option value=""></option></select>')
                                         .appendTo($('.day-filter-slots'))
                                         .on('change', function () {
@@ -589,7 +589,7 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
                                                 .draw();
                                         });
                                 }
-                                if (index === 1 && column.data().any() === true) {
+                                if (index === 4 && column.data().any() === true) {
                                     var select = $('<select id="location-options-manager"><option value=""></option></select>')
                                         .appendTo($('.location-filter-slots'))
                                         .on('change', function () {
@@ -626,6 +626,39 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
          * user not logged in refresh to force sign in
          */
         location.reload();
+    }
+});
+
+/**
+ * No Show appointment
+ */
+jQuery(document).on('click', '.participants-no-show', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var participation_id = jQuery(this).data('participant-id');
+    var event_id = jQuery(this).data('event-id');
+    var url = jQuery('#participants-no-show-url').val();
+    var status = jQuery(this).data('status');
+    if (confirm("Are you sure you want to update the status of this reservation")) {
+
+        /**
+         * Get Manage modal to let user manage their saved appointments
+         */
+        jQuery.ajax({
+            url: url + '&participations_id=' + participation_id + "&event_id=" + event_id + "&reservation_participant_status=" + status,
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) {
+                data = JSON.parse(data);
+                alert(data.message);
+                console.log(jQuery('.participants-list[data-record-id=' + recordId + ']'));
+                jQuery('.participants-list[data-record-id=' + recordId + ']').trigger('click');
+            },
+            error: function (request, error) {
+                alert("Request: " + JSON.stringify(request));
+            }
+        });
     }
 });
 

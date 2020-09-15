@@ -310,11 +310,11 @@ User = {
                                     );
                                     if (document.getElementById('previous-filter').checked) {
                                         column
-                                            .search("Not Scheduled|Reserved|Skipped", true, false)
+                                            .search("^$|Skipped", true, false)
                                             .draw();
                                     } else {
                                         column
-                                            .search("Available|Not Scheduled|Reserved|Canceled|Complete|No Show|Skipped", true, false)
+                                            .search("|Completed|Skipped|No Show", true, false)
                                             .draw();
                                     }
 

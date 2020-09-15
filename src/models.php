@@ -294,7 +294,8 @@ if (!isset($module)) {
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button data-participant-id="" data-event-id="" type="submit" id="skip-appointment-form" data-status="6"
+                <button data-participant-id="" data-event-id="" type="submit" id="skip-appointment-form"
+                        data-status="<?php echo $module->getSkippedIndex() ?>"
                         class="participants-no-show btn btn-primary">Submit
                 </button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

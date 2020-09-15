@@ -58,9 +58,6 @@ if (!defined('USERID') || USERID == '[survey respondent]') {
 <input type="hidden" id="list-view-url" value="<?php echo $module->getUrl('src/list.php', false,
         true) . '&' . COMPLEMENTARY_SUFFIX . '=' . $module->getSuffix() . '&' . PROJECTID . '=' . $module->getProjectId() . $noAuth ?>"
        class="hidden"/>
-<input type="hidden" id="manage-url" value="<?php echo $module->getUrl('src/manage.php', false,
-        true) . '&' . COMPLEMENTARY_SUFFIX . '=' . $module->getSuffix() . '&' . PROJECTID . '=' . $module->getProjectId() . $noAuth ?>"
-       class="hidden"/>
 <input type="hidden" id="instance-description-update-url"
        value="<?php echo $module->getUrl('src/update_description.php', false,
                true) . '&' . COMPLEMENTARY_SUFFIX . '=' . $module->getSuffix() . '&' . PROJECTID . '=' . $module->getProjectId() . $noAuth ?>"

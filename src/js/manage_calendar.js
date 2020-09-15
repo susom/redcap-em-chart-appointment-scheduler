@@ -141,39 +141,6 @@ jQuery(document).on('click', '.participants-list', function (e) {
     });
 });
 
-/**
- * No Show appointment
- */
-jQuery(document).on('change', '.participants-no-show', function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    var participation_id = jQuery(this).data('participant-id');
-    var event_id = jQuery(this).data('event-id');
-    var url = jQuery('#participants-no-show-url').val();
-    var status = jQuery(this).find(":selected").val();
-    if (confirm("Are you sure you want to update the status of this reservation")) {
-
-        /**
-         * Get Manage modal to let user manage their saved appointments
-         */
-        jQuery.ajax({
-            url: url + '&participations_id=' + participation_id + "&event_id=" + event_id + "&reservation_participant_status=" + status,
-            type: 'GET',
-            datatype: 'json',
-            success: function (data) {
-                data = JSON.parse(data);
-                alert(data.message);
-                console.log(jQuery('.participants-list[data-record-id=' + recordId + ']'));
-                jQuery('.participants-list[data-record-id=' + recordId + ']').trigger('click');
-            },
-            error: function (request, error) {
-                alert("Request: " + JSON.stringify(request));
-            }
-        });
-    }
-});
-
 
 /**
  * No Show appointment
