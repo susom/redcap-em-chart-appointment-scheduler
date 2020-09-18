@@ -21,7 +21,7 @@ try {
         $data['visit_status'] = false;
 
         $data['summary_notes'] = $module->getRecordSummaryNotes($data[$primary],
-                $eventId) . '\n[' . date('Y-m-d H:i:s') . ']: Appointment was canceled';
+                $eventId) . '&#13;&#10;[' . date('Y-m-d H:i:s') . ']: Appointment was canceled';
 
         $data['redcap_event_name'] = $module->getUniqueEventName($eventId);
 
