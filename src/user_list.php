@@ -15,6 +15,11 @@ try {
         $regularUser = !defined('USERID') && !$module::isUserHasManagePermission();
         $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
         foreach ($events as $eventId => $event) {
+
+            // also we need to define the default affiliation to be enforced for next appointments.
+            $defaultAffiliate = $user['record'][$eventId]['employer'];
+            $module->setDefaultAffiliation($defaultAffiliate);
+
             // for regular user skip the bonus visits. but not for coordinator
             if ($event['day_offset'] >= 200 && $regularUser && $user['record'][$eventId]['reservation_datetime'] == '') {
                 continue;
@@ -73,9 +78,6 @@ try {
                         //use consent date
                         //$module->setBaseLineDate(date('Y-m-d H:i:s',strtotime($user['record'][$module->getFirstEventId()]['consent_date'])));
 
-                        // also we need to define the default affiliation to be enforced for next appointments.
-                        $defaultAffiliate = $user['record'][$eventId]['employer'];
-                        $module->setDefaultAffiliation($defaultAffiliate);
                     }
 
                     // prevent cancel if appointment is in less than 24 hours
