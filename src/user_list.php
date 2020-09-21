@@ -18,7 +18,10 @@ try {
 
             // also we need to define the default affiliation to be enforced for next appointments.
             $defaultAffiliate = $user['record'][$eventId]['employer'];
-            $module->setDefaultAffiliation($defaultAffiliate);
+            if ($defaultAffiliate) {
+                $module->setDefaultAffiliation($defaultAffiliate);
+            }
+
 
             // for regular user skip the bonus visits. but not for coordinator
             if ($event['day_offset'] >= 200 && $regularUser && $user['record'][$eventId]['reservation_datetime'] == '') {
