@@ -641,10 +641,19 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $filter = "[slot_start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
             $param = array(
                 'project_id' => $this->getProjectId(),
-                'filterLogic' => $filter,
+                #'filterLogic' => $filter,
                 'return_format' => 'array'
             );
-            return REDCap::getData($param);
+            $records = REDCap::getData($param);
+            $data = array();
+            foreach ($records as $id => $record) {
+                foreach ($record as $eventId => $event) {
+                    if ($event['slot_start'] && strtotime($event['slot_start']) > time() && $event['slot_status'] != CANCELED) {
+                        $data[$id] = $event;
+                    }
+                }
+            }
+            return $data;
         } catch (\LogicException $e) {
             echo $e->getMessage();
         }
