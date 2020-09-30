@@ -646,11 +646,10 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             );
             $records = REDCap::getData($param);
             $data = array();
+            $eventId = $this->getSlotEventIdFromReservationEventId($this->getFirstEventId());
             foreach ($records as $id => $record) {
-                foreach ($record as $eventId => $event) {
-                    if ($event['slot_start'] && strtotime($event['slot_start']) > time() && $event['slot_status'] != CANCELED) {
-                        $data[$id] = $event;
-                    }
+                if ($record[$eventId]['slot_start'] && strtotime($record[$eventId]['slot_start']) > time() && $record[$eventId]['slot_status'] != CANCELED) {
+                    $data[$id] = $record;
                 }
             }
             return $data;
