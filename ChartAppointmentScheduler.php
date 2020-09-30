@@ -638,20 +638,24 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             /*
                  * TODO Check if date within allowed window
                  */
+            $eventId = $this->getSlotEventIdFromReservationEventId($this->getFirstEventId());
+            $this->emLog('getAllOpenSlots');
             $filter = "[slot_start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
             $param = array(
                 'project_id' => $this->getProjectId(),
                 #'filterLogic' => $filter,
-                'return_format' => 'array'
+                'return_format' => 'array',
+                'events' => [$eventId]
             );
             $records = REDCap::getData($param);
             $data = array();
-            $eventId = $this->getSlotEventIdFromReservationEventId($this->getFirstEventId());
+            $this->emLog('count records:' . count($records));
             foreach ($records as $id => $record) {
                 if ($record[$eventId]['slot_start'] && strtotime($record[$eventId]['slot_start']) > time() && $record[$eventId]['slot_status'] != CANCELED) {
                     $data[$id] = $record;
                 }
             }
+            $this->emLog('count data:' . count($data));
             return $data;
         } catch (\LogicException $e) {
             echo $e->getMessage();
