@@ -26,6 +26,7 @@ try {
         true);
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
+    $module->emLog(count($records));
     if ($records) {
         ?>
         <div class="container-fluid">
