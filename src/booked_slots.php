@@ -26,7 +26,8 @@ try {
         true);
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
-    $module->emLog(count($records));
+    $validationField = $module->getProjectSetting('validation-field');
+    $firstEvent = $module->getFirstEventId();
     if ($records) {
         ?>
         <div class="container-fluid">
@@ -49,7 +50,7 @@ try {
                 <tbody>
                 <?php
                 foreach ($records as $id => $events) {
-                    $user = $events[$module->getFirstEventId()];
+                    $user = $events[$firstEvent];
                     foreach ($events as $eventId => $record) {
                         //skip past, skipped or empty reservation
                         if (empty($record['reservation_datetime']) || $module->isReservationInPast($record['reservation_datetime']) || $module->isAppointmentSkipped($record['visit_status'])) {
@@ -104,7 +105,7 @@ try {
                                         to Visit Summary</a></strong>
                                 <div class="clear"></div>
                                 <strong><a target="_blank"
-                                           href="<?php echo $url . '&' . $module->getProjectSetting('validation-field') . '=' . $user[$module->getProjectSetting('validation-field')] . '&id=' . $id ?>">Go
+                                           href="<?php echo $url . '&' . $validationField . '=' . $user[$validationField] . '&id=' . $id ?>">Go
                                         to Scheduling Page</a></strong>
                             </td>
                         </tr>

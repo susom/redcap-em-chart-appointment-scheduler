@@ -644,10 +644,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
                 #'filterLogic' => $filter,
                 'return_format' => 'array'
             );
-            $this->emLog($param);
-            $records = REDCap::getData($param);
-            $this->emLog(count($param));
-            return $records;
+            return REDCap::getData($param);
         } catch (\LogicException $e) {
             echo $e->getMessage();
         }
