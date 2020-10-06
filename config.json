@@ -46,12 +46,6 @@
         "icon": "brick",
         "url": "src/manager.php",
         "show-header-and-footer": false
-      },
-      {
-        "name": "User Page",
-        "icon": "brick",
-        "url": "src/user.php",
-        "show-header-and-footer": false
       }
     ]
   },
