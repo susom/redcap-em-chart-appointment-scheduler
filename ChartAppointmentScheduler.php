@@ -638,7 +638,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             /*
                  * TODO Check if date within allowed window
                  */
-            $filter = "[start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
+            $filter = "[start_start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
             $param = array(
                 'project_id' => $this->getProject()->project_id,
                 'filterLogic' => $filter,
