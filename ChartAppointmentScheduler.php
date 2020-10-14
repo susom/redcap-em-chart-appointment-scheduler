@@ -638,11 +638,12 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             /*
                  * TODO Check if date within allowed window
                  */
-            $filter = "[start_start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
+            $filter = "[slot_start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
             $param = array(
                 'project_id' => $this->getProject()->project_id,
                 'filterLogic' => $filter,
-                'return_format' => 'array'
+                'return_format' => 'array',
+                #'events' => '125585'
             );
             $this->emLog($param);
             $records = \REDCap::getData($param);
