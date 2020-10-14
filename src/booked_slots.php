@@ -9,13 +9,15 @@ try {
     /**
      * check if user still logged in
      */
+    $module->emLog("start");
     if (!$module::isUserHasManagePermission()) {
         throw new \LogicException('You cant be here');
     }
 
+    $module->emLog("after permissions");
     //get records for all reservations.
     $records = $module->getParticipant()->getAllReservedSlots($module->getProjectId(), $module->getReservationEvents());
-
+    $module->emLog("after records");
 
     $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
     $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['chart_study_followup_survey_complete']['element_enum']);
@@ -28,6 +30,7 @@ try {
     $slots = $module->getAllOpenSlots();
     $validationField = $module->getProjectSetting('validation-field');
     $firstEvent = $module->getFirstEventId();
+    $module->emLog("before if statements");
     if ($records) {
         ?>
         <div class="container-fluid">
