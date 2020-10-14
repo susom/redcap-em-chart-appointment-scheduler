@@ -649,6 +649,9 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         } catch (\LogicException $e) {
             $this->emError($e);
             echo $e->getMessage();
+        } catch (\Exception $e) {
+            $this->emError($e);
+            echo $e->getMessage();
         }
     }
 
