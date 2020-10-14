@@ -20,15 +20,20 @@ try {
     $module->emLog("after records");
 
     $locations = parseEnum($module->getProject()->metadata['location']['element_enum']);
+    $module->emLog("after locations");
     $trackcovid_monthly_followup_survey_complete_statuses = parseEnum($module->getProject()->metadata['chart_study_followup_survey_complete']['element_enum']);
+    $module->emLog("after chart_study_followup_survey_complete");
     $reservation_statuses = parseEnum($module->getProject()->metadata['reservation_participant_status']['element_enum']);
     $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
-
+    $module->emLog("after visit_status");
     $url = $module->getUrl('src/user.php', false,
         true);
+    $module->emLog("after url");
     //get all open time slots so we can exclude past reservations.
     $slots = $module->getAllOpenSlots();
+    $module->emLog("after slots");
     $validationField = $module->getProjectSetting('validation-field');
+    $module->emLog("after validation-field");
     $firstEvent = $module->getFirstEventId();
     $module->emLog("before if statements");
     if ($records) {
