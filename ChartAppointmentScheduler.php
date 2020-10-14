@@ -647,7 +647,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $this->emLog($param);
             $records = \REDCap::getData($param);
             $this->emLog("after getdata");
-            $this->emLog($records);
+            $this->emLog(count($records));
             return $records;
         } catch (\LogicException $e) {
             $this->emLog($e);
