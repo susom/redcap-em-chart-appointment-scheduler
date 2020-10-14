@@ -641,7 +641,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $filter = "[start$suffix] > '" . date('Y-m-d') . "' AND " . "[slot_status$suffix] != '" . CANCELED . "'";
             $param = array(
                 'project_id' => $this->getProject()->project_id,
-                #'filterLogic' => $filter,
+                'filterLogic' => $filter,
                 'return_format' => 'array'
             );
             $this->emLog($param);
