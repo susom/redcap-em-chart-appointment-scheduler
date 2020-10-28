@@ -1599,7 +1599,12 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             if (time() - strtotime($end) > 0) {
                 return 'The allowed window to schedule this visit already passed. Please call to schedule this appointment. ';
             } else {
-                return '<button data-target-date="' . date('m-d-Y', strtotime($this->getBaseLineDate()) + $offset * 60 * 60 * 24) . '" data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-sm btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
+                if ($this->getBaseLineDate()) {
+                    $target = date('m-d-Y', strtotime($this->getBaseLineDate()) + $offset * 60 * 60 * 24);
+                } else {
+                    $target = 'N/A';
+                }
+                return '<button data-target-date="' . $target . '" data-baseline="' . $this->getBaseLineDate() . '" data-affiliation="' . $this->getDefaultAffiliation() . '"  data-month="' . $month . '"  data-year="' . $year . '" data-url="' . $url . '" data-record-id="' . $user['id'] . '" data-key="' . $eventId . '" data-offset="' . $offset . '" class="get-list btn btn-sm btn-success">Schedule</button><br><small>(Schedule between ' . $start . ' and ' . $end . ')</small>';
             }
         } else {
             return 'Please schedule Baseline Visit First to be able to schedule other visits!';
