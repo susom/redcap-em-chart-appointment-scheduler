@@ -80,7 +80,8 @@ try {
                                     DOB:<?php echo $user['dob'] ? date('m/d/Y', strtotime($user['dob'])) : '' ?></div>
                                 <div class="row">Email: <?php echo $user['email'] ?> </div>
                                 <div class="row">Phone: <?php echo $user['phone'] ?></div>
-                                <div class="row">MRN: <?php echo $user['mrn_all_sites'] ?></div>
+                                <div class="row">
+                                    MRN: <?php echo $user['mrn_all_sites'] ? $user['mrn_all_sites'] : $user['mrn_ucsf'] ? $user['mrn_ucsf'] : $user['mrn_stanford'] ?></div>
                             </td>
                             <td><?php echo $module->getProject()->events[1]['events'][$eventId]['descrip'] ?></td>
                             <!--                            <td>-->
