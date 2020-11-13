@@ -70,14 +70,14 @@ try {
                                 $slot = end($slots[$record['reservation_slot_id']]);
                             }
                         }
-
+                        $dob = $user['dob_ucsf_zsfg'] ? $user['dob_ucsf_zsfg'] : $user['birthday'];
                         ?>
                         <tr>
                             <td><?php echo $id ?></td>
                             <td><?php echo $record['participant_id'] ?></td>
                             <td>
-                                <div class="row"><?php echo $user['name'] ?>
-                                    DOB:<?php echo $user['dob'] ? date('m/d/Y', strtotime($user['dob'])) : '' ?></div>
+                                <div class="row"><?php echo $user['first_name'] . ' ' . $user['last_name'] ?>
+                                    DOB:<?php echo $dob ? date('m/d/Y', strtotime($dob)) : '' ?></div>
                                 <div class="row">Email: <?php echo $user['email'] ?> </div>
                                 <div class="row">Phone: <?php echo $user['phone'] ?></div>
                                 <div class="row">
