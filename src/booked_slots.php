@@ -81,7 +81,7 @@ try {
                                 <div class="row">Email: <?php echo $user['email'] ?> </div>
                                 <div class="row">Phone: <?php echo $user['phone'] ?></div>
                                 <div class="row">
-                                    MRN: <?php echo $user['mrn_all_sites'] ? $user['mrn_all_sites'] : $user['mrn_ucsf'] ?></div>
+                                    MRN: <?php echo $user['ucsf_mrn'] ? $user['ucsf_mrn'] : $user['stanford_mrn'] ?></div>
                             </td>
                             <td><?php echo $module->getProject()->events[1]['events'][$eventId]['descrip'] ?></td>
                             <!--                            <td>-->
