@@ -85,7 +85,7 @@ try {
                             </td>
                             <td><?php echo $module->getProject()->events[1]['events'][$eventId]['descrip'] ?></td>
                             <!--                            <td>-->
-                            <td><?php echo $locations[$record['reservation_participant_location']]; ?></td>
+                            <td><?php echo $locations[$record['reservation_participant_location']] ? $locations[$record['reservation_participant_location']] : 'N/A'; ?></td>
                             <td><?php echo date('m/d/Y', strtotime($slot['slot_start'])) ?></td>
                             <td><?php echo date('H:i', strtotime($slot['slot_start'])) . ' - ' . date('H:i',
                                         strtotime($slot['slot_end'])) ?></td>
