@@ -111,6 +111,7 @@ define("PARTICIPANT_STATUS", "reservation_participant_status");
  * @property \Project $project
  * @property boolean $baseLine
  * @property boolean $bonusVisit
+ * @property boolean $week12RuleSkip
  * @property string $baseLineDate
  * @property array $locationRecords
  */
@@ -187,6 +188,7 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
     private $bonusVisit = false;
 
+    private $week12RuleSkip = false;
     /**
      * ChartAppointmentScheduler constructor.
      */
@@ -1589,11 +1591,32 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         return array($start, $end);
     }
 
+    public function week12RuleSkipAction($eventId, $start, $end)
+    {
+
+        $timestamp = ($start + $end) / 2;
+        $endOfYearTimestamp = strtotime('2020-12-31');
+        $endOfJanuaryTimestamp = strtotime('2021-01-31');
+
+        if ($this->getProject()->events[1]['events'][$eventId]['descrip'] == 'Wk12') {
+            //If week 12 occurs by or at 12/31/20, appointments are blocked after dates 12/31/20
+            if ($timestamp <= $endOfYearTimestamp) {
+                $this->setWeek12RuleSkip(true);
+            } //If week 12 does not occur by 12/31/20, appointments are NOT blocked for dates occurring between 12/31/20 and 1/31/21
+            elseif ($end >= $endOfJanuaryTimestamp) {
+                $this->setWeek12RuleSkip(true);
+            }
+        }
+
+        return $this->isWeek12RuleSkip();
+    }
+
     public function getScheduleActionButton($month, $year, $url, $user, $eventId, $offset = 0)
     {
         if ($this->isBaseLine() || $this->getBaseLineDate()) {
 
             list($start, $end) = $this->getWindowStartEndDates($this->getBaseLineDate(), $offset);
+
 
             // if more than 7 days passed after the follow up visit date then skip it.
             if (time() - strtotime($end) > 0) {
@@ -1820,4 +1843,22 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
     {
         return $status == $this->getSkippedIndex();
     }
+
+    /**
+     * @return bool
+     */
+    public function isWeek12RuleSkip()
+    {
+        return $this->week12RuleSkip;
+    }
+
+    /**
+     * @param bool $week12RuleSkip
+     */
+    public function setWeek12RuleSkip($week12RuleSkip)
+    {
+        $this->week12RuleSkip = $week12RuleSkip;
+    }
+
+
 }
