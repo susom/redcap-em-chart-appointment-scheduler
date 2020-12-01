@@ -42,6 +42,7 @@ try {
                     <th>Date</th>
                     <th>Appointment time</th>
                     <th>Consent status</th>
+                    <th>Consent Addendum status</th>
                     <th>Survey status</th>
                     <th>Visit status</th>
                     <th>Actions</th>
@@ -71,6 +72,14 @@ try {
                             }
                         }
                         $dob = $user['dob_ucsf_zsfg'] ? $user['dob_ucsf_zsfg'] : $user['birthday'];
+
+                        $consent_addendum = 'Incomplete';
+                        if ($record['ucsfzsfg_consent_addendum_complete']) {
+                            $consent_addendum = $record['ucsfzsfg_consent_addendum_complete'];
+                        } elseif ($record['stanford_consent_v3_complete']) {
+                            $consent_addendum = $record['stanford_consent_v3_complete'];
+                        }
+
                         ?>
                         <tr>
                             <td><?php echo $id ?></td>
@@ -90,6 +99,7 @@ try {
                             <td><?php echo date('H:i', strtotime($slot['slot_start'])) . ' - ' . date('H:i',
                                         strtotime($slot['slot_end'])) ?></td>
                             <td><?php echo $user['calc_consent_valid'] ? 'Completed' : 'Incomplete' ?></td>
+                            <td><?php echo $consent_addendum ?></td>
                             <td><?php echo $record['chart_study_followup_survey_complete'] ? $trackcovid_monthly_followup_survey_complete_statuses[$record['chart_study_followup_survey_complete']] : 'Incomplete' ?></td>
                             <td><?php echo $statuses[$record['visit_status']]; ?></td>
                             <td>
