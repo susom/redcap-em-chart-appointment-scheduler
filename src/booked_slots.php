@@ -75,9 +75,9 @@ try {
 
                         $consent_addendum = 'Incomplete';
                         if ($record['ucsfzsfg_consent_addendum_complete']) {
-                            $consent_addendum = $record['ucsfzsfg_consent_addendum_complete'];
+                            $consent_addendum = 'Complete';
                         } elseif ($record['stanford_consent_v3_complete']) {
-                            $consent_addendum = $record['stanford_consent_v3_complete'];
+                            $consent_addendum = 'Complete';
                         }
 
                         ?>
