@@ -74,9 +74,9 @@ try {
                         $dob = $user['dob_ucsf_zsfg'] ? $user['dob_ucsf_zsfg'] : $user['birthday'];
 
                         $consent_addendum = 'Incomplete';
-                        if ($record['ucsfzsfg_consent_addendum_complete']) {
+                        if ($user['ucsfzsfg_consent_addendum_complete']) {
                             $consent_addendum = 'Complete';
-                        } elseif ($record['stanford_consent_v3_complete']) {
+                        } elseif ($user['stanford_consent_v3_complete']) {
                             $consent_addendum = 'Complete';
                         }
 
