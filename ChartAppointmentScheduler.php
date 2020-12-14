@@ -1609,6 +1609,11 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             $this->setWeek12RuleSkip(true);
         }
 
+
+        //if event not configured make sure not to skip anything.
+        if (!$this->getProjectSetting('blocked-event')) {
+            $this->setWeek12RuleSkip(false);
+        }
         return $this->isWeek12RuleSkip();
     }
 
