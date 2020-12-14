@@ -1595,20 +1595,33 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
     {
 
         $timestamp = ($start + $end) / 2;
-        $endOfYearTimestamp = strtotime('2020-12-31');
-        $endOfJanuaryTimestamp = strtotime('2021-01-31');
 
-        if ($this->getProject()->events[1]['events'][$eventId]['descrip'] == 'Wk12') {
+        if ($eventId == $this->getProjectSetting('blocked-event')) {
             //If week 12 occurs by or at 12/31/20, appointments are blocked after dates 12/31/20
-            if ($timestamp <= $endOfYearTimestamp) {
+            if ($this->isBeforeEndOfYearTimestamp($timestamp)) {
                 $this->setWeek12RuleSkip(true);
             } //If week 12 does not occur by 12/31/20, appointments are NOT blocked for dates occurring between 12/31/20 and 1/31/21
-            elseif ($end >= $endOfJanuaryTimestamp) {
+            elseif (!$this->isBeforeEndOfYearTimestamp($end)) {
                 $this->setWeek12RuleSkip(true);
             }
+        }// for other events if window is after end of january 21 skip it
+        elseif (!$this->isBeforeEndOfYearTimestamp($end)) {
+            $this->setWeek12RuleSkip(true);
         }
 
         return $this->isWeek12RuleSkip();
+    }
+
+    public function isBeforeEndOfYearTimestamp($timestamp)
+    {
+        $endOfYearTimestamp = strtotime($this->getProjectSetting('blocked-event-date'));
+        return $timestamp <= $endOfYearTimestamp;
+    }
+
+    public function isBeforeEndOfJanuaryTimestamp($timestamp)
+    {
+        $endOfJanuaryTimestamp = strtotime($this->getProjectSetting('extended-blocked-event-date'));
+        return $timestamp <= $endOfJanuaryTimestamp;
     }
 
     public function getScheduleActionButton($month, $year, $url, $user, $eventId, $offset = 0)
@@ -1617,6 +1630,9 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
 
             list($start, $end) = $this->getWindowStartEndDates($this->getBaseLineDate(), $offset);
 
+            if ($this->week12RuleSkipAction($eventId, $start, $end)) {
+                return $this->getProjectSetting('blocked-event-error-message');
+            }
 
             // if more than 7 days passed after the follow up visit date then skip it.
             if (time() - strtotime($end) > 0) {

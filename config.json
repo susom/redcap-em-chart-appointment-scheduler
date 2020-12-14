@@ -88,6 +88,45 @@
       "type": "text"
     },
     {
+      "key": "blocked-event",
+      "name": "<b>Select the event which you want to block the booking after. Then specify initial block date and extended one.</b>",
+      "required": false,
+      "type": "event-list"
+    },
+    {
+      "key": "blocked-event-date",
+      "name": "<b>Event Initial block date(yyyy-mm-dd). </b>",
+      "required": false,
+      "type": "text",
+      "branchingLogic": {
+        "field": "blocked-event",
+        "op": "<>",
+        "value": ""
+      }
+    },
+    {
+      "key": "extended-blocked-event-date",
+      "name": "<b>Extended Event block date (yyyy-mm-dd). </b>",
+      "required": false,
+      "type": "text",
+      "branchingLogic": {
+        "field": "blocked-event",
+        "op": "<>",
+        "value": ""
+      }
+    },
+    {
+      "key": "blocked-event-error-message",
+      "name": "<b>Displayed message when Event is blocked.  </b>",
+      "required": false,
+      "type": "text",
+      "branchingLogic": {
+        "field": "blocked-event",
+        "op": "<>",
+        "value": ""
+      }
+    },
+    {
       "key": "instance",
       "name": "<b>Configure Appointment Scheduler Instance</b>",
       "required": true,
