@@ -427,7 +427,10 @@ jQuery(document).on('click', '.booked-slots', function (e) {
             },
             complete: function () {
                 jQuery('#booked-slots').DataTable({
-                    dom: '<"day-filter"><"location-filter"><lf<t>ip>',
+                    dom: '<"day-filter"><"location-filter"><lf<t>Bip>',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                     pageLength: 50,
                     order: [[5, "asc"], [6, "asc"]],
                     columnDefs: [
@@ -565,7 +568,10 @@ jQuery(document).on('click', '.manage-calendars', function (e) {
 
                 jQuery('#manage-calendars').DataTable(
                     {
-                        dom: '<"day-filter-slots"><"location-filter-slots"><lf<t>ip>',
+                        dom: '<"day-filter-slots"><"location-filter-slots"><lf<t>Bip>',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
                         pageLength: 50,
                         "aaSorting": [[4, "asc"], [5, "asc"]],
                         columnDefs: [
