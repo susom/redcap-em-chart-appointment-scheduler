@@ -103,6 +103,9 @@ try {
                                             <ul>
                                                 <?php
                                                 foreach ($county as $site) {
+                                                    if ($site['site_closed']) {
+                                                        continue;
+                                                    }
                                                     ?>
                                                     <li><strong><?php echo $site['title'] ?>
                                                             : <?php echo $site['testing_site_address'] ?></strong>
