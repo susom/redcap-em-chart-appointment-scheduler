@@ -16,6 +16,11 @@ try {
         $statuses = parseEnum($module->getProject()->metadata['visit_status']["element_enum"]);
         foreach ($events as $eventId => $event) {
 
+            // remove undefined events
+            if (!$module->isEventDefinedInScheduler($eventId)) {
+                continue;
+            }
+
             // also we need to define the default affiliation to be enforced for next appointments.
             $defaultAffiliate = $user['record'][$eventId]['employer'];
             if ($defaultAffiliate) {

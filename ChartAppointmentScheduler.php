@@ -1138,6 +1138,16 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
         return $instance['show_notes'];
     }
 
+    public function isEventDefinedInScheduler($eventId)
+    {
+        foreach ($this->getInstances() as $instance) {
+            if ($instance['reservation_event_id'] == $eventId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param int $eventId
      * @return bool|array
