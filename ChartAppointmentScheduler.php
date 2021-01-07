@@ -1470,9 +1470,15 @@ class ChartAppointmentScheduler extends \ExternalModules\AbstractExternalModule
             'events' => $this->getFirstEventId()
         );
         $data = REDCap::getData($param);
+
+        // this to check if participant withdraw from the ths study.
+        $withdraw = $data[$newuniq][$this->getFirstEventId()]['withdraw'];
         if (empty($data)) {
             return false;
         } else {
+            if ($withdraw) {
+                return false;
+            }
             return $data;
         }
     }
