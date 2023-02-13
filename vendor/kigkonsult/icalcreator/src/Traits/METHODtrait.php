@@ -2,31 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.14
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
 
 namespace Kigkonsult\Icalcreator\Traits;
 
@@ -37,14 +37,12 @@ use function sprintf;
 /**
  * METHOD property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.29.14 2019-09-03
  */
 trait METHODtrait
 {
     /**
      * @var string calendar property METHOD
-     * @access protected
      */
     protected $method = null;
 
@@ -53,10 +51,11 @@ trait METHODtrait
      *
      * @return string
      */
-    public function createMethod() {
-        return ( empty( $this->method ))
-            ? null
-            : sprintf( self::$FMTICAL, self::METHOD, $this->method );
+    public function createMethod(): string
+    {
+        return (empty($this->method))
+            ? Util::$SP0
+            : sprintf(self::$FMTICAL, self::METHOD, $this->method);
     }
 
     /**
@@ -65,7 +64,8 @@ trait METHODtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteMethod() {
+    public function deleteMethod(): bool
+    {
         $this->method = null;
         return true;
     }
@@ -73,11 +73,12 @@ trait METHODtrait
     /**
      * Return method
      *
-     * @return string
-     * @since  2.27.1 - 2018-12-15
+     * @return bool|string
+     * @since  3.4 - 2021-06-11
      */
-    public function getMethod() {
-        if( empty( $this->method )) {
+    public function getMethod()
+    {
+        if (empty($this->method)) {
             return false;
         }
         return $this->method;
@@ -86,17 +87,18 @@ trait METHODtrait
     /**
      * Set calendar property method
      *
-     * @param string $value
+     * @param null|string $value
      * @return static
      * @since  2.29.14 - 2019-09-03
      */
-    public function setMethod( $value ) {
-        if( empty( $value )) {
-            $this->assertEmptyValue( $value, self::METHOD );
+    public function setMethod($value = null): self
+    {
+        if (empty($value)) {
+            $this->assertEmptyValue($value, self::METHOD);
             $value = Util::$SP0;
         }
-        Util::assertString( $value, self::METHOD );
-        $this->method = (string) $value;
+        Util::assertString($value, self::METHOD);
+        $this->method = (string)$value;
         return $this;
     }
 }

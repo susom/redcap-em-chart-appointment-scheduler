@@ -2,31 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.14
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
 
 namespace Kigkonsult\Icalcreator\Traits;
 
@@ -38,14 +38,12 @@ use InvalidArgumentException;
 /**
  * SUMMARY property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.27.3 2018-12-22
  */
 trait SUMMARYtrait
 {
     /**
      * @var array component property SUMMARY value
-     * @access protected
      */
     protected $summary = null;
 
@@ -54,12 +52,15 @@ trait SUMMARYtrait
      *
      * @return string
      */
-    public function createSummary() {
-        if( empty( $this->summary )) {
+    public function createSummary()
+    {
+        if (empty($this->summary)) {
             return null;
         }
-        if( empty( $this->summary[Util::$LCvalue] )) {
-            return ( $this->getConfig( self::ALLOWEMPTY )) ? StringFactory::createElement( self::SUMMARY ) : null;
+        if (empty($this->summary[Util::$LCvalue])) {
+            return $this->getConfig(self::ALLOWEMPTY)
+                ? StringFactory::createElement(self::SUMMARY)
+                : null;
         }
         return StringFactory::createElement(
             self::SUMMARY,
@@ -68,7 +69,7 @@ trait SUMMARYtrait
                 self::$ALTRPLANGARR,
                 $this->getConfig( self::LANGUAGE )
             ),
-            StringFactory::strrep( $this->summary[Util::$LCvalue] )
+            StringFactory::strrep($this->summary[Util::$LCvalue])
         );
     }
 
@@ -78,7 +79,8 @@ trait SUMMARYtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteSummary() {
+    public function deleteSummary(): bool
+    {
         $this->summary = null;
         return true;
     }
@@ -86,36 +88,38 @@ trait SUMMARYtrait
     /**
      * Get calendar component property summary
      *
-     * @param bool   $inclParam
+     * @param bool $inclParam
      * @return bool|array
      * @since  2.27.1 - 2018-12-12
      */
-    public function getSummary( $inclParam = false ) {
-        if( empty( $this->summary )) {
+    public function getSummary($inclParam = false)
+    {
+        if (empty($this->summary)) {
             return false;
         }
-        return ( $inclParam ) ? $this->summary : $this->summary[Util::$LCvalue];
+        return ($inclParam) ? $this->summary : $this->summary[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property summary
      *
      * @param string $value
-     * @param array  $params
+     * @param array $params
      * @return static
      * @throws InvalidArgumentException
      * @since 2.29.14 2019-09-03
      */
-    public function setSummary( $value = null, $params = [] ) {
-        if( empty( $value )) {
-            $this->assertEmptyValue( $value, self::SUMMARY );
-            $value  = Util::$SP0;
+    public function setSummary($value = null, $params = []): self
+    {
+        if (empty($value)) {
+            $this->assertEmptyValue($value, self::SUMMARY);
+            $value = Util::$SP0;
             $params = [];
         }
-        Util::assertString( $value, self::SUMMARY );
+        Util::assertString($value, self::SUMMARY);
         $this->summary = [
-            Util::$LCvalue  => (string) $value,
-            Util::$LCparams => ParameterFactory::setParams( $params ),
+            Util::$LCvalue => (string)$value,
+            Util::$LCparams => ParameterFactory::setParams($params ?? []),
         ];
         return $this;
     }

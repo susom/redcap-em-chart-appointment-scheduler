@@ -32,11 +32,11 @@ class RedisHandler extends AbstractProcessingHandler
     protected $capSize;
 
     /**
-     * @param \Predis\Client|\Redis $redis   The redis instance
-     * @param string                $key     The key name to push records to
-     * @param int                   $level   The minimum logging level at which this handler will be triggered
-     * @param bool                  $bubble  Whether the messages that are handled can bubble up the stack or not
-     * @param int                   $capSize Number of entries to limit list size to
+     * @param \Predis\Client|\Redis $redis The redis instance
+     * @param string $key The key name to push records to
+     * @param int $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param int|false $capSize Number of entries to limit list size to
      */
     public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true, $capSize = false)
     {

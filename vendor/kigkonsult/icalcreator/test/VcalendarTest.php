@@ -2,36 +2,35 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.9
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
 namespace Kigkonsult\Icalcreator;
 
 use Exception;
 use Kigkonsult\Icalcreator\Util\DateTimeFactory;
+use Kigkonsult\Icalcreator\Util\StringFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,51 +41,65 @@ use PHPUnit\Framework\TestCase;
  *    PRODID (implicit)
  *    Not X-property, tested in MiscTest
  *
- * @author      Kjell-Inge Gustafsson <ical@kigkonsult.se>
- * @since  2.27.14 - 2019-01-24
+ * @since  2.39.1 - 2021-06-26
  */
 class VcalendarTest extends TestCase
 {
-    private static $ERRFMT = "Error %sin case #%s, %s <%s>->%s";
-
+    private static $ERRFMT = "Error %sin case #%s, %s <%s>->%s()";
 
     /**
      * Testing Vcalendar config
      *
      * @test
      */
-    public function vcalendarTest0() {
-
-
+    public function vcalendarTest1()
+    {
         $config = [
             Vcalendar::ALLOWEMPTY => false,
-            Vcalendar::UNIQUE_ID  => 'kigkonsult.se',
+            Vcalendar::UNIQUE_ID => 'kigkonsult.se',
         ];
-        $vcalendar    = new Vcalendar( $config );
+        $vcalendar = new Vcalendar($config);
 
-        $this->assertEquals( $config[Vcalendar::ALLOWEMPTY], $vcalendar->getConfig( Vcalendar::ALLOWEMPTY ));
-        $this->assertEquals( $config[Vcalendar::UNIQUE_ID],  $vcalendar->getConfig( Vcalendar::UNIQUE_ID ));
+        $this->assertEquals($config[Vcalendar::ALLOWEMPTY], $vcalendar->getConfig(Vcalendar::ALLOWEMPTY));
+        $this->assertEquals($config[Vcalendar::UNIQUE_ID], $vcalendar->getConfig(Vcalendar::UNIQUE_ID));
 
-        $vcalendar->setConfig( Vcalendar::LANGUAGE, 'EN' );
-        $this->assertEquals( 'EN',                 $vcalendar->getConfig( Vcalendar::LANGUAGE ));
-        $vcalendar->deleteConfig( Vcalendar::LANGUAGE );
-        $this->assertFalse( $vcalendar->getConfig( Vcalendar::LANGUAGE ));
+        $vcalendar = new Vcalendar();
 
-        $vcalendar->deleteConfig( Vcalendar::ALLOWEMPTY );
-        $this->assertTrue( $vcalendar->getConfig( Vcalendar::ALLOWEMPTY ));
+        $this->assertEquals(true, $vcalendar->getConfig(Vcalendar::ALLOWEMPTY));
+        $this->assertEquals('', $vcalendar->getConfig(Vcalendar::UNIQUE_ID));
 
-        $vcalendar->deleteConfig( Vcalendar::UNIQUE_ID );
-        $this->assertFalse( $vcalendar->getConfig( Vcalendar::UNIQUE_ID ));
+        $vcalendar->setConfig(Vcalendar::LANGUAGE, 'EN');
+        $this->assertEquals('EN', $vcalendar->getConfig(Vcalendar::LANGUAGE));
+        $vcalendar->deleteConfig(Vcalendar::LANGUAGE);
+        $this->assertFalse($vcalendar->getConfig(Vcalendar::LANGUAGE));
+
+        $vcalendar->deleteConfig(Vcalendar::ALLOWEMPTY);
+        $this->assertTrue($vcalendar->getConfig(Vcalendar::ALLOWEMPTY));
+
+        $vcalendar->deleteConfig(Vcalendar::UNIQUE_ID);
+        $this->assertEquals('', $vcalendar->getConfig(Vcalendar::UNIQUE_ID));
     }
 
     /**
-     * vcalendarTest1 provider
+     * Testing Component with empty config, issue #91
+     *
+     * @test
      */
-    public function vcalendarTest1Provider() {
+    public function vcalendarTest2()
+    {
+        $vTimezone = new Vtimezone();
+        $standard = $vTimezone->newStandard();
+        $this->assertTrue($standard instanceof Standard);
+    }
 
+    /**
+     * vcalendarTest10 provider
+     */
+    public function vcalendarTest10Provider()
+    {
         $dataArr = [];
 
-        $value     = 'GREGORIAN';
+        $value = 'GREGORIAN';
         $dataArr[] = [
             1,
             Vcalendar::CALSCALE,
@@ -129,31 +142,32 @@ class VcalendarTest extends TestCase
      * Testing Vcalendar
      *
      * @test
-     * @dataProvider vcalendarTest1Provider
-     * @param int    $case
+     * @dataProvider vcalendarTest10Provider
+     * @param int $case
      * @param string $propName
-     * @param mixed  $value
-     * @param array  $expectedGet
+     * @param mixed $value
+     * @param array $expectedGet
      * @param string $expectedString
      * @throws Exception
      */
-    public function vcalendarTest1( $case, $propName, $value, $expectedGet, $expectedString ) {
+    public function vcalendarTest10($case, $propName, $value, $expectedGet, $expectedString)
+    {
         $vcalendar = Vcalendar::factory();
-        
-        $getMethod    = Vcalendar::getGetMethodName( $propName );
-        $createMethod = Vcalendar::getCreateMethodName( $propName );
-        $deleteMethod = Vcalendar::getDeleteMethodName( $propName );
-        $setMethod    = Vcalendar::getSetMethodName( $propName );
-        $vcalendar->{$setMethod}( $value );
+
+        $getMethod = StringFactory::getGetMethodName($propName);
+        $createMethod = StringFactory::getCreateMethodName($propName);
+        $deleteMethod = StringFactory::getDeleteMethodName($propName);
+        $setMethod = StringFactory::getSetMethodName($propName);
+        $vcalendar->{$setMethod}($value);
         $getValue = $vcalendar->{$getMethod}();
         $this->assertEquals(
             $expectedGet,
             $getValue,
-            sprintf( self::$ERRFMT, null, $case, __FUNCTION__, 'Vcalendar', $getMethod )
+            sprintf(self::$ERRFMT, null, $case, __FUNCTION__, 'Vcalendar', $getMethod)
         );
         $this->assertEquals(
-            strtoupper( $propName ) . $expectedString,
-            trim( $vcalendar->{$createMethod}() ),
+            strtoupper($propName) . $expectedString,
+            trim($vcalendar->{$createMethod}()),
             sprintf( self::$ERRFMT, null, $case, __FUNCTION__, 'Vcalendar', $createMethod )
         );
 
@@ -178,10 +192,10 @@ class VcalendarTest extends TestCase
         }
 
         $v = $vcalendar->newVevent();
-        $v->deleteUID();
+        $v->deleteUid();
         $this->assertNotFalse(
-            $v->getUID(),
-            sprintf( self::$ERRFMT, null, $case, __FUNCTION__, 'VEVENT', 'getUid' )
+            $v->getUid(),
+            sprintf(self::$ERRFMT, null, $case, __FUNCTION__, 'VEVENT', 'getUid')
         );
         $v->deleteDtstamp();
         $this->assertNotFalse(
@@ -202,8 +216,7 @@ class VcalendarTest extends TestCase
             sprintf( self::$ERRFMT, null, $case, __FUNCTION__, 'Error in calendar compare', null )
         );
 
-        unset( $vcalendar, $vcalendar2 );
-        $this->assertFalse( isset( $vcalendar ));
+        unset($vcalendar, $vcalendar2);
     }
 
     /**
@@ -212,24 +225,25 @@ class VcalendarTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function vcalendarTest2() {
+    public function vcalendarTest20()
+    {
         $vcalendar = new Vcalendar();
 
         $v = new Vevent();
         $uid = $v->getUid();
-        $vcalendar->setComponent( $v, 6 );
+        $vcalendar->setComponent($v, 6);
 
-        $v2 = $vcalendar->getComponent( 6 );
-        $this->assertEquals( $uid,  $v2->getUid());
+        $v2 = $vcalendar->getComponent(6);
+        $this->assertEquals($uid, $v2->getUid());
 
-        $date = DateTimeFactory::factory( 'now', Vcalendar::UTC );
+        $date = DateTimeFactory::factory('now', Vcalendar::UTC);
         $v2->setDtstart( $date );
         $vcalendar->setComponent( $v2, 6 );
         $v2 = $vcalendar->getComponent( 6 );
         $this->assertEquals( $date, $v2->getDtstart());
 
-        $vcalendar->deleteComponent( 6 );
-        $this->assertFalse( $vcalendar->getComponent( 6 ));
+        $vcalendar->deleteComponent(6, false);
+        $this->assertFalse($vcalendar->getComponent(6));
         $this->assertFalse( $vcalendar->getComponent());
 
         $this->assertTrue(
@@ -239,17 +253,17 @@ class VcalendarTest extends TestCase
 
 
         for( $x = 1; $x <= 12; $x++ ) {
-            $vx1   = $vcalendar->newVevent();
-            $vx1->setXprop( 'X-SET_NO', $x );
+            $vx1 = $vcalendar->newVevent();
+            $vx1->setXprop('X-SET_NO', (string)$x);
         }
 
         for( $x = 13; $x <= 14; $x++ ) {
-            $vx1   = $vcalendar->newVtodo();
-            $vx1->setXprop( 'X-SET_NO', $x );
+            $vx1 = $vcalendar->newVtodo();
+            $vx1->setXprop('X-SET_NO', (string)$x);
         }
         for( $x = 15; $x <= 30; $x++ ) {
-            $vx1   = $vcalendar->newVevent();
-            $vx1->setXprop( 'X-SET_NO', $x );
+            $vx1 = $vcalendar->newVevent();
+            $vx1->setXprop('X-SET_NO', (string)$x);
         }
         $this->assertTrue(
             ( 30 == $vcalendar->countComponents()),
@@ -464,7 +478,7 @@ class VcalendarTest extends TestCase
         // check fetch on config compsinfo
         foreach( $vcalendar->getConfig( Vcalendar::COMPSINFO ) as $cix => $compInfo ) {
 
-            $v = $vcalendar->getComponent( $compInfo['uid'] );
+            $v = $vcalendar->getComponent($compInfo['uid']); // note lower case
 
             $this->assertEquals(
                 $compInfo['type'],
@@ -493,15 +507,15 @@ class VcalendarTest extends TestCase
 
         for( $x = 18; $x <= 1; $x-- ) {
             $this->assertTrue(
-                $vcalendar->deleteComponent( Vcalendar::VEVENT, $x ),
+                $vcalendar->deleteComponent(Vcalendar::VEVENT, $x),
                 'deleteComponent-error 7 on #' . $x
             );
         }
-        while( $vcalendar->deleteComponent( Vcalendar::VEVENT ) ) {
+        while ($vcalendar->deleteComponent(Vcalendar::VEVENT, false)) {
             continue;
         }
         $this->assertFalse(
-            $vcalendar->deleteComponent( Vcalendar::VEVENT ),
+            $vcalendar->deleteComponent(Vcalendar::VEVENT, false),
             'deleteComponent-error 8'
         );
         $this->assertTrue(
@@ -509,11 +523,11 @@ class VcalendarTest extends TestCase
             'deleteComponent-error 9, has ' . $vcalendar->countComponents()
         );
 
-        while( $vcalendar->deleteComponent( Vcalendar::VTODO ) ) {
+        while ($vcalendar->deleteComponent(Vcalendar::VTODO, false)) {
             continue;
         }
         $this->assertFalse(
-            $vcalendar->deleteComponent( Vcalendar::VTODO ),
+            $vcalendar->deleteComponent(Vcalendar::VTODO, false),
             'deleteComponent-error 10'
         );
         $this->assertTrue(
@@ -530,16 +544,14 @@ class VcalendarTest extends TestCase
             $x += 1;
             $this->assertEquals(
                 $x,
-                $comp->getXprop( 'X-SET_NO' )[1],
+                $comp->getXprop('X-SET_NO')[1],
                 'setComponent-error 12, comp . ' . $x . ' is not in order'
             );
         }
         // check number of components
         $this->assertTrue(
-            ( 30 == $vcalendar->countComponents() ),
+            (30 == $vcalendar->countComponents()),
             'deleteComponent-error 13, has ' . $vcalendar->countComponents()
         );
-
     }
-
 }

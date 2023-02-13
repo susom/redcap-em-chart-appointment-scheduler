@@ -1,32 +1,32 @@
 <?php
 /**
-  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
- *
- * copyright (c) 2007-2020 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.20
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
  * This file is a part of iCalcreator.
-*/
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
 
 namespace Kigkonsult\Icalcreator\Util;
 
@@ -45,7 +45,6 @@ use function trim;
  * iCalcreator DateInterval utility/support class
  *
  * @see https://en.wikipedia.org/wiki/Iso8601
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since  2.29.20 - 2020-01-31
  */
 class DateIntervalFactory
@@ -57,8 +56,6 @@ class DateIntervalFactory
 
     /**
      * @var string  duration keys etc
-     * @access private
-     * @static
      */
     private static $Y = 'Y';
     private static $T = 'T';
@@ -78,9 +75,8 @@ class DateIntervalFactory
 
     /**
      * @var string
-     * @static
      */
-    public static $P         = 'P';
+    public static $P = 'P';
 
     /**
      * Return new DateTimeZone object instance
@@ -88,11 +84,11 @@ class DateIntervalFactory
      * @param string $dateIntervalString
      * @return DateInterval
      * @throws InvalidArgumentException
-     * @static
      * @since  2.27.8 - 2019-01-12
      */
-    public static function factory( $dateIntervalString ) {
-        return self::assertDateIntervalString( $dateIntervalString );
+    public static function factory(string $dateIntervalString): DateInterval
+    {
+        return self::assertDateIntervalString($dateIntervalString);
     }
 
     /**
@@ -101,16 +97,21 @@ class DateIntervalFactory
      * @param string $dateIntervalString
      * @return DateInterval
      * @throws InvalidArgumentException
-     * @static
      * @since  2.27.8 - 2019-01-12
      */
-    public static function assertDateIntervalString( $dateIntervalString ) {
+    public static function assertDateIntervalString(
+        string $dateIntervalString
+    ): DateInterval
+    {
         static $ERR = 'Invalid DateInterval \'%s\'';
         try {
-            $dateInterval = new DateInterval( $dateIntervalString );
-        }
-        catch( Exception $e ) {
-            throw new InvalidArgumentException( sprintf( $ERR, $dateIntervalString ), null, $e );
+            $dateInterval = new DateInterval($dateIntervalString);
+        } catch (Exception $e) {
+            throw new InvalidArgumentException(
+                sprintf($ERR, $dateIntervalString),
+                $e->getCode(),
+                $e
+            );
         }
         return $dateInterval;
     }
@@ -118,19 +119,20 @@ class DateIntervalFactory
     /**
      * Return bool true is string is a duration
      *
-     * @param mixed  $value
+     * @param mixed $value
      * @return bool
-     * @static
-     * @since  2.29.20 - 2020-01-31
+     * @since  2.29.22 - 2020-08-22
      */
-    public static function isStringAndDuration( $value ) {
-        static $PREFIXARR = [ 'P', '+', '-' ];
-        if( ! is_string( $value )) {
+    public static function isStringAndDuration($value): bool
+    {
+        static $PREFIXARR = ['P', '+', '-'];
+        if (!is_string($value)) {
             return false;
         }
-        $value = trim( $value );
-        $value = StringFactory::trimTrailNL( $value );
-        return (( 3 <= strlen( $value )) && ( in_array( $value[0], $PREFIXARR )));
+        $value = trim($value);
+        $value = StringFactory::trimTrailNL($value);
+        return ((3 <= strlen($value)) &&
+            (in_array(substr($value, 0, 1), $PREFIXARR)));
     }
 
     /**
@@ -138,25 +140,25 @@ class DateIntervalFactory
      *
      * @param mixed $dateInterval
      * @return bool
-     * @static
      * @since  2.29.2 - 2019-06-27
      */
-    public static function isDateIntervalArrayInvertSet( $dateInterval ) {
-        return( is_array( $dateInterval ) && isset( $dateInterval[self::$invert] ));
+    public static function isDateIntervalArrayInvertSet($dateInterval): bool
+    {
+        return (is_array($dateInterval) && isset($dateInterval[self::$invert]));
     }
 
     /**
      * Return value with removed opt. prefix +/-
      *
-     * @param string  $value
+     * @param string $value
      * @return string
-     * @static
      * @since  2.16.7 - 2018-11-26
      * @todo remove -> $isMinus  = ( 0 > $value );  $tz = abs((int) $value );
      */
-    public static function removePlusMinusPrefix( $value ) {
-        if( self::hasPlusMinusPrefix( $value )) {
-            $value = substr( $value, 1 );
+    public static function removePlusMinusPrefix(string $value): string
+    {
+        if (self::hasPlusMinusPrefix($value)) {
+            $value = substr($value, 1);
         }
         return $value;
     }
@@ -164,38 +166,42 @@ class DateIntervalFactory
     /**
      * Return bool true if string has a leading +/-
      *
-     * @param string  $value
+     * @param string $value
      * @return bool
-     * @static
      * @since  2.16.14 - 2019-02-18
      */
-    public static function hasPlusMinusPrefix( $value ) {
-        static $PLUSMINUSARR  = [ '+', '-' ];
-        return ( in_array( substr( $value, 0, 1 ), $PLUSMINUSARR ));
+    public static function hasPlusMinusPrefix(string $value): bool
+    {
+        static $PLUSMINUSARR = ['+', '-'];
+        return (in_array(substr($value, 0, 1), $PLUSMINUSARR));
     }
 
     /**
      * Return DateInterval as string
      *
      * @param DateInterval $dateInterval
-     * @param bool         $showOptSign
+     * @param bool $showOptSign
      * @return string
-     * @static
      * @since  2.16.14 - 2019-02-15
      */
-    public static function dateInterval2String( DateInterval $dateInterval, $showOptSign=false ) {
-        $dateIntervalArr = (array) $dateInterval;
-        $result          = self::$P;
-        if( empty( $dateIntervalArr[self::$y] ) &&
-            empty( $dateIntervalArr[self::$m] ) &&
-            empty( $dateIntervalArr[self::$h] ) &&
-            empty( $dateIntervalArr[self::$i] ) &&
-            empty( $dateIntervalArr[self::$s] ) &&
-          ! empty( $dateIntervalArr[self::$d] ) &&
-            ( 0 == ( $dateIntervalArr[self::$d] % 7 ))) {
-            $result .= (int) floor( $dateIntervalArr[self::$d] / 7 ) .
+    public static function dateInterval2String(
+        DateInterval $dateInterval,
+                     $showOptSign = false
+    ): string
+    {
+        $dateIntervalArr = (array)$dateInterval;
+        $result = self::$P;
+        if (empty($dateIntervalArr[self::$y]) &&
+            empty($dateIntervalArr[self::$m]) &&
+            empty($dateIntervalArr[self::$h]) &&
+            empty($dateIntervalArr[self::$i]) &&
+            empty($dateIntervalArr[self::$s]) &&
+            !empty($dateIntervalArr[self::$d]) &&
+            (0 == ($dateIntervalArr[self::$d] % 7))) {
+            $result .= (int)floor($dateIntervalArr[self::$d] / 7) .
                 self::$W;
-            return ( $showOptSign && ( 0 < $dateIntervalArr[self::$invert] ))
+            return (($showOptSign ?? false) &&
+                (0 < $dateIntervalArr[self::$invert]))
                 ? Util::$MINUS . $result : $result;
         }
         if( 0 < $dateIntervalArr[self::$y] ) {
@@ -236,21 +242,21 @@ class DateIntervalFactory
      *
      * @param DateInterval $dateInterval
      * @return DateInterval
-     * @static
      * @throws Exception  on DateInterval create error
      * @since  2.27.14 - 2019-03-09
      */
-    public static function conformDateInterval( DateInterval $dateInterval ) {
-        $dateIntervalArr = (array) $dateInterval;
-        if( 60 <= $dateIntervalArr[self::$s] ) {
+    public static function conformDateInterval(DateInterval $dateInterval): DateInterval
+    {
+        $dateIntervalArr = (array)$dateInterval;
+        if (60 <= $dateIntervalArr[self::$s]) {
             $dateIntervalArr[self::$i] +=
-                (int) floor( $dateIntervalArr[self::$s] / 60 );
+                (int)floor($dateIntervalArr[self::$s] / 60);
             $dateIntervalArr[self::$s] =
                 $dateIntervalArr[self::$s] % 60;
         }
-        if( 60 <= $dateIntervalArr[self::$i] ) {
+        if (60 <= $dateIntervalArr[self::$i]) {
             $dateIntervalArr[self::$h] +=
-                (int) floor( $dateIntervalArr[self::$i] / 60 );
+                (int)floor($dateIntervalArr[self::$i] / 60);
             $dateIntervalArr[self::$i] =
                 $dateIntervalArr[self::$i] % 60;
         }
@@ -266,21 +272,23 @@ class DateIntervalFactory
     /**
      * Modify DateTime from DateInterval
      *
-     * @param DateTime     $dateTime
+     * @param DateTime $dateTime
      * @param DateInterval $dateInterval
-     * @static
      * @since  2.29.2 - 2019-06-20
      * @tofo error mgnt
      */
-    public static function modifyDateTimeFromDateInterval( DateTime $dateTime, DateInterval $dateInterval ) {
-        static $YEAR  = 'year';
+    public static function modifyDateTimeFromDateInterval(
+        DateTime     $dateTime,
+        DateInterval $dateInterval)
+    {
+        static $YEAR = 'year';
         static $MONTH = 'month';
-        static $DAY   = 'day';
-        static $HOUR  = 'hour';
-        static $MIN   = 'minute';
-        static $SEC   = 'second';
-        static $KEYS = null;
-        if( empty( $KEYS )) {
+        static $DAY = 'day';
+        static $HOUR = 'hour';
+        static $MIN = 'minute';
+        static $SEC = 'second';
+        static $KEYS = [];
+        if (empty($KEYS)) {
             $KEYS = [
                 self::$y => $YEAR,
                 self::$m => $MONTH,
@@ -290,22 +298,30 @@ class DateIntervalFactory
                 self::$s => $SEC
             ];
         }
-        $dateIntervalArr = (array) $dateInterval;
-        $operator        = ( 0 < $dateIntervalArr[self::$invert] ) ? Util::$MINUS : Util::$PLUS;
-        foreach( $KEYS as $diKey => $dtKey ) {
-            if( 0 < $dateIntervalArr[$diKey] ) {
-                $dateTime->modify( self::getModifyString ( $operator, $dateIntervalArr[$diKey], $dtKey ) );
+        $dateIntervalArr = (array)$dateInterval;
+        $operator = (0 < $dateIntervalArr[self::$invert])
+            ? Util::$MINUS
+            : Util::$PLUS;
+        foreach ($KEYS as $diKey => $dtKey) {
+            if (0 < $dateIntervalArr[$diKey]) {
+                $dateTime->modify(
+                    self::getModifyString($operator, $dateIntervalArr[$diKey], $dtKey)
+                );
             }
         }
     }
-    private static function getModifyString ( $operator, $number, $unit ) {
+
+    private static function getModifyString($operator, $number, $unit): string
+    {
         static $MONTH = 'month';
-        $suffix = ( $MONTH != $unit ) ? self::getOptPluralSuffix( $number ) : null;
+        $suffix = ($MONTH != $unit) ? self::getOptPluralSuffix($number) : null;
         return $operator . $number . Util::$SP1 . $unit . $suffix;
     }
-    private static function getOptPluralSuffix ( $number ) {
+
+    private static function getOptPluralSuffix($number): string
+    {
         static $PLS = 's';
-        return ( 1 < $number ) ? $PLS : Util::$SP0;
+        return (1 < $number) ? $PLS : Util::$SP0;
     }
 
     /**
@@ -313,19 +329,18 @@ class DateIntervalFactory
      *
      * @param array $dateIntervalArr
      * @return DateInterval
-     * @static
      * @throws Exception  on DateInterval create error
      * @since  2.27.2 - 2018-12-21
      */
-    public static function DateIntervalArr2DateInterval( $dateIntervalArr ) {
+    public static function DateIntervalArr2DateInterval($dateIntervalArr): DateInterval
+    {
         static $P0D = 'P0D';
-        if( ! is_array( $dateIntervalArr )) {
+        if (!is_array($dateIntervalArr)) {
             $dateIntervalArr = [];
         }
         try {
-            $dateInterval = new DateInterval( $P0D );
-        }
-        catch( Exception $e ) {
+            $dateInterval = new DateInterval($P0D);
+        } catch (Exception $e) {
             throw $e;
         }
         foreach( $dateIntervalArr as $key => $value ) {
@@ -333,6 +348,5 @@ class DateIntervalFactory
         }
         return $dateInterval;
     }
-
 }
 

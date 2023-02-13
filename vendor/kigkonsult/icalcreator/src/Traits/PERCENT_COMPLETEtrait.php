@@ -2,31 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.14
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
 
 namespace Kigkonsult\Icalcreator\Traits;
 
@@ -40,14 +40,12 @@ use function is_numeric;
 /**
  * PERCENT-COMPLETE property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.27.3 2018-12-22
  */
 trait PERCENT_COMPLETEtrait
 {
     /**
      * @var array component property PERCENT_COMPLETE value
-     * @access protected
      */
     protected $percentcomplete = null;
 
@@ -56,14 +54,17 @@ trait PERCENT_COMPLETEtrait
      *
      * @return string
      */
-    public function createPercentcomplete() {
-        if( empty( $this->percentcomplete )) {
-            return null;
+    public function createPercentcomplete(): string
+    {
+        if (empty($this->percentcomplete)) {
+            return Util::$SP0;
         }
-        if( ! isset( $this->percentcomplete[Util::$LCvalue] ) ||
-            ( empty( $this->percentcomplete[Util::$LCvalue] ) &&
-                ! is_numeric( $this->percentcomplete[Util::$LCvalue] ))) {
-            return ( $this->getConfig( self::ALLOWEMPTY )) ? StringFactory::createElement( self::PERCENT_COMPLETE ) : null;
+        if (!isset($this->percentcomplete[Util::$LCvalue]) ||
+            (empty($this->percentcomplete[Util::$LCvalue]) &&
+                !is_numeric($this->percentcomplete[Util::$LCvalue]))) {
+            return $this->getConfig(self::ALLOWEMPTY)
+                ? StringFactory::createElement(self::PERCENT_COMPLETE)
+                : Util::$SP0;
         }
         return StringFactory::createElement(
             self::PERCENT_COMPLETE,
@@ -78,7 +79,8 @@ trait PERCENT_COMPLETEtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deletePercentcomplete() {
+    public function deletePercentcomplete(): bool
+    {
         $this->percentcomplete = null;
         return true;
     }
@@ -86,38 +88,41 @@ trait PERCENT_COMPLETEtrait
     /**
      * Get calendar component property percent-complete
      *
-     * @param bool   $inclParam
+     * @param null|bool $inclParam
      * @return bool|array
      * @since  2.27.1 - 2018-12-12
      */
-    public function getPercentcomplete( $inclParam = false ) {
-        if( empty( $this->percentcomplete )) {
+    public function getPercentcomplete($inclParam = false)
+    {
+        if (empty($this->percentcomplete)) {
             return false;
         }
-        return ( $inclParam ) ? $this->percentcomplete : $this->percentcomplete[Util::$LCvalue];
+        return ($inclParam)
+            ? $this->percentcomplete
+            : $this->percentcomplete[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property percent-complete
      *
-     * @param int   $value
-     * @param array $params
+     * @param null|int $value
+     * @param null|array $params
      * @return static
      * @throws InvalidArgumentException
      * @since 2.27.3 2018-12-22
      */
-    public function setPercentcomplete( $value = null, $params = [] ) {
-        if( empty( $value ) && ! is_numeric( $value )) {
-            $this->assertEmptyValue( $value, self::PERCENT_COMPLETE );
-            $value  = Util::$SP0;
+    public function setPercentcomplete($value = null, $params = []): self
+    {
+        if (empty($value) && !is_numeric($value)) {
+            $this->assertEmptyValue($value, self::PERCENT_COMPLETE);
+            $value = Util::$SP0;
             $params = [];
-        }
-        else {
-            Util::assertInteger( $value, self::PERCENT_COMPLETE, 0, 100 );
+        } else {
+            Util::assertInteger($value, self::PERCENT_COMPLETE, 0, 100);
         }
         $this->percentcomplete = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => ParameterFactory::setParams( $params ),
+            Util::$LCvalue => $value,
+            Util::$LCparams => ParameterFactory::setParams($params ?? []),
         ];
         return $this;
     }

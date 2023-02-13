@@ -2,31 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.14
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
 
 namespace Kigkonsult\Icalcreator\Traits;
 
@@ -36,19 +36,15 @@ use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use Kigkonsult\Icalcreator\Util\CalAddressFactory;
 use InvalidArgumentException;
 
-use function trim;
-
 /**
  * ORGANIZER property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since  2.27.8 - 2019-03-17
  */
 trait ORGANIZERtrait
 {
     /**
      * @var array component property ORGANIZER value
-     * @access protected
      */
     protected $organizer = null;
 
@@ -57,13 +53,15 @@ trait ORGANIZERtrait
      *
      * @return string
      */
-    public function createOrganizer() {
-        if( empty( $this->organizer )) {
-            return null;
+    public function createOrganizer(): string
+    {
+        if (empty($this->organizer)) {
+            return Util::$SP0;
         }
-        if( empty( $this->organizer[Util::$LCvalue] )) {
-            return ( $this->getConfig( self::ALLOWEMPTY ))
-                ? StringFactory::createElement( self::ORGANIZER ) : null;
+        if (empty($this->organizer[Util::$LCvalue])) {
+            return $this->getConfig(self::ALLOWEMPTY)
+                ? StringFactory::createElement(self::ORGANIZER)
+                : Util::$SP0;
         }
         return StringFactory::createElement(
             self::ORGANIZER,
@@ -87,7 +85,8 @@ trait ORGANIZERtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteOrganizer() {
+    public function deleteOrganizer(): bool
+    {
         $this->organizer = null;
         return true;
     }
@@ -95,51 +94,57 @@ trait ORGANIZERtrait
     /**
      * Get calendar component property organizer
      *
-     * @param bool   $inclParam
+     * @param null|bool $inclParam
      * @return bool|array
      * @since  2.27.1 - 2018-12-12
      */
-    public function getOrganizer( $inclParam = false ) {
-        if( empty( $this->organizer )) {
+    public function getOrganizer($inclParam = false)
+    {
+        if (empty($this->organizer)) {
             return false;
         }
-        return ( $inclParam ) ? $this->organizer : $this->organizer[Util::$LCvalue];
+        return ($inclParam) ? $this->organizer : $this->organizer[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property organizer
      *
-     * @param string $value
-     * @param array  $params
+     * @param null|string $value
+     * @param null|array $params
      * @return static
      * @throws InvalidArgumentException
-     * @since  2.29.5 - 2019-08-30
+     * @since  2.39 - 2021-06-17
+     * @todo ensure value is prefixed by protocol, mailto: if missing
      */
-    public function setOrganizer( $value = null, $params = [] ) {
-        if( empty( $value )) {
-            $this->assertEmptyValue( $value, self::ORGANIZER );
-            $value  = Util::$SP0;
+    public function setOrganizer($value = null, $params = []): self
+    {
+        if (empty($value)) {
+            $this->assertEmptyValue($value, self::ORGANIZER);
+            $value = Util::$SP0;
             $params = [];
         }
-        $value = CalAddressFactory::conformCalAddress( $value );
-        if( ! empty( $value )) {
-            CalAddressFactory::assertCalAddress( $value );
+        $value = CalAddressFactory::conformCalAddress($value, true);
+        if (!empty($value)) {
+            CalAddressFactory::assertCalAddress($value);
         }
-        $params = array_change_key_case( (array) $params, CASE_UPPER );
-        CalAddressFactory::sameValueAndEMAILparam( $value, $params );
+        $params = array_change_key_case((array)$params, CASE_UPPER);
+        CalAddressFactory::sameValueAndEMAILparam($value, $params);
         $this->organizer = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => ParameterFactory::setParams( $params ),
+            Util::$LCvalue => $value,
+            Util::$LCparams => ParameterFactory::setParams($params ?? []),
         ];
-        foreach( [ self::EMAIL, self::SENT_BY ] as $key ) {
-            if( isset( $this->organizer[Util::$LCparams][$key] )) {
-                $pVal = CalAddressFactory::conformCalAddress(
-                    trim( $this->organizer[Util::$LCparams][$key], StringFactory::$QQ )
+        if (isset($this->organizer[Util::$LCparams][self::EMAIL])) {
+            $this->organizer[Util::$LCparams][self::EMAIL] =
+                CalAddressFactory::prepEmail(
+                    $this->organizer[Util::$LCparams][self::EMAIL]
                 );
-                CalAddressFactory::assertCalAddress( $pVal );
-                $this->organizer[Util::$LCparams][$key] = $pVal;
-            }
-        } // end foreach
+        } // end if
+        if (isset($this->organizer[Util::$LCparams][self::SENT_BY])) {
+            $this->organizer[Util::$LCparams][self::SENT_BY] =
+                CalAddressFactory::prepSentBy(
+                    $this->organizer[Util::$LCparams][self::SENT_BY]
+                );
+        } // end if
         return $this;
     }
 }

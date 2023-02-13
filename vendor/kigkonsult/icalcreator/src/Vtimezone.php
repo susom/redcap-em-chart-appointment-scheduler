@@ -1,32 +1,32 @@
 <?php
 /**
-  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
- *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.14
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
  * This file is a part of iCalcreator.
-*/
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
 
 namespace Kigkonsult\Icalcreator;
 
@@ -39,7 +39,6 @@ use function strtoupper;
 /**
  * iCalcreator VTIMEZONE component class
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.29.9 2019-08-05
  */
 final class Vtimezone extends CalendarComponent
@@ -57,8 +56,6 @@ final class Vtimezone extends CalendarComponent
 
     /**
      * @var string
-     * @access protected
-     * @static
      */
     protected static $compSgn = 'tz';
 
@@ -67,9 +64,10 @@ final class Vtimezone extends CalendarComponent
      *
      * @since  2.26 - 2018-11-10
      */
-    public function __destruct() {
-        if( ! empty( $this->components )) {
-            foreach( $this->components as $cix => $component ) {
+    public function __destruct()
+    {
+        if (!empty($this->components)) {
+            foreach ($this->components as $cix => $component) {
                 $this->components[$cix]->__destruct();
             }
         }
@@ -97,8 +95,7 @@ final class Vtimezone extends CalendarComponent
             $this->tzname,
             $this->tzoffsetfrom,
             $this->tzoffsetto,
-            $this->tzurl,
-            $this->timezonetype
+            $this->tzurl
         );
     }
 
@@ -109,33 +106,35 @@ final class Vtimezone extends CalendarComponent
      * @throws Exception  (on Rdate err)
      * @since 2.29.9 2019-08-05
      */
-    public function createComponent() {
-        $compType    = strtoupper( $this->getCompType());
-        $component   = sprintf( self::$FMTBEGIN, $compType );
-        $component  .= $this->createTzid();
-        $component  .= $this->createLastmodified();
-        $component  .= $this->createTzurl();
-        $component  .= $this->createDtstart();
-        $component  .= $this->createTzoffsetfrom();
-        $component  .= $this->createTzoffsetto();
-        $component  .= $this->createComment();
-        $component  .= $this->createRdate();
+    public function createComponent(): string
+    {
+        $compType = strtoupper($this->getCompType());
+        $component = sprintf(self::$FMTBEGIN, $compType);
+        $component .= $this->createTzid();
+        $component .= $this->createLastmodified();
+        $component .= $this->createTzurl();
+        $component .= $this->createDtstart();
+        $component .= $this->createTzoffsetfrom();
+        $component .= $this->createTzoffsetto();
+        $component .= $this->createComment();
+        $component .= $this->createRdate();
         $component  .= $this->createRrule();
         $component  .= $this->createTzname();
         $component  .= $this->createXprop();
         $component  .= $this->createSubComponent();
-        return $component . sprintf( self::$FMTEND, $compType );
+        return $component . sprintf(self::$FMTEND, $compType);
     }
 
     /**
      * Return formatted output for subcomponents
      *
      * @return string
-     * @since  2.27.2 - 2018-12-21
      * @throws Exception  (on Valarm/Standard/Daylight) err)
+     * @since  2.27.2 - 2018-12-21
      */
-    public function createSubComponent() {
-        if( self::VTIMEZONE == $this->getCompType()) {
+    public function createSubComponent(): string
+    {
+        if (self::VTIMEZONE == $this->getCompType()) {
             $this->sortVtimezonesSubComponents();
         }
         return parent::createSubComponent();
@@ -145,20 +144,20 @@ final class Vtimezone extends CalendarComponent
      * Sort Vtimezones subComponents
      *
      * sort : standard, daylight, in dtstart order
-     * @access private
      * @since  2.29.1 - 2019-06-28
      */
-    private function sortVtimezonesSubComponents() {
-        if( empty( $this->components )) {
+    private function sortVtimezonesSubComponents()
+    {
+        if (empty($this->components)) {
             return;
         }
         $stdArr = $dlArr = [];
-        foreach( array_keys( $this->components ) as $cix ) {
-            if( empty( $this->components[$cix] )) {
+        foreach (array_keys($this->components) as $cix) {
+            if (empty($this->components[$cix])) {
                 continue;
             }
             $key = $this->components[$cix]->getDtstart();
-            if( empty( $key )) {
+            if (empty($key)) {
                 $key = $cix * 10;
             }
             else {
@@ -169,25 +168,24 @@ final class Vtimezone extends CalendarComponent
                     $key += 1;
                 }
                 $stdArr[$key] = $this->components[$cix];
-            }
-            elseif( self::DAYLIGHT == $this->components[$cix]->getCompType()) {
-                while( isset( $dlArr[$key] )) {
+            } elseif (self::DAYLIGHT == $this->components[$cix]->getCompType()) {
+                while (isset($dlArr[$key])) {
                     $key += 1;
                 }
                 $dlArr[$key] = $this->components[$cix];
             }
-        } // end foreach(...
+        } // end foreach
         $this->components = [];
-        ksort( $stdArr, SORT_NUMERIC );
-        foreach( $stdArr as $std ) {
+        ksort($stdArr, SORT_NUMERIC);
+        foreach ($stdArr as $std) {
             $this->components[] = $std;
         }
-        unset( $stdArr );
-        ksort( $dlArr, SORT_NUMERIC );
-        foreach( $dlArr as $dl ) {
+        unset($stdArr);
+        ksort($dlArr, SORT_NUMERIC);
+        foreach ($dlArr as $dl) {
             $this->components[] = $dl;
         }
-        unset( $dlArr );
+        unset($dlArr);
     }
 
     /**
@@ -196,8 +194,9 @@ final class Vtimezone extends CalendarComponent
      * @return Standard
      * @since  2.27.2 - 2018-12-21
      */
-    public function newStandard() {
-        array_unshift( $this->components, new Standard( $this->getConfig()));
+    public function newStandard(): Standard
+    {
+        array_unshift($this->components, new Standard($this->getConfig()));
         return $this->components[0];
     }
 
@@ -207,12 +206,12 @@ final class Vtimezone extends CalendarComponent
      * @return Daylight
      * @since  2.27.2 - 2018-12-21
      */
-    public function newDaylight() {
-        $ix = ( empty( $this->components ))
+    public function newDaylight(): Daylight
+    {
+        $ix = (empty($this->components))
             ? 0
-            : key( array_slice( $this->components, -1, 1, true )) + 1;
-        $this->components[$ix] = new Daylight( $this->getConfig());
+            : key(array_slice($this->components, -1, 1, true)) + 1;
+        $this->components[$ix] = new Daylight($this->getConfig());
         return $this->components[$ix];
     }
-
 }

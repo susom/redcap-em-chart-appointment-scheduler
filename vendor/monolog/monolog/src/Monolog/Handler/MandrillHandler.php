@@ -50,7 +50,11 @@ class MandrillHandler extends MailHandler
     {
         $message = clone $this->message;
         $message->setBody($content);
-        $message->setDate(time());
+        if (version_compare(\Swift::VERSION, '6.0.0', '>=')) {
+            $message->setDate(new \DateTimeImmutable());
+        } else {
+            $message->setDate(time());
+        }
 
         $ch = curl_init();
 
@@ -59,7 +63,7 @@ class MandrillHandler extends MailHandler
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
             'key' => $this->apiKey,
-            'raw_message' => (string) $message,
+            'raw_message' => (string)$message,
             'async' => false,
         )));
 

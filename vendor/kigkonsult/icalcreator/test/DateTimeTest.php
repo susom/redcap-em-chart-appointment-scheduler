@@ -2,32 +2,30 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.9
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
 namespace Kigkonsult\Icalcreator;
 
 use DateInterval;
@@ -41,7 +39,6 @@ use Kigkonsult\Icalcreator\Util\Util;
 /**
  * class DateTimeTest, testing DTSTART, DTEND, DUE, RECURRENCE_ID, (single) EXDATE + RDATE
  *
- * @author      Kjell-Inge Gustafsson <ical@kigkonsult.se>
  * @since  2.29.16 - 2020-01-24
  */
 class DateTimeTest extends DtBase
@@ -50,19 +47,23 @@ class DateTimeTest extends DtBase
      * set and restore local timezone from const
      */
     public static $oldTimeZone = null;
-    public static function setUpBeforeClass() {
+
+    public static function setUpBeforeClass()
+    {
         self::$oldTimeZone = date_default_timezone_get();
-        date_default_timezone_set( LTZ );
+        date_default_timezone_set(LTZ);
     }
-    public static function tearDownAfterClass() {
-        date_default_timezone_set( self::$oldTimeZone );
+
+    public static function tearDownAfterClass()
+    {
+        date_default_timezone_set(self::$oldTimeZone);
     }
 
     private static $propsCompsProps = [
         Vcalendar::DTSTART => [
-            Vcalendar::VEVENT   => [ Vcalendar::DTSTART ],
-            Vcalendar::VTODO    => [ Vcalendar::DTSTART ],
-            Vcalendar::VJOURNAL => [ Vcalendar::DTSTART ]
+            Vcalendar::VEVENT => [Vcalendar::DTSTART],
+            Vcalendar::VTODO => [Vcalendar::DTSTART],
+            Vcalendar::VJOURNAL => [Vcalendar::DTSTART]
         ],
         Vcalendar::DTEND => [
             Vcalendar::VEVENT => [ Vcalendar::DTEND ]
@@ -88,6 +89,7 @@ class DateTimeTest extends DtBase
             Vcalendar::RDATE
         ]
     ];
+
     /**
      * testDateTime1 provider
      * @throws Exception
@@ -110,9 +112,9 @@ class DateTimeTest extends DtBase
             $this->getDateTimeAsCreateLongString( $dateTime, LTZ)
         ];
 
-        $dateTime  = new DateTimeImmutable( DATEYmdTHis . ' ' . LTZ );
-        $dateTime2 = DateTimeFactory::cnvrtDateTimeInterface( $dateTime );
-        $dateTime2->setTimezone( DateTimeZoneFactory::factory( TZ2 ));
+        $dateTime = new DateTimeImmutable(DATEYmdTHis . ' ' . LTZ);
+        $dateTime2 = DateTimeFactory::toDateTime($dateTime);
+        $dateTime2->setTimezone(DateTimeZoneFactory::factory(TZ2));
         $dataArr[] = [
             1012,
             $dateTime,
@@ -124,9 +126,9 @@ class DateTimeTest extends DtBase
             $this->getDateTimeAsCreateLongString( $dateTime2, TZ2 )
         ];
 
-        $dateTime  = new DateTime( DATEYmdTHis . ' ' . LTZ );
-        $dateTime2 = DateTimeFactory::cnvrtDateTimeInterface( $dateTime );
-        $dateTime2->setTimezone( DateTimeZoneFactory::factory( Vcalendar::UTC ));
+        $dateTime = new DateTime(DATEYmdTHis . ' ' . LTZ);
+        $dateTime2 = DateTimeFactory::toDateTime($dateTime);
+        $dateTime2->setTimezone(DateTimeZoneFactory::factory(Vcalendar::UTC));
         $dataArr[] = [
             1013,
             $dateTime,
@@ -138,9 +140,9 @@ class DateTimeTest extends DtBase
             $this->getDateTimeAsCreateLongString( $dateTime2, Vcalendar::UTC )
         ];
 
-        $dateTime  = new DateTimeImmutable( DATEYmdTHis . ' ' . LTZ );
-        $dateTime2 = DateTimeFactory::cnvrtDateTimeInterface( $dateTime );
-        $dateTime2->setTimezone( DateTimeZoneFactory::factory( OFFSET ));
+        $dateTime = new DateTimeImmutable(DATEYmdTHis . ' ' . LTZ);
+        $dateTime2 = DateTimeFactory::toDateTime($dateTime);
+        $dateTime2->setTimezone(DateTimeZoneFactory::factory(OFFSET));
         $tz = $dateTime2->getTimezone()->getName();
         $dataArr[] = [
             1014,
@@ -159,51 +161,60 @@ class DateTimeTest extends DtBase
             $dateTime,
             [],
             [
-                Util::$LCvalue  => clone $dateTime,
+                Util::$LCvalue => clone $dateTime,
                 Util::$LCparams => []
             ],
-            $this->getDateTimeAsCreateLongString( $dateTime, Vcalendar::UTC )
+            $this->getDateTimeAsCreateLongString($dateTime, Vcalendar::UTC)
         ];
 
-        $dateTime  = new DateTimeImmutable( DATEYmdTHis, DateTimeZoneFactory::factory( Vcalendar::UTC));
-        $dateTime2 = DateTimeFactory::cnvrtDateTimeInterface( $dateTime );
-        $dateTime2->setTimezone( DateTimeZoneFactory::factory( TZ2 ));
+        $dateTime = new DateTimeImmutable(
+            DATEYmdTHis,
+            DateTimeZoneFactory::factory(Vcalendar::UTC)
+        );
+        $dateTime2 = DateTimeFactory::toDateTime($dateTime);;
+        $dateTime2->setTimezone(DateTimeZoneFactory::factory(TZ2));
         $dataArr[] = [
             1019,
             $dateTime,
-            [ Vcalendar::TZID => TZ2 ],
+            [Vcalendar::TZID => TZ2],
             [
-                Util::$LCvalue  => clone $dateTime2,
-                Util::$LCparams => [ Vcalendar::TZID => TZ2 ]
+                Util::$LCvalue => clone $dateTime2,
+                Util::$LCparams => [Vcalendar::TZID => TZ2]
             ],
-            $this->getDateTimeAsCreateLongString( $dateTime2, TZ2 )
+            $this->getDateTimeAsCreateLongString($dateTime2, TZ2)
         ];
 
-        $dateTime = new DateTime( DATEYmdTHis, DateTimeZoneFactory::factory( Vcalendar::UTC));
-        $dateTime2 = clone $dateTime;
-        $dateTime2->setTimezone( DateTimeZoneFactory::factory( Vcalendar::UTC ));
+        $dateTime = new DateTime(
+            DATEYmdTHis,
+            DateTimeZoneFactory::factory(Vcalendar::UTC)
+        );
+        $dateTime2 = DateTimeFactory::toDateTime($dateTime);;
+        $dateTime2->setTimezone(DateTimeZoneFactory::factory(Vcalendar::UTC));
         $dataArr[] = [
             1020,
             $dateTime,
-            [ Vcalendar::TZID => Vcalendar::UTC ],
+            [Vcalendar::TZID => Vcalendar::UTC],
             [
-                Util::$LCvalue  => clone $dateTime2,
+                Util::$LCvalue => clone $dateTime2,
                 Util::$LCparams => []
             ],
-            $this->getDateTimeAsCreateLongString( $dateTime2, Vcalendar::UTC )
+            $this->getDateTimeAsCreateLongString($dateTime2, Vcalendar::UTC)
         ];
 
-        $dateTime  = new DateTimeImmutable( DATEYmdTHis, DateTimeZoneFactory::factory( Vcalendar::UTC));
-        $dateTime2 = DateTimeFactory::cnvrtDateTimeInterface( $dateTime );
-        $dateTime2->setTimezone( DateTimeZoneFactory::factory( OFFSET ));
+        $dateTime = new DateTimeImmutable(
+            DATEYmdTHis,
+            DateTimeZoneFactory::factory(Vcalendar::UTC)
+        );
+        $dateTime2 = DateTimeFactory::toDateTime($dateTime);;
+        $dateTime2->setTimezone(DateTimeZoneFactory::factory(OFFSET));
         $tz = $dateTime2->getTimezone()->getName();
         $dataArr[] = [
             1021,
             $dateTime,
-            [ Vcalendar::TZID => OFFSET ],
+            [Vcalendar::TZID => OFFSET],
             [
-                Util::$LCvalue  => clone $dateTime2,
-                Util::$LCparams => [ Vcalendar::TZID => $tz ]
+                Util::$LCvalue => clone $dateTime2,
+                Util::$LCparams => [Vcalendar::TZID => $tz]
             ],
             $this->getDateTimeAsCreateLongString( $dateTime2, $tz )
         ];
@@ -222,9 +233,9 @@ class DateTimeTest extends DtBase
             $this->getDateTimeAsCreateLongString( $dateTime2, $tz )
         ];
 
-        $dateTime  = new DateTimeImmutable( DATEYmdTHis . OFFSET );
-        $dateTime2 = DateTimeFactory::cnvrtDateTimeInterface( $dateTime );
-        $dateTime2 = DateTimeFactory::setDateTimeTimeZone( $dateTime2, TZ2 );
+        $dateTime = new DateTimeImmutable(DATEYmdTHis . OFFSET);
+        $dateTime2 = clone $dateTime;
+        $dateTime2 = DateTimeFactory::setDateTimeTimeZone($dateTime2, TZ2);
         $dataArr[] = [
             1026,
             $dateTime,
@@ -242,25 +253,28 @@ class DateTimeTest extends DtBase
         $dataArr[] = [
             1027,
             $dateTime,
-            [ Vcalendar::TZID => Vcalendar::UTC ],
+            [Vcalendar::TZID => Vcalendar::UTC],
             [
-                Util::$LCvalue  => clone $dateTime2,
+                Util::$LCvalue => clone $dateTime2,
                 Util::$LCparams => []
             ],
-            $this->getDateTimeAsCreateLongString( $dateTime2, Vcalendar::UTC )
+            $this->getDateTimeAsCreateLongString($dateTime2, Vcalendar::UTC)
         ];
 
-        $dateTime = new DateTimeImmutable( DATEYmdTHis, DateTimeZoneFactory::factory( OFFSET ));
+        $dateTime = new DateTimeImmutable(
+            DATEYmdTHis,
+            DateTimeZoneFactory::factory(OFFSET)
+        );
         $tz = $dateTime->getTimezone()->getName();
         $dataArr[] = [
             1028,
             $dateTime,
-            [ Vcalendar::TZID => OFFSET ],
+            [Vcalendar::TZID => OFFSET],
             [
-                Util::$LCvalue  => clone $dateTime,
-                Util::$LCparams => [ Vcalendar::TZID => $tz ]
+                Util::$LCvalue => clone $dateTime,
+                Util::$LCparams => [Vcalendar::TZID => $tz]
             ],
-            $this->getDateTimeAsCreateLongString( $dateTime, $tz )
+            $this->getDateTimeAsCreateLongString($dateTime, $tz)
         ];
 
         return $dataArr;
@@ -271,6 +285,7 @@ class DateTimeTest extends DtBase
      *
      * @test
      * @dataProvider DateTime1Provider
+     *
      * @param int    $case
      * @param mixed  $value
      * @param mixed  $params
@@ -284,20 +299,21 @@ class DateTimeTest extends DtBase
         $params,
         $expectedGet,
         $expectedString
-    ) {
-        if( ! empty( $value )) {
-            $expectedGet2 = [
-                Util::$LCvalue  => [ clone $expectedGet[Util::$LCvalue], new DateInterval( 'P1D' ) ],
-                Util::$LCparams => $expectedGet[Util::$LCparams] + [ Vcalendar::VALUE => Vcalendar::PERIOD ]
+    )
+    {
+        $expectedGet2 = empty($value)
+            ? []
+            : [
+                Util::$LCvalue => [clone $expectedGet[Util::$LCvalue], new DateInterval('P1D')],
+                Util::$LCparams => $expectedGet[Util::$LCparams] + [Vcalendar::VALUE => Vcalendar::PERIOD]
             ];
+
+        foreach (self::$propsCompsProps as $compsProps) {
+            $this->theTestMethod($case, $compsProps, $value, $params, $expectedGet, $expectedString);
         }
 
-        foreach( self::$propsCompsProps as $compsProps ) {
-            $this->theTestMethod( $case, $compsProps, $value, $params, $expectedGet, $expectedString );
-        }
-
-        $this->theTestMethod1b( $case, self::$compsProps2, $value, $params, $expectedGet, $expectedString );
-        if( empty( $value )) {
+        $this->theTestMethod1b($case, self::$compsProps2, $value, $params, $expectedGet, $expectedString);
+        if (empty($value)) {
             return;
         }
         $value          = [ $value, 'P1D' ];
@@ -631,17 +647,18 @@ class DateTimeTest extends DtBase
         $params,
         $expectedGet,
         $expectedString
-    ) {
-        foreach( self::$propsCompsProps as $comps => $compsProps ) {
-            $this->theTestMethod( $case, $compsProps, $value, $params, $expectedGet, $expectedString );
+    )
+    {
+        foreach (self::$propsCompsProps as $comps => $compsProps) {
+            $this->theTestMethod($case, $compsProps, $value, $params, $expectedGet, $expectedString);
         }
 
-        $this->theTestMethod1b( $case, self::$compsProps2, $value, $params, $expectedGet, $expectedString );
-        if( empty( $value )) {
+        $this->theTestMethod1b($case, self::$compsProps2, $value, $params, $expectedGet, $expectedString);
+        if (empty($value)) {
             return;
         }
-        $value          = [ $value, 'P1D' ];
-        $params         = [ Vcalendar::VALUE => Vcalendar::PERIOD ] + $params;
+        $value = [$value, 'P1D'];
+        $params = [Vcalendar::VALUE => Vcalendar::PERIOD] + $params;
         $expectedGet    = [
             Util::$LCvalue  => [ $expectedGet[Util::$LCvalue], new DateInterval( 'P1D' ) ],
             Util::$LCparams => $expectedGet[Util::$LCparams] + [ Vcalendar::VALUE => Vcalendar::PERIOD ]
@@ -957,17 +974,18 @@ class DateTimeTest extends DtBase
         $params,
         $expectedGet,
         $expectedString
-    ) {
-        foreach( self::$propsCompsProps as $comps => $compsProps ) {
-            $this->theTestMethod( $case, $compsProps, $value, $params, $expectedGet, $expectedString );
+    )
+    {
+        foreach (self::$propsCompsProps as $comps => $compsProps) {
+            $this->theTestMethod($case, $compsProps, $value, $params, $expectedGet, $expectedString);
         }
 
-        $this->theTestMethod1b( $case, self::$compsProps2, $value, $params, $expectedGet, $expectedString );
-        if( empty( $value )) {
+        $this->theTestMethod1b($case, self::$compsProps2, $value, $params, $expectedGet, $expectedString);
+        if (empty($value)) {
             return;
         }
-        $value          = [ $value, 'P1D' ];
-        $params         = [ Vcalendar::VALUE => Vcalendar::PERIOD ] + $params;
+        $value = [$value, 'P1D'];
+        $params = [Vcalendar::VALUE => Vcalendar::PERIOD] + $params;
         $expectedGet    = [
             Util::$LCvalue  => [ $expectedGet[Util::$LCvalue], new DateInterval( 'P1D' ) ],
             Util::$LCparams => $expectedGet[Util::$LCparams] + [ Vcalendar::VALUE => Vcalendar::PERIOD ]
@@ -984,5 +1002,4 @@ class DateTimeTest extends DtBase
             $expectedString
         );
     }
-
 }

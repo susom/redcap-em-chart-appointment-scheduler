@@ -2,32 +2,30 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.9
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
 namespace Kigkonsult\Icalcreator;
 
 use Exception;
@@ -38,7 +36,6 @@ use Kigkonsult\Icalcreator\Util\Util;
 /**
  * class DateTest, testing VALUE DATE, also empty value, DTSTART, DTEND, DUE, RECURRENCE_ID, (single) EXDATE + RDATE
  *
- * @author      Kjell-Inge Gustafsson <ical@kigkonsult.se>
  * @since  2.27.14 - 2019-01-24
  */
 class DateTest extends DtBase
@@ -47,12 +44,16 @@ class DateTest extends DtBase
      * set and restore local timezone from const
      */
     public static $oldTimeZone = null;
-    public static function setUpBeforeClass() {
+
+    public static function setUpBeforeClass()
+    {
         self::$oldTimeZone = date_default_timezone_get();
-        date_default_timezone_set( LTZ );
+        date_default_timezone_set(LTZ);
     }
-    public static function tearDownAfterClass() {
-        date_default_timezone_set( self::$oldTimeZone );
+
+    public static function tearDownAfterClass()
+    {
+        date_default_timezone_set(self::$oldTimeZone);
     }
 
     /**
@@ -76,7 +77,6 @@ class DateTest extends DtBase
             ],
             ':'
         ];
-
 
         $dateTime  = DateTimeFactory::factory( DATEYmd );
         $dataArr[] = [ // test set #101 DateTime
@@ -181,16 +181,16 @@ class DateTest extends DtBase
         for( $x = 1; $x < 10; $x++ ) {
             $dataArr[] = [ // test set #101 DateTime
                 200 + $x,
-                $dateTime->format( 'Ymd' ),
-                [ Vcalendar::VALUE => Vcalendar::DATE ],
+                $dateTime->format('Ymd'),
+                [Vcalendar::VALUE => Vcalendar::DATE],
                 [
-                    Util::$LCvalue  => clone $dateTime,
-                    Util::$LCparams => [ Vcalendar::VALUE => Vcalendar::DATE ]
+                    Util::$LCvalue => clone $dateTime,
+                    Util::$LCparams => [Vcalendar::VALUE => Vcalendar::DATE]
                 ],
-                $this->getDateTimeAsCreateShortString( $dateTime )
+                $this->getDateTimeAsCreateShortString($dateTime)
             ];
-            $dateTime->modify( '-1 day ' );
-        }
+            $dateTime->modify('-1 day ');
+        } // end for
 
         return $dataArr;
     }
@@ -214,7 +214,8 @@ class DateTest extends DtBase
         $params,
         $expectedGet,
         $expectedString
-    ) {
+    )
+    {
         static $compsProps = [
             Vcalendar::VEVENT => [
                 Vcalendar::DTSTART,
@@ -223,8 +224,8 @@ class DateTest extends DtBase
                 Vcalendar::EXDATE,
                 Vcalendar::RDATE
             ],
-            Vcalendar::VTODO    => [ Vcalendar::DTSTART, Vcalendar::DUE, Vcalendar::RECURRENCE_ID ],
-            Vcalendar::VJOURNAL => [ Vcalendar::DTSTART, Vcalendar::RECURRENCE_ID ],
+            Vcalendar::VTODO => [Vcalendar::DTSTART, Vcalendar::DUE, Vcalendar::RECURRENCE_ID],
+            Vcalendar::VJOURNAL => [Vcalendar::DTSTART, Vcalendar::RECURRENCE_ID],
         ];
         static $compsProps2 = [
             Vcalendar::VEVENT => [
@@ -235,6 +236,4 @@ class DateTest extends DtBase
         $this->theTestMethod( $case, $compsProps, $value, $params, $expectedGet, $expectedString );
         $this->theTestMethod1b( $case, $compsProps2, $value, $params, $expectedGet, $expectedString );
     }
-
-
 }

@@ -2,32 +2,30 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.9
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
 namespace Kigkonsult\Icalcreator;
 
 use Exception;
@@ -47,29 +45,29 @@ use Kigkonsult\Icalcreator\Util\Util;
  * testing GeoLocation
  * testing empty properties
  * testing parse eol-htab
- * @author      Kjell-Inge Gustafsson <ical@kigkonsult.se>
- * @since  2.29.5 - 2019-08-30
+ *
+ * @since  2.39 - 2021-06-19
  */
 class MiscTest extends DtBase
 {
-    private static $ERRFMT   = "Error %sin case #%s, %s <%s>->%s";
-    private static $STCPAR   = [ 'X-PARAM' => 'Y-vALuE' ];
-    private static $EOLCHARS = [ "\r\n ", "\r\n\t", PHP_EOL . " ", PHP_EOL . "\t" ];
+    private static $ERRFMT = "Error %sin case #%s, %s <%s>->%s";
+    private static $STCPAR = ['X-PARAM' => 'Y-vALuE'];
+    private static $EOLCHARS = ["\r\n ", "\r\n\t", PHP_EOL . " ", PHP_EOL . "\t"];
 
     /**
      * testMisc1 provider
      */
-    public function Misc1Provider() {
-
+    public function Misc1Provider()
+    {
         $dataArr = [];
 
         // TRANSP
-        $value  = Vcalendar::OPAQUE;
+        $value = Vcalendar::OPAQUE;
         $params = self::$STCPAR;
         $dataArr[] = [
             1011,
             [
-                Vcalendar::TRANSP => [ Vcalendar::VEVENT ]
+                Vcalendar::TRANSP => [Vcalendar::VEVENT]
             ],
             $value,
             $params,
@@ -168,46 +166,147 @@ class MiscTest extends DtBase
             ':' . $value
         ];
 
-        // URL
+        // SOURCE
         $value  = 'http://example.com/pub/calendars/jsmith/mytime.ics';
         $params = []  + self::$STCPAR;
         $dataArr[] = [
             1051,
             [
-                Vcalendar::URL => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY ]
+                Vcalendar::SOURCE => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY]
             ],
             $value,
             $params,
             [
-                Util::$LCvalue  => $value,
+                Util::$LCvalue => $value,
                 Util::$LCparams => $params
             ],
-            strtoupper( Vcalendar::URL ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::SOURCE) .
+            ParameterFactory::createParams($params) .
             ':' . $value
         ];
 
+        // URL 1
+        $value1 = '%3C01020175ae0fa363-b7ebfe82-02d0-420a-a8d9-331e43fa1867-000000@eu-west-1.amazonses.com%3E';
+        $value2 = '01020175ae0fa363-b7ebfe82-02d0-420a-a8d9-331e43fa1867-000000@eu-west-1.amazonses.com';
+        $params1 = [Vcalendar::VALUE => 'URI'] + self::$STCPAR;
+        $params2 = self::$STCPAR;
+        $dataArr[] = [
+            1061,
+            [
+                Vcalendar::URL => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY]
+            ],
+            $value1,
+            $params1,
+            [
+                Util::$LCvalue => $value2,
+                Util::$LCparams => $params2
+            ],
+            strtoupper(Vcalendar::URL) .
+            ParameterFactory::createParams($params2) . ':' . $value2
+        ];
+
+        // URL 2
+        $value1 = 'https://www.masked.de/account/subscription/delivery/8878/%3Fweek=2021-W03';
+        $value2 = 'https://www.masked.de/account/subscription/delivery/8878/%3Fweek=2021-W03';
+        $params1 = [Vcalendar::VALUE => Vcalendar::URI] + self::$STCPAR;
+        $params2 = self::$STCPAR;
+        $dataArr[] = [
+            1062,
+            [
+                Vcalendar::URL => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY]
+            ],
+            $value1,
+            $params1,
+            [
+                Util::$LCvalue => $value2,
+                Util::$LCparams => $params2
+            ],
+            strtoupper(Vcalendar::URL) .
+            ParameterFactory::createParams($params2) . ':' . $value2
+        ];
+
+
+        // URL 4
+        $value1 = 'message://https://www.masked.de/account/subscription/delivery/8878/%3Fweek=2021-W03';
+        $value2 = 'message://https://www.masked.de/account/subscription/delivery/8878/%3Fweek=2021-W03';
+        $params1 = self::$STCPAR + [Vcalendar::VALUE => Vcalendar::URI];
+        $params2 = self::$STCPAR;
+        $dataArr[] = [
+            1064,
+            [
+                Vcalendar::URL => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY]
+            ],
+            $value1,
+            $params1,
+            [
+                Util::$LCvalue => $value2,
+                Util::$LCparams => $params2
+            ],
+            strtoupper(Vcalendar::URL) .
+            ParameterFactory::createParams($params2) . ':' . $value2
+        ];
+
+        // URL 5
+        $value1 = 'message://%3C1714214488.13907.1453128266311.JavaMail.tomcat%40web-pdfe-f02%3E?c=1453128266&k1=ticket&k2=1797815930&k3=2016-07-20';
+        $value2 = 'message://1714214488.13907.1453128266311.JavaMail.tomcat@web-pdfe-f02?c=1453128266&k1=ticket&k2=1797815930&k3=2016-07-20';
+        $params1 = self::$STCPAR + [Vcalendar::VALUE => Vcalendar::URI];
+        $params2 = self::$STCPAR;
+        $dataArr[] = [
+            1065,
+            [
+                Vcalendar::URL => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY]
+            ],
+            $value1,
+            $params1,
+            [
+                Util::$LCvalue => $value2,
+                Util::$LCparams => $params2
+            ],
+            strtoupper(Vcalendar::URL) .
+            ParameterFactory::createParams($params2) . ':' . $value2
+        ];
+
+        // URL 6
+        $value1 = 'message://%3C1714214488.13907.1453128266311.JavaMail.tomcat%40web-pdfe-f02%3E?c=1453128266&k1=ticket&k2=1797815930&k3=2016-07-20';
+        $value2 = 'message://1714214488.13907.1453128266311.JavaMail.tomcat@web-pdfe-f02?c=1453128266&k1=ticket&k2=1797815930&k3=2016-07-20';
+        $params1 = self::$STCPAR + [strtolower(Vcalendar::VALUE) => strtolower(Vcalendar::URI)];
+        $params2 = self::$STCPAR;
+        $dataArr[] = [
+            1066,
+            [
+                Vcalendar::URL => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL, Vcalendar::VFREEBUSY]
+            ],
+            $value1,
+            $params1,
+            [
+                Util::$LCvalue => $value2,
+                Util::$LCparams => $params2
+            ],
+            strtoupper(Vcalendar::URL) .
+            ParameterFactory::createParams($params2) . ':' . $value2
+        ];
+
         // ORGANIZER
-        $value  = 'MAILTO:ildoit@example.com';
+        $value = 'MAILTO:ildoit1071@example.com';
         $params = [
-                Vcalendar::CN             => 'John Doe',
-                Vcalendar::DIR            => 'ldap://example.com:6666/o=ABC%20Industries,c=US???(cn=Jim%20Dolittle)',
-                Vcalendar::SENT_BY        => 'MAILTO:boss@example.com',
-                Vcalendar::LANGUAGE       => 'EN'
+                Vcalendar::CN => 'John Doe',
+                Vcalendar::DIR => 'ldap://example.com:6666/o=ABC%20Industries,c=US???(cn=Jim%20Dolittle)',
+                Vcalendar::SENT_BY => 'MAILTO:boss1071@example.com',
+                Vcalendar::LANGUAGE => 'EN'
             ] + self::$STCPAR;
-        $getValue  = [
+        $getValue = [
             Util::$LCvalue  => $value,
             Util::$LCparams => $params
         ];
         $dataArr[] = [
-            1061,
+            1071,
             [
-                Vcalendar::ORGANIZER => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ]
+                Vcalendar::ORGANIZER => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL]
             ],
             $value,
-            $params + [ Vcalendar::EMAIL => 'ildoit@example.com' ],
+            $params + [Vcalendar::EMAIL => 'ildoit1071@example.com'], // removed, same as value
             $getValue,
-            strtoupper( Vcalendar::ORGANIZER ) .
+            strtoupper(Vcalendar::ORGANIZER) .
             ParameterFactory::createParams(
                 $params,
                 [
@@ -220,23 +319,59 @@ class MiscTest extends DtBase
             ':' . $value
         ];
 
-        // CLASS
-        $value  = Vcalendar::CONFIDENTIAL;
-        $params = self::$STCPAR;
-        $getValue  = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => $params
+        $value = 'ildoit1072@example.com';
+        $params = [
+                strtolower(Vcalendar::CN) => 'Jane Doe',
+                strtolower(Vcalendar::SENT_BY) => 'boss1072@example.com',
+                strtolower(Vcalendar::EMAIL) => 'MAILTO:another1072@example.com'
+            ] + self::$STCPAR;
+        $params2 = [
+                Vcalendar::CN => 'Jane Doe',
+                Vcalendar::SENT_BY => 'MAILTO:boss1072@example.com',
+                Vcalendar::EMAIL => 'another1072@example.com'
+            ] + self::$STCPAR;
+        $getValue = [
+            Util::$LCvalue => 'MAILTO:' . $value,
+            Util::$LCparams => $params2
         ];
         $dataArr[] = [
-            1071,
+            1072,
             [
-                Vcalendar::KLASS => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ]
+                Vcalendar::ORGANIZER => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL]
             ],
             $value,
             $params,
             $getValue,
-            strtoupper( Vcalendar::KLASS ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::ORGANIZER) .
+            ParameterFactory::createParams(
+                $params2,
+                [
+                    Vcalendar::CN,
+                    Vcalendar::DIR,
+                    Vcalendar::SENT_BY,
+                    Vcalendar::LANGUAGE
+                ]
+            ) .
+            ':' . 'MAILTO:' . $value
+        ];
+
+        // CLASS
+        $value = Vcalendar::CONFIDENTIAL;
+        $params = self::$STCPAR;
+        $getValue = [
+            Util::$LCvalue => $value,
+            Util::$LCparams => $params
+        ];
+        $dataArr[] = [
+            1081,
+            [
+                Vcalendar::KLASS => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL]
+            ],
+            $value,
+            $params,
+            $getValue,
+            strtoupper(Vcalendar::KLASS) .
+            ParameterFactory::createParams($params) .
             ':' . $value
         ];
 
@@ -248,15 +383,15 @@ class MiscTest extends DtBase
             Util::$LCparams => $params
         ];
         $dataArr[] = [
-            1081,
+            1091,
             [
-                Vcalendar::STATUS => [ Vcalendar::VEVENT ]
+                Vcalendar::STATUS => [Vcalendar::VEVENT]
             ],
             $value,
             $params,
             $getValue,
-            strtoupper( Vcalendar::STATUS ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::STATUS) .
+            ParameterFactory::createParams($params) .
             ':' . $value
         ];
 
@@ -268,15 +403,15 @@ class MiscTest extends DtBase
             Util::$LCparams => $params
         ];
         $dataArr[] = [
-            1082,
+            1092,
             [
-                Vcalendar::STATUS => [ Vcalendar::VTODO ]
+                Vcalendar::STATUS => [Vcalendar::VTODO]
             ],
             $value,
             $params,
             $getValue,
-            strtoupper( Vcalendar::STATUS ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::STATUS) .
+            ParameterFactory::createParams($params) .
             ':' . $value
         ];
 
@@ -288,15 +423,15 @@ class MiscTest extends DtBase
             Util::$LCparams => $params
         ];
         $dataArr[] = [
-            1083,
+            1093,
             [
-                Vcalendar::STATUS => [ Vcalendar::VJOURNAL ]
+                Vcalendar::STATUS => [Vcalendar::VJOURNAL]
             ],
             $value,
             $params,
             $getValue,
-            strtoupper( Vcalendar::STATUS ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::STATUS) .
+            ParameterFactory::createParams($params) .
             ':' . $value
         ];
 
@@ -308,17 +443,17 @@ class MiscTest extends DtBase
             Util::$LCparams => $params
         ];
         $dataArr[] = [
-            1091,
+            1101,
             [
-                Vcalendar::GEO => [ Vcalendar::VEVENT, Vcalendar::VTODO ]
+                Vcalendar::GEO => [Vcalendar::VEVENT, Vcalendar::VTODO]
             ],
             $value,
             $params,
             $getValue,
-            strtoupper( Vcalendar::GEO ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::GEO) .
+            ParameterFactory::createParams($params) .
             ':' .
-            GeoFactory::geo2str2( $getValue[Util::$LCvalue][Vcalendar::LATITUDE], GeoFactory::$geoLatFmt ) .
+            GeoFactory::geo2str2($getValue[Util::$LCvalue][Vcalendar::LATITUDE], GeoFactory::$geoLatFmt) .
             Util::$SEMIC .
             GeoFactory::geo2str2( $getValue[Util::$LCvalue][Vcalendar::LONGITUDE], GeoFactory::$geoLongFmt )
 
@@ -332,15 +467,15 @@ class MiscTest extends DtBase
             Util::$LCparams => $params
         ];
         $dataArr[] = [
-            1083,
+            1103,
             [
-                Vcalendar::COLOR => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ]
+                Vcalendar::COLOR => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL]
             ],
             $value,
             $params,
             $getValue,
-            strtoupper( Vcalendar::COLOR ) .
-            ParameterFactory::createParams( $params ) .
+            strtoupper(Vcalendar::COLOR) .
+            ParameterFactory::createParams($params) .
             ':' . $value
         ];
 
@@ -369,31 +504,38 @@ class MiscTest extends DtBase
         $expectedString
     ) {
         $c = new Vcalendar();
+        $urlIsSet = false;
         foreach( $propComps as $propName => $theComps ) {
-            foreach( $theComps as $theComp ) {
-                if( Vcalendar::COLOR == $propName ) {
-                    $c->setColor( $value, $params );
+            if (Vcalendar::SOURCE == $propName) {
+                $c->setSource($value, $params);
+                $c->setUrl($value, $params);
+                continue;
+            }
+            foreach ($theComps as $theComp) {
+                if (Vcalendar::COLOR == $propName) {
+                    $c->setColor($value, $params);
                 }
-                if( Vcalendar::URL == $propName ) {
-                    $c->setSource( $value, $params );
-                    $c->setUrl( $value, $params );
+
+                if (!$urlIsSet && (Vcalendar::URL == $propName)) {
+                    $c->setUrl($value, $params);
+                    $urlIsSet = true;
                 }
+
                 $newMethod = 'new' . $theComp;
-                $comp      = $c->{$newMethod}();
+                $comp = $c->{$newMethod}();
 
-                $getMethod    = Vcalendar::getGetMethodName( $propName );
-                $createMethod = Vcalendar::getCreateMethodName( $propName );
-                $deleteMethod = Vcalendar::getDeleteMethodName( $propName );
-                $setMethod    = Vcalendar::getSetMethodName( $propName );
+                $getMethod = StringFactory::getGetMethodName($propName);
+                $createMethod = StringFactory::getCreateMethodName($propName);
+                $deleteMethod = StringFactory::getDeleteMethodName($propName);
+                $setMethod = StringFactory::getSetMethodName($propName);
 
-                if( Vcalendar::GEO == $propName ) {
-                    $comp->{$setMethod}( $value[Vcalendar::LATITUDE], $value[Vcalendar::LONGITUDE], $params );
+                if (Vcalendar::GEO == $propName) {
+                    $comp->{$setMethod}($value[Vcalendar::LATITUDE], $value[Vcalendar::LONGITUDE], $params);
+                } else {
+                    $comp->{$setMethod}($value, $params);
                 }
-                else {
-                    $comp->{$setMethod}( $value, $params );
-                }
 
-                $getValue = $comp->{$getMethod}( true );
+                $getValue = $comp->{$getMethod}(true);
                 $this->assertEquals(
                     $expectedGet,
                     $getValue,
@@ -411,20 +553,18 @@ class MiscTest extends DtBase
                 $comp->{$deleteMethod}();
                 $this->assertFalse(
                     $comp->{$getMethod}(),
-                    sprintf( self::$ERRFMT, '(after delete) ', $case, __FUNCTION__, $theComp, $getMethod )
+                    sprintf(self::$ERRFMT, '(after delete) ', $case, __FUNCTION__, $theComp, $getMethod)
                 );
 
-                if( Vcalendar::GEO == $propName ) {
-                    $comp->{$setMethod}( $value[Vcalendar::LATITUDE], $value[Vcalendar::LONGITUDE], $params );
+                if (Vcalendar::GEO == $propName) {
+                    $comp->{$setMethod}($value[Vcalendar::LATITUDE], $value[Vcalendar::LONGITUDE], $params);
+                } else {
+                    $comp->{$setMethod}($value, $params);
                 }
-                else {
-                    $comp->{$setMethod}( $value, $params );
-                }
-            }
-        }
+            } // end foreach
+        } // end foreach
 
-        $this->parseCalendarTest( $case, $c, $expectedString );
-
+        $this->parseCalendarTest($case, $c, $expectedString);
     }
 
     /**
@@ -544,59 +684,96 @@ class MiscTest extends DtBase
         ];
 
         // ATTENDEE
-        $value  = 'MAILTO:ildoit@example.com';
+        $value = 'MAILTO:ildoit2061@example.com';
         $params = [
-                Vcalendar::CUTYPE         => Vcalendar::GROUP,
-                Vcalendar::MEMBER         => 'MAILTO:DEV-GROUP@example.com',
-                Vcalendar::ROLE           => Vcalendar::OPT_PARTICIPANT,
-                Vcalendar::PARTSTAT       => Vcalendar::TENTATIVE,
-                Vcalendar::RSVP           => Vcalendar::TRUE,
-                Vcalendar::DELEGATED_TO   => 'MAILTO:bob@example.com',
-                Vcalendar::DELEGATED_FROM => 'MAILTO:jane@example.com',
-                Vcalendar::SENT_BY        => 'MAILTO:boss@example.com',
-                Vcalendar::EMAIL          => 'MAILTO:hammer@example.com',
-                Vcalendar::CN             => 'John Doe',
-                Vcalendar::DIR            => 'ldap://example.com:6666/o=ABC%20Industries,c=US???(cn=Jim%20Dolittle)',
-                Vcalendar::LANGUAGE       => 'EN'
+                Vcalendar::CUTYPE => Vcalendar::GROUP,
+                Vcalendar::MEMBER => [
+                    'MAILTO:DEV-GROUP1@example.com',
+                    'MAILTO:DEV-GROUP2@example.com',
+                    'MAILTO:DEV-GROUP3@example.com',
+                ],
+                Vcalendar::ROLE => Vcalendar::OPT_PARTICIPANT,
+                Vcalendar::PARTSTAT => Vcalendar::TENTATIVE,
+                Vcalendar::RSVP => Vcalendar::TRUE,
+                Vcalendar::DELEGATED_TO => [
+                    'MAILTO:bob@example.com',
+                    'MAILTO:rob@example.com',
+                ],
+                Vcalendar::DELEGATED_FROM => [
+                    'MAILTO:jane@example.com',
+                    'MAILTO:mary@example.com',
+                ],
+                Vcalendar::SENT_BY => 'boss@example.com',          // note missing MAILTO:
+                Vcalendar::EMAIL => 'MAILTO:hammer@example.com', // MAILTO: woíll be removed
+                Vcalendar::CN => 'John Doe',
+                Vcalendar::DIR => 'ldap://example.com:6666/o=ABC%20Industries,c=US???(cn=Jim%20Dolittle)',
+                Vcalendar::LANGUAGE => 'EN'
             ] + self::$STCPAR;
-        $getValue  = [
-            Util::$LCvalue  => $value,
+        $getValue = [
+            Util::$LCvalue => $value,
             Util::$LCparams => $params
         ];
-        $getValue[Util::$LCparams][Vcalendar::MEMBER]         = [$getValue[Util::$LCparams][Vcalendar::MEMBER]];
-        $getValue[Util::$LCparams][Vcalendar::DELEGATED_TO]   = [$getValue[Util::$LCparams][Vcalendar::DELEGATED_TO]];
-        $getValue[Util::$LCparams][Vcalendar::DELEGATED_FROM] = [$getValue[Util::$LCparams][Vcalendar::DELEGATED_FROM]];
-
-        $expectedString = trim( CalAddressFactory::outputFormatAttendee( [ $getValue ], true ));
-        $expectedString = str_replace( Util::$CRLF . ' ' , null, $expectedString);
-        $expectedString = str_replace( '\,', ',', $expectedString );
+        $getValue2 = $getValue;
+        $getValue2[Util::$LCparams][Vcalendar::SENT_BY] = 'MAILTO:boss@example.com';
+        $getValue2[Util::$LCparams][Vcalendar::EMAIL] = 'hammer@example.com';
+        $expectedString = trim(CalAddressFactory::outputFormatAttendee([$getValue2], true));
+        $expectedString = str_replace(Util::$CRLF . ' ', null, $expectedString);
+        $expectedString = str_replace('\,', ',', $expectedString);
         $dataArr[] = [
             2061,
             [
-                Vcalendar::ATTENDEE => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ] // , Vcalendar::VFREEBUSY
+                Vcalendar::ATTENDEE => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL]
             ],
             $value,
             $params,
-            $getValue,
+            $getValue2,
             $expectedString
         ];
 
-        $value  = 'MAILTO:ildoit@example.com';
-        $params = self::$STCPAR;
-        $getValue  = [
-            Util::$LCvalue  => $value,
+        $value = 'MAILTO:ildoit2062@example.com';
+        $params = [
+                Vcalendar::MEMBER => '"DEV-GROUP2062@example.com"',
+                Vcalendar::DELEGATED_TO => '"bob2062@example.com"',
+                Vcalendar::DELEGATED_FROM => '"jane2062@example.com"',
+            ] + self::$STCPAR;
+        $getValue = [
+            Util::$LCvalue => $value,
             Util::$LCparams => $params
         ];
-        $expectedString = trim( CalAddressFactory::outputFormatAttendee( [ $getValue ], true ));
-        $expectedString = str_replace( self::$EOLCHARS , null, $expectedString);
-        $expectedString = str_replace( '\,', ',', $expectedString );
+        $getValue2 = $getValue;
+        $getValue2[Util::$LCparams][Vcalendar::MEMBER] = ['MAILTO:DEV-GROUP2062@example.com'];
+        $getValue2[Util::$LCparams][Vcalendar::DELEGATED_TO] = ['MAILTO:bob2062@example.com'];
+        $getValue2[Util::$LCparams][Vcalendar::DELEGATED_FROM] = ['MAILTO:jane2062@example.com'];
+        $expectedString = trim(CalAddressFactory::outputFormatAttendee([$getValue2], true));
+        $expectedString = str_replace(self::$EOLCHARS, null, $expectedString);
+        $expectedString = str_replace('\,', ',', $expectedString);
         $dataArr[] = [
             2062,
             [
-                Vcalendar::ATTENDEE => [ Vcalendar::VFREEBUSY ] // , Vcalendar::VFREEBUSY
+                Vcalendar::ATTENDEE => [Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL]
             ],
             $value,
-            $params + [ Vcalendar::EMAIL => 'ildoit@example.com' ],
+            $params,
+            $getValue2,
+            $expectedString
+        ];
+
+        $value = 'MAILTO:ildoit2063@example.com';
+        $params = self::$STCPAR;
+        $getValue = [
+            Util::$LCvalue => $value,
+            Util::$LCparams => $params
+        ];
+        $expectedString = trim(CalAddressFactory::outputFormatAttendee([$getValue], true));
+        $expectedString = str_replace(self::$EOLCHARS, null, $expectedString);
+        $expectedString = str_replace('\,', ',', $expectedString);
+        $dataArr[] = [
+            2063,
+            [
+                Vcalendar::ATTENDEE => [Vcalendar::VFREEBUSY] // , Vcalendar::VFREEBUSY
+            ],
+            $value,
+            $params + [Vcalendar::EMAIL => 'ildoit2063-2@example.com'], // will be skipped
             $getValue,
             $expectedString
         ];
@@ -905,6 +1082,7 @@ class MiscTest extends DtBase
      *
      * @test
      * @dataProvider Misc2Provider
+     *
      * @param int    $case
      * @param array  $propComps
      * @param mixed  $value
@@ -1002,21 +1180,24 @@ class MiscTest extends DtBase
         $params,
         $expectedGet,
         $expectedString
-    ) {
-        $getMethod    = Vcalendar::getGetMethodName(    $propName );
-        $createMethod = Vcalendar::getCreateMethodName( $propName );
-        $deleteMethod = Vcalendar::getDeleteMethodName( $propName );
-        $setMethod    = Vcalendar::getSetMethodName(    $propName );
+    )
+    {
+        $getMethod = StringFactory::getGetMethodName($propName);
+        if (!method_exists($instance, $getMethod)) {
+            return;
+        }
+        $createMethod = StringFactory::getCreateMethodName($propName);
+        $deleteMethod = StringFactory::getDeleteMethodName($propName);
+        $setMethod = StringFactory::getSetMethodName($propName);
 
-        if( Vcalendar::REQUEST_STATUS == $propName ) {
+        if (Vcalendar::REQUEST_STATUS == $propName) {
             $instance->{$setMethod}(
                 $value[Vcalendar::STATCODE],
                 $value[Vcalendar::STATDESC],
                 $value[Vcalendar::EXTDATA],
                 $params
             );
-        }
-        else {
+        } else {
             $instance->{$setMethod}( $value, $params );
         }
 
@@ -1345,13 +1526,13 @@ class MiscTest extends DtBase
             $this->assertEquals(
                 $location,
                 $getValue[0],
-                sprintf( self::$ERRFMT, null, 2, __FUNCTION__, $theComp, 'getGeoLocation' )
+                sprintf(self::$ERRFMT, null, 2, __FUNCTION__, $theComp, 'getGeoLocation')
             );
-            $tLat = substr( StringFactory::before_last('+', $getValue[1] ), 1 );
+            $tLat = substr(StringFactory::beforeLast('+', $getValue[1]), 1);
             $this->assertEquals(
                 $latitude,
                 $tLat,
-                sprintf( self::$ERRFMT, null, 3, __FUNCTION__, $theComp, 'getGeoLocation' )
+                sprintf(self::$ERRFMT, null, 3, __FUNCTION__, $theComp, 'getGeoLocation')
             );
             $tLong = substr( str_replace( $tLat, null, $getValue[1] ), 1 );
             $this->assertEquals(
@@ -1551,40 +1732,28 @@ class MiscTest extends DtBase
     }
 
     /**
-     * Testing parse eol-htab
-     *
-     * @test
-     * @dataProvider parse5Provider
-     * @param int    $case
-     * @paran string $value
-     * @throws Exception
-     */
-    public function parseTest6( $case, $value ) {
-        $c = new Vcalendar();
-        $c->parse( $value );
-
-        $this->parseCalendarTest( $case, $c );
-
-    }
-
-    /**
      * parseTest6 provider
      */
-    public function parse5Provider() {
+    public function parse6Provider()
+    {
 
         $dataArr = [];
 
         $dataArr[] = [
-            501,
+            601,
             "BEGIN:VCALENDAR\r\n" .
             "VERSION:2.0\r\n" .
             "PRODID:-//ShopReply Inc//CalReply 1.0//EN\r\n" .
             "METHOD:REFRESH\r\n" .
+            "SOURCE;x-a=first;VALUE=uri:message://https://www.masked.de/account/subscripti\r\n" .
+            " on/delivery/8878/%3Fweek=2021-W03\r\n" .
             "X-WR-CALNAME:ESPN Daily Calendar\r\n" .
             "X-WR-RELCALID:657d63b8-df1d-e611-8b88-06bb54d48d13\r\n" .
             "X-PUBLISH-TTL:P1D\r\n" .
             "BEGIN:VTIMEZONE\r\n" .
             "TZID:America/New_York\r\n" .
+            "TZURL;x-a=first;VALUE=uri:message//:https://www.masked.de/account/subscriptio\r\n" .
+            " n/delivery/8878/%3Fweek=2021-W03" .
             "BEGIN:STANDARD\r\n" .
             "DTSTART:20070101T020000\r\n" .
             "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU;\r\n" .
@@ -1617,6 +1786,8 @@ class MiscTest extends DtBase
             "DTSTAMP:20190315T211012Z\r\n" .
             "LAST-MODIFIED:20190315T211012Z\r\n" .
             "SEQUENCE:1\r\n" .
+            "URL;x-a=first;VALUE=uri:message//:https://www.masked.de/account/subscription/\r\n" .
+            " delivery/8878/%3Fweek=2021-W03\r\n" .
             "BEGIN:VALARM\r\n" .
             "ACTION:DISPLAY\r\n" .
             "DESCRIPTION:Reminder\r\n" .
@@ -1629,4 +1800,22 @@ class MiscTest extends DtBase
         return $dataArr;
     }
 
+    /**
+     * Testing parse eol-htab, also test of empty unique_id
+     *
+     * @test
+     * @dataProvider parse6Provider
+     * @param int $case
+     * @param string $value
+     * @throws Exception
+     */
+    public function parseTest6($case, $value)
+    {
+        $c = new Vcalendar();
+        $c->parse($value);
+
+        $this->parseCalendarTest($case, $c);
+
+        // echo $c->createCalendar(); // test ###
+    }
 }

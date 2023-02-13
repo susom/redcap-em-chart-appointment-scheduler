@@ -1,316 +1,369 @@
-[
+{
+  "packages": [
     {
-        "name": "kigkonsult/icalcreator",
-        "version": "v2.29.21",
-        "version_normalized": "2.29.21.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/iCalcreator/iCalcreator.git",
-            "reference": "c9ac2c29b5e2e291f53705f5c9dcec539f48ead4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/c9ac2c29b5e2e291f53705f5c9dcec539f48ead4",
-            "reference": "c9ac2c29b5e2e291f53705f5c9dcec539f48ead4",
-            "shasum": ""
-        },
-        "require": {
-            "ext-openssl": "*",
-            "ext-simplexml": "*",
-            "ext-zlib": "*",
-            "php": ">=5.6"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "6.5.13"
-        },
-        "time": "2020-01-31T20:03:53+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "autoload.php"
-            ],
-            "psr-4": {
-                "Kigkonsult\\Icalcreator\\": [
-                    "src/",
-                    "src/Util/",
-                    "src/Traits/"
-                ]
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "lgpl-3.0"
+      "name": "kigkonsult/icalcreator",
+      "version": "v2.39.2",
+      "version_normalized": "2.39.2.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/iCalcreator/iCalcreator.git",
+        "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/722e161d1a25c3ceec1692642d64a7f2cf5faee9",
+        "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9",
+        "shasum": ""
+      },
+      "require": {
+        "ext-openssl": "*",
+        "ext-simplexml": "*",
+        "ext-zlib": "*",
+        "php": ">=7.0"
+      },
+      "require-dev": {
+        "phpcompatibility/php-compatibility": ">=9.3.5",
+        "phpstan/phpstan": ">=0.9.3",
+        "phpunit/phpunit": ">=6.5.13",
+        "squizlabs/php_codesniffer": ">=3.5.5"
+      },
+      "time": "2021-06-28T09:19:24+00:00",
+      "type": "library",
+      "installation-source": "dist",
+      "autoload": {
+        "files": [
+          "autoload.php"
         ],
-        "authors": [
-            {
-                "name": "Kjell-Inge Gustafsson",
-                "email": "ical@kigkonsult.se"
-            }
-        ],
-        "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545, management of calendar information",
-        "keywords": [
-            "alarm",
-            "calendar",
-            "daylight",
-            "event",
-            "management",
-            "rfc2445",
-            "rfc5545",
-            "rfc6321",
-            "standard",
-            "todo",
-            "vCalendar",
-            "valarm",
-            "vevent",
-            "vfreebusy",
-            "vjournal",
-            "vtimezone",
-            "vtodo"
-        ]
+        "psr-4": {
+          "Kigkonsult\\Icalcreator\\": [
+            "src/",
+            "src/Util/",
+            "src/Traits/"
+          ]
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "LGPL-3.0-or-later"
+      ],
+      "authors": [
+        {
+          "name": "Kjell-Inge Gustafsson",
+          "email": "ical@kigkonsult.se"
+        }
+      ],
+      "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545, management of calendar information",
+      "keywords": [
+        "alarm",
+        "calendar",
+        "daylight",
+        "event",
+        "management",
+        "rfc2445",
+        "rfc5545",
+        "rfc6321",
+        "rfc7986",
+        "standard",
+        "todo",
+        "vCalendar",
+        "valarm",
+        "vevent",
+        "vfreebusy",
+        "vjournal",
+        "vtimezone",
+        "vtodo"
+      ],
+      "support": {
+        "issues": "https://github.com/iCalcreator/iCalcreator/issues",
+        "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.39.2"
+      },
+      "funding": [
+        {
+          "url": "https://paypal.me/kigkonsult",
+          "type": "other"
+        }
+      ],
+      "install-path": "../kigkonsult/icalcreator"
     },
     {
-        "name": "monolog/monolog",
-        "version": "1.25.5",
-        "version_normalized": "1.25.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0"
+      "name": "monolog/monolog",
+      "version": "1.27.1",
+      "version_normalized": "1.27.1.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/Seldaek/monolog.git",
+        "reference": "904713c5929655dc9b97288b69cfeedad610c9a1"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/Seldaek/monolog/zipball/904713c5929655dc9b97288b69cfeedad610c9a1",
+        "reference": "904713c5929655dc9b97288b69cfeedad610c9a1",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=5.3.0",
+        "psr/log": "~1.0"
+      },
+      "provide": {
+        "psr/log-implementation": "1.0.0"
+      },
+      "require-dev": {
+        "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+        "doctrine/couchdb": "~1.0@dev",
+        "graylog2/gelf-php": "~1.0",
+        "php-amqplib/php-amqplib": "~2.4",
+        "php-console/php-console": "^3.1.3",
+        "phpstan/phpstan": "^0.12.59",
+        "phpunit/phpunit": "~4.5",
+        "ruflin/elastica": ">=0.90 <3.0",
+        "sentry/sentry": "^0.13",
+        "swiftmailer/swiftmailer": "^5.3|^6.0"
+      },
+      "suggest": {
+        "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+        "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+        "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+        "ext-mongo": "Allow sending log messages to a MongoDB server",
+        "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+        "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+        "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+        "php-console/php-console": "Allow sending log messages to Google Chrome",
+        "rollbar/rollbar": "Allow sending log messages to Rollbar",
+        "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+        "sentry/sentry": "Allow sending log messages to a Sentry server"
+      },
+      "time": "2022-06-09T08:53:42+00:00",
+      "type": "library",
+      "installation-source": "dist",
+      "autoload": {
+        "psr-4": {
+          "Monolog\\": "src/Monolog"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Jordi Boggiano",
+          "email": "j.boggiano@seld.be",
+          "homepage": "http://seld.be"
+        }
+      ],
+      "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+      "homepage": "http://github.com/Seldaek/monolog",
+      "keywords": [
+        "log",
+        "logging",
+        "psr-3"
+      ],
+      "support": {
+        "issues": "https://github.com/Seldaek/monolog/issues",
+        "source": "https://github.com/Seldaek/monolog/tree/1.27.1"
+      },
+      "funding": [
+        {
+          "url": "https://github.com/Seldaek",
+          "type": "github"
         },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1817faadd1846cd08be9a49e905dc68823bc38c0",
-            "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "psr/log": "~1.0"
-        },
-        "provide": {
-            "psr/log-implementation": "1.0.0"
-        },
-        "require-dev": {
-            "aws/aws-sdk-php": "^2.4.9 || ^3.0",
-            "doctrine/couchdb": "~1.0@dev",
-            "graylog2/gelf-php": "~1.0",
-            "php-amqplib/php-amqplib": "~2.4",
-            "php-console/php-console": "^3.1.3",
-            "php-parallel-lint/php-parallel-lint": "^1.0",
-            "phpunit/phpunit": "~4.5",
-            "ruflin/elastica": ">=0.90 <3.0",
-            "sentry/sentry": "^0.13",
-            "swiftmailer/swiftmailer": "^5.3|^6.0"
-        },
-        "suggest": {
-            "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-            "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
-            "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-            "ext-mongo": "Allow sending log messages to a MongoDB server",
-            "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-            "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
-            "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
-            "php-console/php-console": "Allow sending log messages to Google Chrome",
-            "rollbar/rollbar": "Allow sending log messages to Rollbar",
-            "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-            "sentry/sentry": "Allow sending log messages to a Sentry server"
-        },
-        "time": "2020-07-23T08:35:51+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Monolog\\": "src/Monolog"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jordi Boggiano",
-                "email": "j.boggiano@seld.be",
-                "homepage": "http://seld.be"
-            }
-        ],
-        "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-        "homepage": "http://github.com/Seldaek/monolog",
-        "keywords": [
-            "log",
-            "logging",
-            "psr-3"
-        ]
+        {
+          "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
+          "type": "tidelift"
+        }
+      ],
+      "install-path": "../monolog/monolog"
     },
     {
-        "name": "phpmailer/phpmailer",
-        "version": "v6.1.7",
-        "version_normalized": "6.1.7.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PHPMailer/PHPMailer.git",
-            "reference": "2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0"
+      "name": "phpmailer/phpmailer",
+      "version": "v6.7.1",
+      "version_normalized": "6.7.1.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/PHPMailer/PHPMailer.git",
+        "reference": "49cd7ea3d2563f028d7811f06864a53b1f15ff55"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/49cd7ea3d2563f028d7811f06864a53b1f15ff55",
+        "reference": "49cd7ea3d2563f028d7811f06864a53b1f15ff55",
+        "shasum": ""
+      },
+      "require": {
+        "ext-ctype": "*",
+        "ext-filter": "*",
+        "ext-hash": "*",
+        "php": ">=5.5.0"
+      },
+      "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
+        "doctrine/annotations": "^1.2.6 || ^1.13.3",
+        "php-parallel-lint/php-console-highlighter": "^1.0.0",
+        "php-parallel-lint/php-parallel-lint": "^1.3.2",
+        "phpcompatibility/php-compatibility": "^9.3.5",
+        "roave/security-advisories": "dev-latest",
+        "squizlabs/php_codesniffer": "^3.7.1",
+        "yoast/phpunit-polyfills": "^1.0.4"
+      },
+      "suggest": {
+        "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
+        "ext-openssl": "Needed for secure SMTP sending and DKIM signing",
+        "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
+        "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+        "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+        "psr/log": "For optional PSR-3 debug logging",
+        "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
+        "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
+      },
+      "time": "2022-12-08T13:30:06+00:00",
+      "type": "library",
+      "installation-source": "dist",
+      "autoload": {
+        "psr-4": {
+          "PHPMailer\\PHPMailer\\": "src/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "LGPL-2.1-only"
+      ],
+      "authors": [
+        {
+          "name": "Marcus Bointon",
+          "email": "phpmailer@synchromedia.co.uk"
         },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0",
-            "reference": "2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0",
-            "shasum": ""
+        {
+          "name": "Jim Jagielski",
+          "email": "jimjag@gmail.com"
         },
-        "require": {
-            "ext-ctype": "*",
-            "ext-filter": "*",
-            "php": ">=5.5.0"
+        {
+          "name": "Andy Prevost",
+          "email": "codeworxtech@users.sourceforge.net"
         },
-        "require-dev": {
-            "doctrine/annotations": "^1.2",
-            "friendsofphp/php-cs-fixer": "^2.2",
-            "phpunit/phpunit": "^4.8 || ^5.7"
-        },
-        "suggest": {
-            "ext-mbstring": "Needed to send email in multibyte encoding charset",
-            "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
-            "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
-            "psr/log": "For optional PSR-3 debug logging",
-            "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
-            "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
-        },
-        "time": "2020-07-14T18:50:27+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "PHPMailer\\PHPMailer\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL-2.1-only"
-        ],
-        "authors": [
-            {
-                "name": "Marcus Bointon",
-                "email": "phpmailer@synchromedia.co.uk"
-            },
-            {
-                "name": "Jim Jagielski",
-                "email": "jimjag@gmail.com"
-            },
-            {
-                "name": "Andy Prevost",
-                "email": "codeworxtech@users.sourceforge.net"
-            },
-            {
-                "name": "Brent R. Matzelle"
-            }
-        ],
-        "description": "PHPMailer is a full-featured email creation and transfer class for PHP"
+        {
+          "name": "Brent R. Matzelle"
+        }
+      ],
+      "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+      "support": {
+        "issues": "https://github.com/PHPMailer/PHPMailer/issues",
+        "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.7.1"
+      },
+      "funding": [
+        {
+          "url": "https://github.com/Synchro",
+          "type": "github"
+        }
+      ],
+      "install-path": "../phpmailer/phpmailer"
     },
     {
-        "name": "psr/log",
-        "version": "1.1.3",
-        "version_normalized": "1.1.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/php-fig/log.git",
-            "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/php-fig/log/zipball/0f73288fd15629204f9d42b7055f72dacbe811fc",
-            "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2020-03-23T09:12:05+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.1.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Psr\\Log\\": "Psr/Log/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "PHP-FIG",
-                "homepage": "http://www.php-fig.org/"
-            }
-        ],
-        "description": "Common interface for logging libraries",
-        "homepage": "https://github.com/php-fig/log",
-        "keywords": [
-            "log",
-            "psr",
-            "psr-3"
-        ]
+      "name": "psr/log",
+      "version": "1.1.4",
+      "version_normalized": "1.1.4.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/php-fig/log.git",
+        "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+        "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=5.3.0"
+      },
+      "time": "2021-05-03T11:20:27+00:00",
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "1.1.x-dev"
+        }
+      },
+      "installation-source": "dist",
+      "autoload": {
+        "psr-4": {
+          "Psr\\Log\\": "Psr/Log/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "PHP-FIG",
+          "homepage": "https://www.php-fig.org/"
+        }
+      ],
+      "description": "Common interface for logging libraries",
+      "homepage": "https://github.com/php-fig/log",
+      "keywords": [
+        "log",
+        "psr",
+        "psr-3"
+      ],
+      "support": {
+        "source": "https://github.com/php-fig/log/tree/1.1.4"
+      },
+      "install-path": "../psr/log"
     },
     {
-        "name": "twilio/sdk",
-        "version": "5.42.2",
-        "version_normalized": "5.42.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twilio/twilio-php.git",
-            "reference": "0cfcb871b18a9c427dd9e8f0ed7458d43009b48a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twilio/twilio-php/zipball/0cfcb871b18a9c427dd9e8f0ed7458d43009b48a",
-            "reference": "0cfcb871b18a9c427dd9e8f0ed7458d43009b48a",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.0"
-        },
-        "require-dev": {
-            "apigen/apigen": "^4.1",
-            "guzzlehttp/guzzle": "^6.3",
-            "phpunit/phpunit": ">=4.5"
-        },
-        "suggest": {
-            "guzzlehttp/guzzle": "An HTTP client to execute the API requests"
-        },
-        "time": "2020-02-05T19:55:13+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Twilio\\": "src/Twilio/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Twilio API Team",
-                "email": "api@twilio.com"
-            }
-        ],
-        "description": "A PHP wrapper for Twilio's API",
-        "homepage": "http://github.com/twilio/twilio-php",
-        "keywords": [
-            "api",
-            "sms",
-            "twilio"
-        ]
+      "name": "twilio/sdk",
+      "version": "5.42.2",
+      "version_normalized": "5.42.2.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/twilio/twilio-php.git",
+        "reference": "0cfcb871b18a9c427dd9e8f0ed7458d43009b48a"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/twilio/twilio-php/zipball/0cfcb871b18a9c427dd9e8f0ed7458d43009b48a",
+        "reference": "0cfcb871b18a9c427dd9e8f0ed7458d43009b48a",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=5.5.0"
+      },
+      "require-dev": {
+        "apigen/apigen": "^4.1",
+        "guzzlehttp/guzzle": "^6.3",
+        "phpunit/phpunit": ">=4.5"
+      },
+      "suggest": {
+        "guzzlehttp/guzzle": "An HTTP client to execute the API requests"
+      },
+      "time": "2020-02-05T19:55:13+00:00",
+      "type": "library",
+      "installation-source": "dist",
+      "autoload": {
+        "psr-4": {
+          "Twilio\\": "src/Twilio/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Twilio API Team",
+          "email": "api@twilio.com"
+        }
+      ],
+      "description": "A PHP wrapper for Twilio's API",
+      "homepage": "http://github.com/twilio/twilio-php",
+      "keywords": [
+        "api",
+        "sms",
+        "twilio"
+      ],
+      "install-path": "../twilio/sdk"
     }
-]
+  ],
+  "dev": true,
+  "dev-package-names": []
+}

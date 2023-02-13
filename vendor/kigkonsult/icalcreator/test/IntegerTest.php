@@ -2,36 +2,35 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2019 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.29.9
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
 namespace Kigkonsult\Icalcreator;
 
 use Kigkonsult\Icalcreator\Util\Util;
 use Kigkonsult\Icalcreator\Util\ParameterFactory;
+use Kigkonsult\Icalcreator\Util\StringFactory;
 use Exception;
 
 /**
@@ -41,27 +40,26 @@ use Exception;
  *    SEQUENCE            VEVENT, VTODO, or VJOURNAL
  *    REPEAT              (VEVENT) VALARM
  *
- * @author      Kjell-Inge Gustafsson <ical@kigkonsult.se>
  * @since  2.27.14 - 2019-01-24
  */
 class IntegerTest extends DtBase
 {
     private static $ERRFMT = "Error %sin case #%s, %s <%s>->%s";
-    private static $STCPAR = [ 'X-PARAM' => 'Y-vALuE' ];
+    private static $STCPAR = ['X-PARAM' => 'Y-vALuE'];
 
     /**
      * integerTest provider
      */
-    public function integerTestProvider() {
-
+    public function integerTestProvider()
+    {
         $dataArr = [];
 
         $dataArr[] = [
             1,
             [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
-                Vcalendar::PRIORITY         => [ Vcalendar::VEVENT, Vcalendar::VTODO ],
-                Vcalendar::REPEAT           => [ Vcalendar::VALARM ],
+                Vcalendar::PERCENT_COMPLETE => [Vcalendar::VTODO],
+                Vcalendar::PRIORITY => [Vcalendar::VEVENT, Vcalendar::VTODO],
+                Vcalendar::REPEAT => [Vcalendar::VALARM],
             ],
             null,
             self::$STCPAR,
@@ -164,20 +162,19 @@ class IntegerTest extends DtBase
     ) {
         $c = new Vcalendar();
         foreach( $propComps as $propName => $theComps ) {
-            $getMethod    = Vcalendar::getGetMethodName( $propName );
-            $createMethod = Vcalendar::getCreateMethodName( $propName );
-            $deleteMethod = Vcalendar::getDeleteMethodName( $propName );
-            $setMethod    = Vcalendar::getSetMethodName( $propName );
-            foreach( $theComps as $theComp ) {
+            $getMethod = StringFactory::getGetMethodName($propName);
+            $createMethod = StringFactory::getCreateMethodName($propName);
+            $deleteMethod = StringFactory::getDeleteMethodName($propName);
+            $setMethod = StringFactory::getSetMethodName($propName);
+            foreach ($theComps as $theComp) {
                 $newMethod = 'new' . $theComp;
-                if( Vcalendar::VALARM == $theComp ) {
-                    $comp      = $c->newVevent()->{$newMethod}();
-                }
-                else {
-                    $comp      = $c->{$newMethod}();
+                if (Vcalendar::VALARM == $theComp) {
+                    $comp = $c->newVevent()->{$newMethod}();
+                } else {
+                    $comp = $c->{$newMethod}();
                 }
                 try {
-                    $comp->{$setMethod}( $value, $params );
+                    $comp->{$setMethod}($value, $params);
                 }
                 catch( Exception $e ) {
                     $ok = false;
@@ -201,21 +198,19 @@ class IntegerTest extends DtBase
                     sprintf( self::$ERRFMT, null, $case, __FUNCTION__, $theComp, $getMethod )
                 );
                 $this->assertEquals(
-                    strtoupper( $propName ) . $expectedString,
-                    trim( $comp->{$createMethod}() ),
-                    sprintf( self::$ERRFMT, null, $case, __FUNCTION__, $theComp, $createMethod )
+                    strtoupper($propName) . $expectedString,
+                    trim($comp->{$createMethod}()),
+                    sprintf(self::$ERRFMT, null, $case, __FUNCTION__, $theComp, $createMethod)
                 );
                 $comp->{$deleteMethod}();
                 $this->assertFalse(
                     $comp->{$getMethod}(),
-                    sprintf( self::$ERRFMT, '(after delete) ', $case, __FUNCTION__, $theComp, $getMethod )
+                    sprintf(self::$ERRFMT, '(after delete) ', $case, __FUNCTION__, $theComp, $getMethod)
                 );
-                $comp->{$setMethod}( $value, $params );
-            }
-        }
+                $comp->{$setMethod}($value, $params);
+            } // end foreach
+        } // end foreach
 
-        $this->parseCalendarTest( $case, $c, $expectedString );
-
+        $this->parseCalendarTest($case, $c, $expectedString);
     }
-
 }
