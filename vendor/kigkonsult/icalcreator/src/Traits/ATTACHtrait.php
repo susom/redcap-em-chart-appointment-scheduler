@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2024 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,66 +26,54 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
-use Kigkonsult\Icalcreator\Util\StringFactory;
-use Kigkonsult\Icalcreator\Util\Util;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
+use Kigkonsult\Icalcreator\Formatter\Property\MultiProps;
+use Kigkonsult\Icalcreator\Pc;
 use InvalidArgumentException;
+use Kigkonsult\Icalcreator\Util\Util;
 
 /**
  * ATTACH property functions
  *
- * @since 2.27.3 2018-12-20
+ * @since 2.41.85 2024-01-18
  */
 trait ATTACHtrait
 {
     /**
-     * @var array component property ATTACH value
+     * @var null|Pc[] component property ATTACH value
      */
-    protected $attach = null;
+    protected ? array $attach = null;
 
     /**
      * Return formatted output for calendar component property attach
      *
      * @return string
      */
-    public function createAttach(): string
+    public function createAttach() : string
     {
-        if (empty($this->attach)) {
-            return Util::$SP0;
-        }
-        $output = Util::$SP0;
-        foreach ($this->attach as $aix => $attachPart) {
-            if (!empty($attachPart[Util::$LCvalue])) {
-                $output .= StringFactory::createElement(
-                    self::ATTACH,
-                    ParameterFactory::createParams($attachPart[Util::$LCparams]),
-                    $attachPart[Util::$LCvalue]
-                );
-            } elseif ($this->getConfig(self::ALLOWEMPTY)) {
-                $output .= StringFactory::createElement(self::ATTACH);
-            }
-        } // end foreach
-        return $output;
+        return MultiProps::format(
+            self::ATTACH,
+            $this->attach ?? [],
+            $this->getConfig( self::ALLOWEMPTY )
+        );
     }
 
     /**
      * Delete calendar component property attach
      *
-     * @param null|int $propDelIx specific property in case of multiply occurrence
+     * @param null|int   $propDelIx   specific property in case of multiply occurrence
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteAttach($propDelIx = null): bool
+    public function deleteAttach( ? int $propDelIx = null ) : bool
     {
-        if (empty($this->attach)) {
-            unset($this->propDelIx[self::ATTACH]);
+        if( empty( $this->attach )) {
+            unset( $this->propDelIx[self::ATTACH] );
             return false;
         }
-        return self::deletePropertyM(
+        return  self::deletePropertyM(
             $this->attach,
             self::ATTACH,
             $this,
@@ -96,18 +84,18 @@ trait ATTACHtrait
     /**
      * Get calendar component property attach
      *
-     * @param null|int $propIx specific property in case of multiply occurrence
-     * @param null|bool $inclParam
-     * @return bool|array
-     * @since  2.27.1 - 2018-12-16
+     * @param null|int    $propIx specific property in case of multiply occurrence
+     * @param null|bool   $inclParam
+     * @return bool|string|Pc
+     * @since 2.41.36 2022-04-03
      */
-    public function getAttach($propIx = null, $inclParam = false)
+    public function getAttach( ? int $propIx = null, ? bool $inclParam = false ) : bool | string | Pc
     {
-        if (empty($this->attach)) {
-            unset($this->propIx[self::ATTACH]);
+        if( empty( $this->attach )) {
+            unset( $this->propIx[self::ATTACH] );
             return false;
         }
-        return self::getPropertyM(
+        return self::getMvalProperty(
             $this->attach,
             self::ATTACH,
             $this,
@@ -117,23 +105,50 @@ trait ATTACHtrait
     }
 
     /**
+     * Return array, all calendar component property attachs
+     *
+     * @param null|bool $inclParam
+     * @return Pc[]
+     * @since 2.41.58 2022-08-24
+     */
+    public function getAllAttach( ? bool $inclParam = false ) : array
+    {
+        return self::getMvalProperties( $this->attach, $inclParam );
+    }
+
+    /**
+     * Return bool true if set (and ignore empty property)
+     *
+     * @return bool
+     * @since 2.41.35 2022-03-28
+     */
+    public function isAttachSet() : bool
+    {
+        return self::isMvalSet( $this->attach );
+    }
+
+    /**
      * Set calendar component property attach
      *
-     * @param null|string $value
-     * @param null|array $params
-     * @param null|integer $index
+     * @param null|string|Pc   $value
+     * @param null|int|array $params
+     * @param null|int         $index
      * @return static
      * @throws InvalidArgumentException
-     * @since 2.27.3 2018-12-20
+     * @since 2.41.85 2024-01-18
      */
-    public function setAttach($value = null, $params = [], $index = null): self
+    public function setAttach( null|string|Pc $value = null, null|int|array $params = [], ? int $index = null) : static
     {
-        if (empty($value)) {
-            $this->assertEmptyValue($value, self::ATTACH);
-            $value = Util::$SP0;
-            $params = [];
+        $pc = self::marshallInputMval( $value, $params, $index );
+        $pcValue = $pc->getValue();
+        if( empty( $pcValue )) {
+            $this->assertEmptyValue( $pcValue, self::ATTACH );
+            $pc->setEmpty();
         }
-        self::setMval($this->attach, $value, $params, null, $index);
+        else {
+            Util::assertString( $pcValue, self::ATTACH );
+        }
+        self::setMval( $this->attach, $pc, $index );
         return $this;
     }
 }

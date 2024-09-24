@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2023 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,20 +26,19 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Util;
 
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 use Kigkonsult\Icalcreator\Vcalendar;
+use Kigkonsult\Icalcreator\Vtimezone;
 
 use function array_keys;
 use function count;
 use function date;
 use function end;
-use function is_array;
 use function reset;
 use function sprintf;
 
@@ -63,7 +62,7 @@ use function sprintf;
  * END:DAYLIGHT
  * END:VTIMEZONE
  *
- * @since  2.29.16 - 2020-01-25
+ * @since 2.41.10 2022-01-26
  *
  * Contributors :
  *   Yitzchok Lavi <icalcreator@onebigsystem.com>
@@ -75,271 +74,308 @@ class VtimezonePopulateFactory
     /*
     * @var string  for populate method (and descendents)
     */
-    private static $ABBR    = 'abbr';
-    private static $AT      = '@';
-    private static $ISDST   = 'isdst';
-    private static $OFFSET  = 'offset';
-    private static $SECONDS = 'seconds';
-    private static $TIME    = 'time';
-    private static $TS      = 'ts';
-    private static $YMD     = 'Ymd';
+    private static string $ABBR    = 'abbr';
+    private static string $ISDST   = 'isdst';
+    private static string $OFFSET  = 'offset';
+    private static string $SECONDS = 'seconds';
+    private static string $TIME    = 'time';
+    private static string $TS      = 'ts';
+    private static string $YMD     = 'Ymd';
 
     /**
-     * Return calendar with timezone and standard/daylight components
+     * If missing start/end or fetched from Dtstart, number if days before/after (now/dtstart) to use
      *
-     * @param Vcalendar $calendar iCalcreator calendar instance
-     * @param string $timezone valid timezone acceptable by PHP5 DateTimeZone
-     * @param array $xProp *[x-propName => x-propValue]
-     * @param DateTimeInterface|int $start .. or unix timestamp
-     * @param DateTimeInterface|int $end .. or unix timestamp
+     * @var int
+     */
+    private static int $NUMBEROFDAYSBEFORE = 365;
+    private static int $NUMBEROFDAYSAFTER  = 548;
+
+    /**
+     * Return calendar with Vtimezone(s) and Standard/Daylight components
+     *
+     * Used timezone from 1. xProps arg 2-3. calendar/vtimezone X-prop X_WR_TIMEZONE/X-LIC-LOCATION, 4. UTC
+     * start/end : 1. start/end args  2. first/last found DTSTART and recalculated using vars above
+     * Will remove any previously set Vtimezones
+     *
+     * @param Vcalendar             $calendar iCalcreator calendar instance
+     * @param null|string|string[]  $timezone valid timezone(s) acceptable by PHP DateTimeZone
+     * @param null|string[]         $xProp    *[x-propName => x-propValue]
+     * @param null|int|DateTimeInterface  $start    .. or unix timestamp
+     * @param null|int|DateTimeInterface  $end      .. or unix timestamp
      * @return Vcalendar
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since  2.29.16 - 2020-01-25
+     * @since 2.41.10 2022-01-26
      */
     public static function process(
         Vcalendar $calendar,
-                  $timezone = null,
-                  $xProp = [],
-                  $start = null,
-                  $end = null
-    ): Vcalendar
+        null | string| array $timezone = null,
+        ? array $xProp = [],
+        null|int|DateTimeInterface $start = null,
+        null|int|DateTimeInterface $end = null
+    ) : Vcalendar
     {
-        $timezone = self::getTimezone($calendar, $timezone, $xProp);
+        $timezone = empty( $timezone )
+            ? [ self::getTimezone( $calendar, $xProp ) ]
+            : (array) $timezone;
+        while( false !== $calendar->deleteComponent( Vcalendar::VTIMEZONE )) {} // remove all Vtimezones
+        foreach( $timezone as $theTimezone ) {
+            DateTimeZoneFactory::assertDateTimeZone( $theTimezone );
+            self::processSingleTimezone( $calendar, $theTimezone, $xProp, $start, $end );
+        }
+        return $calendar;
+    }
+
+    /**
+     * Add VTimezone to calendar for single timezone
+     *
+     * @param Vcalendar $calendar
+     * @param string $timezone
+     * @param null|string[] $xProps
+     * @param int|DateTimeInterface|null $start
+     * @param int|DateTimeInterface|null $end
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @since 2.41.73 2023-03-15
+     */
+    public static function processSingleTimezone(
+        Vcalendar                  $calendar,
+        string                     $timezone,
+        ? array                    $xProps = [],
+        null|int|DateTimeInterface $start = null,
+        null|int|DateTimeInterface $end = null
+    ) : void
+    {
         $foundTrans = [];
-        if (!DateTimeZoneFactory::isUTCtimeZone($timezone)) {
-            list($start, $end) =
-                self::ensureStartAndEnd($calendar, $timezone, $start, $end);
-            $foundTrans = self::findTransitions($timezone, $start, $end);
+        $dtstartArr = self::getDtstartsArr( $calendar );
+        if( ! DateTimeZoneFactory::isUTCtimeZone( $timezone, (string) $dtstartArr[0] )) {
+            [ $start, $end ] = self::ensureStartAndEnd( $timezone, $dtstartArr, $start, $end );
+            $foundTrans      = self::findTransitions( $timezone, $start, $end );
         }
-        while (false !== $calendar->deleteComponent(Vcalendar::VTIMEZONE, false)) {
-            continue;
-        }
-        $timezoneComp = $calendar->newVtimezone();
-        $timezoneComp->setTzid( $timezone );
-        if( ! empty( $xProp )) {
-            foreach( (array) $xProp as $xPropName => $xPropValue ) {
+        $timezoneComp = self::getTimezoneComp( $calendar, $timezone, $xProps );
+        foreach( $foundTrans as $trans ) {
+            if(( 1 === count( $trans )) && isset( $trans[self::$TIME] )) {
+                // last, contains DateTime for 'next' transition, i.e. transtion valid until
+                $timezoneComp->setTzuntil( $trans[self::$TIME] );
+                break;
+            }
+            // create standard/daylight subcomponents
+            $subComp = ( true !== $trans[self::$ISDST] )
+                ? $timezoneComp->newStandard()
+                : $timezoneComp->newDaylight();
+            $subComp->setDtstart( $trans[self::$TIME] );
+            if( ! empty( $trans[self::$ABBR] )) {
+                $subComp->setTzname( $trans[self::$ABBR] );
+            }
+            if( isset( $trans[Vcalendar::TZOFFSETFROM] )) {
+                $subComp->setTzoffsetfrom( DateTimeZoneFactory::secondsToOffset( $trans[Vcalendar::TZOFFSETFROM] ));
+            }
+            $subComp->setTzoffsetto( DateTimeZoneFactory::secondsToOffset( $trans[self::$OFFSET] ));
+            if( isset( $trans[Vcalendar::RDATE] )) {
+                foreach( $trans[Vcalendar::RDATE] as $rDate ) {
+                    // RDATEs, each with s single date
+                    $subComp->setRdate( $rDate );
+                }
+            }
+        } // end foreach
+    }
+
+    /**
+     * @param Vcalendar $calendar
+     * @param string $timezone
+     * @param null|string[] $xProps
+     * @return Vtimezone
+     */
+    private static function getTimezoneComp( Vcalendar $calendar, string $timezone, ? array $xProps = [] ) : Vtimezone
+    {
+        $timezoneComp = $calendar->newVtimezone( $timezone );
+        if( ! empty( $xProps )) {
+            foreach( $xProps as $xPropName => $xPropValue ) {
                 if( StringFactory::isXprefixed( $xPropName )) {
                     $timezoneComp->setXprop( $xPropName, $xPropValue );
                 }
             }
         } // end if
-        foreach( $foundTrans as $tix => $trans ) {
-            // create standard/daylight subcomponents
-            $subComp = ( true !== $trans[self::$ISDST] )
-                ? $timezoneComp->newStandard()
-                : $timezoneComp->newDaylight();
-            $subComp->setDtstart($trans[self::$TIME]);
-            if (!empty($trans[self::$ABBR])) {
-                $subComp->setTzname($trans[self::$ABBR]);
-            }
-            if (isset($trans[Vcalendar::TZOFFSETFROM])) {
-                $subComp->setTzoffsetfrom(
-                    DateTimeZoneFactory::secondsToOffset($trans[Vcalendar::TZOFFSETFROM])
-                );
-            }
-            $subComp->setTzoffsetto(
-                DateTimeZoneFactory::secondsToOffset($trans[self::$OFFSET])
-            );
-            if (isset($trans[Vcalendar::RDATE])) {
-                foreach ($trans[Vcalendar::RDATE] as $rDate) {
-                    // single RDATEs, each with single date
-                    $subComp->setRdate($rDate);
-                }
-            }
-        } // end foreach
-        return $calendar;
+        return $timezoneComp;
     }
 
     /**
-     * Return timezone from 1. tz arg, 2. xProps arg 3. calendar/vtimezone X-prop X_WR_TIMEZONE/X-LIC-LOCATION, 4. UTC
+     * Return timezone from 1. xProps arg 2-3. calendar/vtimezone X-prop X_WR_TIMEZONE/X-LIC-LOCATION, 4. UTC
      *
-     * @param Vcalendar $calendar iCalcreator calendar instance
-     * @param string $timezone valid timezone acceptable by PHP5 DateTimeZone
-     * @param array $xProp *[x-propName => x-propValue]
+     * @param Vcalendar     $calendar iCalcreator calendar instance
+     * @param null|string[] $xProps    *[x-propName => x-propValue]
      * @return string
-     * @since  2.29.22 - 2019-08-26
+     * @since 2.41.68 - 2022-09-25
      */
-    private static function getTimezone(
-        Vcalendar $calendar,
-                  $timezone = null,
-                  $xProp = []
-    ): string
+    private static function getTimezone( Vcalendar $calendar, ? array $xProps = [] ) : string
     {
-        switch (true) {
-            case (!empty($timezone)) :
+        switch( true ) {
+            case Util::issetAndNotEmpty( $xProps, Vcalendar::X_WR_TIMEZONE ) :
+                $timezone = $xProps[Vcalendar::X_WR_TIMEZONE];
                 break;
-            case Util::issetAndNotEmpty($xProp, Vcalendar::X_WR_TIMEZONE) :
-                $timezone = $xProp[Vcalendar::X_WR_TIMEZONE];
+            case Util::issetAndNotEmpty( $xProps, Vcalendar::X_LIC_LOCATION ) :
+                $timezone = $xProps[Vcalendar::X_LIC_LOCATION];
                 break;
-            case Util::issetAndNotEmpty($xProp, Vcalendar::X_LIC_LOCATION) :
-                $timezone = $xProp[Vcalendar::X_LIC_LOCATION];
+            case $calendar->isXpropSet( Vcalendar::X_WR_TIMEZONE ) :
+                $timezone = $calendar->getXprop( Vcalendar::X_WR_TIMEZONE )[1];
                 break;
-            case (false !==
-                ($xProp = $calendar->getXprop(Vcalendar::X_WR_TIMEZONE))) :
-                $timezone = $xProp[1];
-                break;
-            case (false !==
-                ($comp = $calendar->getComponent(Vcalendar::VTIMEZONE))) :
-                $calendar->reset();
-                if (false !== ($xProp = $comp->getXprop(Vcalendar::X_LIC_LOCATION))) {
-                    $timezone = $xProp[1];
+            case ( false !== ( $comp = $calendar->getComponent( Vcalendar::VTIMEZONE ))) :
+                $calendar->resetCompCounter();
+                if( false !== ( $xProp3 = $comp->getXprop( Vcalendar::X_LIC_LOCATION ))) {
+                    $timezone = $xProp3[1];
                     break;
                 }
-            // fall through
+                // fall through
             default :
                 return Vcalendar::UTC;
         } // end switch
-        DateTimeZoneFactory::assertDateTimeZone($timezone);
         return $timezone;
     }
 
     /**
-     * Return valid (ymd-)from/tom
+     * Return valid (ymd-)from/tom as timestamps
      *
-     * @param Vcalendar $calendar
-     * @param string $timezone valid timezone acceptable by PHP5 DateTimeZone
-     * @param DateTimeInterface|int $start .. or unix timestamp
-     * @param DateTimeInterface|int $end .. or unix timestamp
-     * @return array
+     * @param string        $timezone  valid timezone acceptable by PHP5 DateTimeZone
+     * @param int[]         $dtstartArr
+     * @param null|int|DateTimeInterface  $start    .. or unix timestamp
+     * @param null|int|DateTimeInterface  $end      .. or unix timestamp
+     * @return int[]
      * @throws  InvalidArgumentException
      * @throws  Exception
-     * @since  2.27.15 - 2019-03-21
+     * @since  2.41.88 - 2024-01-17
      */
     private static function ensureStartAndEnd(
-        Vcalendar $calendar,
-                  $timezone,
-                  $start = null,
-                  $end = null
-    ): array
+        string $timezone,
+        array $dtstartArr,
+        null|int|DateTimeInterface $start = null,
+        null|int|DateTimeInterface $end = null
+    ) : array
     {
-        static $NUMBEROFDAYSBEFORE = 365;
-        static $FMTBEFORE = '-%d days';
-        static $NUMBEROFDAYSAFTER = 548;
-        static $FMTAFTER = '+%d days';
         static $ERRMSG = 'Date are not in order: %d - %d';
-        switch (true) {
-            case empty($start) :
-                break;
-            case ($start instanceof DateTimeInterface) :
-                $start = $start->getTimestamp();
-                break;
-            default :
-                Util::assertInteger( $start, __METHOD__ );
-                break;
-        } // end switch
-        switch( true ) {
-            case empty( $end ) :
-                break;
-            case ( $end instanceof DateTimeInterface ) :
-                $end = $end->getTimestamp();
-                break;
-            default :
-                Util::assertInteger( $end, __METHOD__ );
-                break;
-        } // end switch
-        switch( true ) {
-            case ( ! empty( $start ) && ! empty( $end )) :
-                break;
-            case ( ! empty( $start )) : //  set to = +18 month (i.e 548 days)
-                $end = $start + ( 3600 * 24 * $NUMBEROFDAYSAFTER );
-                break;
-            case ( ! empty( $end )) :  // set from = -12 month (i.e 365 days)
-                $start = $end - ( 3600 * 24 * $NUMBEROFDAYSBEFORE );
-                break;
-            default :
-                $dtstarts = array_keys( $calendar->getProperty( Vcalendar::DTSTART ));
-                switch( true ) {
-                    case (empty($dtstarts)) :
-                        $start = DateTimeFactory::factory(null, $timezone);
-                        $end = (clone $start);
-                        break;
-                    case (1 == count($dtstarts)) :
-                        $start = DateTimeFactory::factory(
-                            reset($dtstarts),
-                            $timezone
-                        );
-                        $end = (clone $start);
-                        break;
-                    default :
-                        $start = DateTimeFactory::factory(
-                            reset($dtstarts),
-                            $timezone
-                        );
-                        $end = DateTimeFactory::factory(
-                            end($dtstarts),
-                            $timezone
-                        );
-                        break;
-                } // end switch
-                $start = $start->modify(sprintf($FMTBEFORE, $NUMBEROFDAYSBEFORE))
-                    ->getTimestamp();
-                $end = $end->modify(sprintf($FMTAFTER, $NUMBEROFDAYSAFTER))
-                    ->getTimestamp();
-                break;
-        } // end switch
-        if( $start > $end ) {
+        $startTs = self::getArgInSeconds( $start);
+        $endTs   = self::getArgInSeconds( $end );
+        match( true ) {
+            (( null !== $startTs ) && ( null !== $endTs )) => null,
+            ( null !== $startTs ) => //  set to = +18 month (i.e 548 days)
+                $endTs = $startTs + ( 3600 * 24 * self::$NUMBEROFDAYSAFTER ),
+            ( null !== $endTs ) =>  // set from = -12 month (i.e 365 days)
+                $startTs = $endTs - ( 3600 * 24 * self::$NUMBEROFDAYSBEFORE ),
+            default =>
+                [ $startTs, $endTs ] = self::getStartEndFromDtstarts( $timezone, $dtstartArr ),
+        }; // end match
+        if( $startTs > $endTs ) {
             throw new InvalidArgumentException( sprintf( $ERRMSG, $start, $end ));
         }
-        return [ $start, $end ];
+        return [ $startTs, $endTs ];
     }
 
     /**
-     * Return (prep'd) datetimezone transitions
+     * @param int|DateTimeInterface|null $arg
+     * @return null|int
+     */
+    private static function getArgInSeconds( null|int|DateTimeInterface $arg = null ) : ? int
+    {
+        switch( true ) {
+            case empty( $arg ) :
+                return null;
+            case ( $arg instanceof DateTimeInterface ) :
+                return $arg->getTimestamp();
+            default :
+                Util::assertInteger( $arg, __METHOD__ );
+                return (int) $arg;
+        } // end switch
+    }
+
+    /**
+     * Return array (Ymd), all Dtstarts from calendar components, if none found [ 'now' ]
+     *
+     * @param Vcalendar $calendar
+     * @return int[]|string[]
+     * @throws Exception
+     * @since  2.41.73 - 2023-03-25
+     */
+    private static function getDtstartsArr( Vcalendar $calendar ) : array
+    {
+        $dtstartArr = array_keys( $calendar->getProperty( Vcalendar::DTSTART ));
+        if( empty( $dtstartArr )) {
+            $dtstartArr = [ date( self::$YMD ) ];
+        }
+        return $dtstartArr;
+    }
+
+    /**
+     * @param string $timezone
+     * @param int[] $dtstartArr
+     * @return int[]
+     * @throws Exception
+     * @since  2.41.73 - 2023-03-25
+     */
+    private static function getStartEndFromDtstarts( string $timezone, array $dtstartArr ) : array
+    {
+        static $FMTBEFORE = '-%d days';
+        static $FMTAFTER  = '+%d days';
+        if( 1 === count( $dtstartArr )) {
+            $start = DateTimeFactory::factory((string) reset( $dtstartArr ), $timezone );
+            $end   = ( clone $start );
+        }
+        else {
+            $start = DateTimeFactory::factory((string) reset( $dtstartArr ), $timezone );
+            $end   = DateTimeFactory::factory((string) end( $dtstartArr ), $timezone );
+        }
+        return [
+            $start->modify( sprintf( $FMTBEFORE, self::$NUMBEROFDAYSBEFORE ))->getTimestamp(),
+            $end->modify(   sprintf( $FMTAFTER,  self::$NUMBEROFDAYSAFTER ))->getTimestamp()
+        ];
+    }
+
+    /**
+     * Return (prep'd) datetimezone transitions within start and end plus one for TZUNIL
      *
      * @param string $timezone
-     * @param int $start
-     * @param int $end
+     * @param int    $start
+     * @param int    $end
      * @return array
      * @throws InvalidArgumentException
      * @throws Exception
-     * @since  2.27.15 - 2019-02-23
+     * @since 2.41.1 2022-01-15
      */
-    private static function findTransitions(
-        string $timezone,
-        int    $start,
-        int    $end
-    ): array
+    private static function findTransitions( string $timezone, int $start, int $end ) : array
     {
-        static $Y = 'Y';
-        $foundTrans = [];
+        static $Y       = 'Y';
+        $foundTrans     = [];
         $prevOffsetFrom = 0;
-        $stdIx = $dlghtIx = -1;
-        $backupTrans = false;
-        $dateFromYmd = DateTimeFactory::setDateTimeTimeZone(
-            DateTimeFactory::factory(self::$AT . $start),
-            $timezone
-        )
-            ->format(DateTimeFactory::$Ymd);
-        $dateToYmd = DateTimeFactory::setDateTimeTimeZone(
-            DateTimeFactory::factory(self::$AT . $end), $timezone)
-            ->format(DateTimeFactory::$Ymd);
+        $stdIx          = $dlghtIx = -1;
+        $backupTrans    = [];
+        $dateFromYmd    = self::getYmdFromTimestamp( $start, $timezone );
+        $dateToYmd      = self::getYmdFromTimestamp( $end, $timezone );
         // extend search-args to assure we start/end at daylight shifts
-        $start -= (3600 * 24 * 275);
-        $end += (3600 * 24 * 185);
-        $transitions =
-            DateTimeZoneFactory::getDateTimeZoneTransitions($timezone, $start, $end);
+        $start -= ( 3600 * 24 * 275 );
+        $end   += ( 3600 * 24 * ( 185 * 2 )); // need one after end to get TZUNTIL
+        $transitions    = DateTimeZoneFactory::getDateTimeZoneTransitions( $timezone, $start, $end );
         // all transitions in date-time order!!
-        foreach ($transitions as $tix => $trans) {
-            if (0 > (int)date($Y, $trans[self::$TS])) {
+        foreach( $transitions as $tix => $trans ) {
+            if( 0 > (int) date( $Y, $trans[self::$TS] )) {
                 // skip negative year... but save offset
                 $prevOffsetFrom = $trans[self::$OFFSET];
                 // previous trans offset will be 'next' trans offsetFrom
                 continue;
             } // end if
-            $transDate = DateTimeFactory::factory(self::$AT . $trans[self::$TS]);
-            $transDateYmd = $transDate->format(self::$YMD);
+            $transDate    = DateTimeFactory::factory( DateTimeFactory::$AT . $trans[self::$TS] );
+            $transDateYmd = $transDate->format( self::$YMD );
             if( $transDateYmd < $dateFromYmd ) {
                 // previous trans offset will be 'next' trans offsetFrom
                 $prevOffsetFrom = $trans[self::$OFFSET];
                 // we save it in case we don't find any match
-                $backupTrans = $trans;
+                $backupTrans    = $trans;
                 $backupTrans[Vcalendar::TZOFFSETFROM] =
-                    (0 < $tix) ? $transitions[$tix - 1][self::$OFFSET] : 0;
+                    ( 0 < $tix ) ? $transitions[$tix - 1][self::$OFFSET] : 0;
                 continue;
             } // end if
             if(( $transDateYmd > $dateToYmd ) && ( -1 < ( $stdIx + $dlghtIx ))) {
-                // loop always (?) breaks here with, at least, one standard/daylight
+                // loop always breaks here with, at least, one standard/daylight
+                // now, save first UTC DateTime after end as TZUNTIL
+                $foundTrans[] = [ self::$TIME => $transDate ];
                 break;
             }
             if( ! empty( $prevOffsetFrom ) || ( 0 == $prevOffsetFrom )) {
@@ -347,27 +383,25 @@ class VtimezonePopulateFactory
                 $trans[Vcalendar::TZOFFSETFROM] = $prevOffsetFrom;
                 // convert utc time to local time
                 $transDate->modify( $trans[Vcalendar::TZOFFSETFROM] . self::$SECONDS );
-                $trans[self::$TIME]             = $transDate;
+                $trans[self::$TIME] = $transDate;
             } // end if
             $prevOffsetFrom = $trans[self::$OFFSET];
             if( true !== $trans[self::$ISDST] ) {
                 // standard timezone, build RDATEs (in date order)
-                if(( -1 < $stdIx ) &&
-                    self::matchTrans( $foundTrans[$stdIx], $trans )) {
+                if(( -1 < $stdIx ) && self::matchTrans( $foundTrans[$stdIx], $trans )) {
                     $foundTrans[$stdIx][Vcalendar::RDATE][] = clone $trans[self::$TIME];
                     continue;
                 }
                 $stdIx = $tix;
-            } // end standard timezone
+            } // end if, standard timezone
             else {
                 // daylight timezone, build RDATEs (in date order)
-                if(( -1 < $dlghtIx ) &&
-                    self::matchTrans( $foundTrans[$dlghtIx], $trans )) {
+                if(( -1 < $dlghtIx ) && self::matchTrans( $foundTrans[$dlghtIx], $trans )) {
                     $foundTrans[$dlghtIx][Vcalendar::RDATE][] = clone $trans[self::$TIME];
                     continue;
                 }
                 $dlghtIx = $tix;
-            } // end daylight timezone
+            } // end else, daylight timezone
             $foundTrans[$tix] = $trans;
         } // end foreach( $transitions as $tix => $trans )
         if( empty( $foundTrans )) {
@@ -377,42 +411,58 @@ class VtimezonePopulateFactory
     }
 
     /**
-     * return bool true if foundTrans matches trans
+     * Return string Ymd from timestamp and timezone
+     *
+     * @param int $timestamp
+     * @param string $timezone
+     * @return string
+     * @throws Exception
+     */
+    private static function getYmdFromTimestamp( int $timestamp, string $timezone ) : string
+    {
+        return DateTimeFactory::setDateTimeTimeZone(
+            DateTimeFactory::factory( DateTimeFactory::$AT . $timestamp ),
+            $timezone
+        )
+            ->format( DateTimeFactory::$Ymd );
+    }
+
+    /**
+     * Return bool true if foundTrans matches trans
      *
      * @param array $foundTrans
      * @param array $trans
      * @return bool
      * @since  2.27.15 - 2019-02-23
      */
-    private static function matchTrans(array $foundTrans, array $trans): bool
+    private static function matchTrans( array $foundTrans, array $trans ) : bool
     {
         return
-            ((isset($foundTrans[Vcalendar::TZOFFSETFROM])) &&
-                ($foundTrans[self::$ABBR] == $trans[self::$ABBR]) &&
-                ($foundTrans[Vcalendar::TZOFFSETFROM]
-                    == $trans[Vcalendar::TZOFFSETFROM]) &&
-                ($foundTrans[self::$OFFSET] == $trans[self::$OFFSET])
+            ( isset( $foundTrans[Vcalendar::TZOFFSETFROM] ) &&
+                ( $foundTrans[self::$ABBR]   === $trans[self::$ABBR] ) &&
+                ( $foundTrans[Vcalendar::TZOFFSETFROM] === $trans[Vcalendar::TZOFFSETFROM] ) &&
+                ( $foundTrans[self::$OFFSET] === $trans[self::$OFFSET] )
             );
     }
 
     /**
-     * return (array build 'found'-trans
+     * Return (array) build 'found'-trans
      *
-     * @param array|bool $backupTrans
-     * @param string $timezone
+     * @param array   $backupTrans
+     * @param string  $timezone
      * @return array
      * @throws InvalidArgumentException
      * @throws Exception
      * @since  2.27.15 - 2019-02-23
      */
-    private static function buildTrans($backupTrans, string $timezone): array
+    private static function buildTrans( array $backupTrans, string $timezone ) : array
     {
         static $NOW = 'now';
-        if (is_array($backupTrans)) {
+        if( ! empty( $backupTrans )) {
             // we use the last transition (i.e. before startdate) for the tz info
-            $prevDate = DateTimeFactory::factory(self::$AT . $backupTrans[self::$TS]);
+            $prevDate = DateTimeFactory::factory( DateTimeFactory::$AT . $backupTrans[self::$TS] );
             // convert utc date to 'local' date
-            $prevDate->modify($backupTrans[Vcalendar::TZOFFSETFROM] . self::$SECONDS);
+            $prevDate->modify( $backupTrans[Vcalendar::TZOFFSETFROM] . self::$SECONDS );
             $backupTrans[self::$TIME] = $prevDate;
         } // end if( $backupTrans )
         else {

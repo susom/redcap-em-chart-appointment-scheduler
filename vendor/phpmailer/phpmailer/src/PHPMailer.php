@@ -358,6 +358,13 @@ class PHPMailer
     public $AuthType = '';
 
     /**
+     * SMTP SMTPXClient command attibutes
+     *
+     * @var array
+     */
+    protected $SMTPXClient = [];
+
+    /**
      * An implementation of the PHPMailer OAuthTokenProvider interface.
      *
      * @var OAuthTokenProvider
@@ -750,7 +757,7 @@ class PHPMailer
      *
      * @var string
      */
-    const VERSION = '6.7.1';
+    const VERSION = '6.9.1';
 
     /**
      * Error severity: message only, continue processing.
@@ -795,7 +802,7 @@ class PHPMailer
      * The maximum line length supported by mail().
      *
      * Background: mail() will sometimes corrupt messages
-     * with headers headers longer than 65 chars, see #818.
+     * with headers longer than 65 chars, see #818.
      *
      * @var int
      */
@@ -884,10 +891,10 @@ class PHPMailer
      * Output debugging info via a user-defined method.
      * Only generates output if debug output is enabled.
      *
-     * @param string $str
+     * @see PHPMailer::$Debugoutput
      * @see PHPMailer::$SMTPDebug
      *
-     * @see PHPMailer::$Debugoutput
+     * @param string $str
      */
     protected function edebug($str)
     {
@@ -910,7 +917,7 @@ class PHPMailer
             case 'error_log':
                 //Don't output, just log
                 /** @noinspection ForgottenDebugOutputInspection */
-            error_log($str);
+                error_log($str);
                 break;
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
@@ -1065,9 +1072,9 @@ class PHPMailer
      * be modified after calling this function), addition of such addresses is delayed until send().
      * Addresses that have been added already return false, but do not throw exceptions.
      *
-     * @param string $kind One of 'to', 'cc', 'bcc', or 'ReplyTo'
+     * @param string $kind    One of 'to', 'cc', 'bcc', or 'ReplyTo'
      * @param string $address The email address
-     * @param string $name An optional username associated with the address
+     * @param string $name    An optional username associated with the address
      *
      * @throws Exception
      *
@@ -1144,7 +1151,7 @@ class PHPMailer
      * Add an address to one of the recipient arrays or to the ReplyTo array.
      * Addresses that have been added already return false, but do not throw exceptions.
      *
-     * @param string $kind One of 'to', 'cc', 'bcc', or 'ReplyTo'
+     * @param string $kind    One of 'to', 'cc', 'bcc', or 'ReplyTo'
      * @param string $address The email address to send, resp. to reply to
      * @param string $name
      *
@@ -1208,7 +1215,7 @@ class PHPMailer
      * @see http://www.andrew.cmu.edu/user/agreen1/testing/mrbs/web/Mail/RFC822.php A more careful implementation
      *
      * @param string $addrstr The address list string
-     * @param bool $useimap Whether to use the IMAP extension to parse the list
+     * @param bool   $useimap Whether to use the IMAP extension to parse the list
      * @param string $charset The charset to use when decoding the address list string.
      *
      * @return array
@@ -1311,7 +1318,7 @@ class PHPMailer
         if (
             (false === $pos)
             || ((!$this->has8bitChars(substr($address, ++$pos)) || !static::idnSupported())
-                && !static::validateAddress($address))
+            && !static::validateAddress($address))
         ) {
             $error_message = sprintf(
                 '%s (From): %s',
@@ -1422,7 +1429,7 @@ class PHPMailer
                  *
                  * @see https://html.spec.whatwg.org/#e-mail-state-(type=email)
                  */
-            return (bool) preg_match(
+                return (bool) preg_match(
                     '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}' .
                     '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/sD',
                     $address
@@ -1479,7 +1486,7 @@ class PHPMailer
                     $punycode = idn_to_ascii(
                         $domain,
                         \IDNA_DEFAULT | \IDNA_USE_STD3_RULES | \IDNA_CHECK_BIDI |
-                        \IDNA_CHECK_CONTEXTJ | \IDNA_NONTRANSITIONAL_TO_ASCII,
+                            \IDNA_CHECK_CONTEXTJ | \IDNA_NONTRANSITIONAL_TO_ASCII,
                         \INTL_IDNA_VARIANT_UTS46
                     );
                 } elseif (defined('INTL_IDNA_VARIANT_2003')) {
@@ -1571,6 +1578,10 @@ class PHPMailer
 
             //Validate From, Sender, and ConfirmReadingTo addresses
             foreach (['From', 'Sender', 'ConfirmReadingTo'] as $address_kind) {
+                if ($this->{$address_kind} === null) {
+                    $this->{$address_kind} = '';
+                    continue;
+                }
                 $this->{$address_kind} = trim($this->{$address_kind});
                 if (empty($this->{$address_kind})) {
                     continue;
@@ -1884,7 +1895,7 @@ class PHPMailer
         if (strpos($path, '\\\\') !== 0) {
             $readable = $readable && is_readable($path);
         }
-        return $readable;
+        return  $readable;
     }
 
     /**
@@ -1893,7 +1904,7 @@ class PHPMailer
      * @see http://www.php.net/manual/en/book.mail.php
      *
      * @param string $header The message headers
-     * @param string $body The message body
+     * @param string $body   The message body
      *
      * @throws Exception
      *
@@ -1998,6 +2009,38 @@ class PHPMailer
     }
 
     /**
+     * Provide SMTP XCLIENT attributes
+     *
+     * @param string $name  Attribute name
+     * @param ?string $value Attribute value
+     *
+     * @return bool
+     */
+    public function setSMTPXclientAttribute($name, $value)
+    {
+        if (!in_array($name, SMTP::$xclient_allowed_attributes)) {
+            return false;
+        }
+        if (isset($this->SMTPXClient[$name]) && $value === null) {
+            unset($this->SMTPXClient[$name]);
+        } elseif ($value !== null) {
+            $this->SMTPXClient[$name] = $value;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get SMTP XCLIENT attributes
+     *
+     * @return array
+     */
+    public function getSMTPXclientAttributes()
+    {
+        return $this->SMTPXClient;
+    }
+
+    /**
      * Send mail via SMTP.
      * Returns false if there is a bad MAIL FROM, RCPT, or DATA input.
      *
@@ -2024,6 +2067,9 @@ class PHPMailer
             $smtp_from = $this->From;
         } else {
             $smtp_from = $this->Sender;
+        }
+        if (count($this->SMTPXClient)) {
+            $this->smtp->xclient($this->SMTPXClient);
         }
         if (!$this->smtp->mail($smtp_from)) {
             $this->setError($this->lang('from_failed') . $smtp_from . ' : ' . implode(',', $this->smtp->getError()));
@@ -2175,7 +2221,7 @@ class PHPMailer
                 $hostinfo[3] > 0 &&
                 $hostinfo[3] < 65536
             ) {
-                $port = (int)$hostinfo[3];
+                $port = (int) $hostinfo[3];
             }
             if ($this->smtp->connect($prefix . $host, $port, $this->Timeout, $options)) {
                 try {
@@ -2187,10 +2233,17 @@ class PHPMailer
                     $this->smtp->hello($hello);
                     //Automatically enable TLS encryption if:
                     //* it's not disabled
+                    //* we are not connecting to localhost
                     //* we have openssl extension
                     //* we are not already using SSL
                     //* the server offers STARTTLS
-                    if ($this->SMTPAutoTLS && $sslext && 'ssl' !== $secure && $this->smtp->getServerExt('STARTTLS')) {
+                    if (
+                        $this->SMTPAutoTLS &&
+                        $this->Host !== 'localhost' &&
+                        $sslext &&
+                        $secure !== 'ssl' &&
+                        $this->smtp->getServerExt('STARTTLS')
+                    ) {
                         $tls = true;
                     }
                     if ($tls) {
@@ -2251,7 +2304,7 @@ class PHPMailer
      * Set the language for error messages.
      * The default language is English.
      *
-     * @param string $langcode ISO 639-1 2-character language code (e.g. French is "fr")
+     * @param string $langcode  ISO 639-1 2-character language code (e.g. French is "fr")
      *                          Optionally, the language code can be enhanced with a 4-character
      *                          script annotation and/or a 2-character country annotation.
      * @param string $lang_path Path to the language file directory, with trailing separator (slash)
@@ -2315,7 +2368,7 @@ class PHPMailer
 
         //Validate $langcode
         $foundlang = true;
-        $langcode = strtolower($langcode);
+        $langcode  = strtolower($langcode);
         if (
             !preg_match('/^(?P<lang>[a-z]{2})(?P<script>_[a-z]{4})?(?P<country>_[a-z]{2})?$/', $langcode, $matches)
             && $langcode !== 'en'
@@ -2423,7 +2476,7 @@ class PHPMailer
      */
     public function addrFormat($addr)
     {
-        if (empty($addr[1])) { //No name provided
+        if (!isset($addr[1]) || ($addr[1] === '')) { //No name provided
             return $this->secureHeader($addr[0]);
         }
 
@@ -2734,7 +2787,7 @@ class PHPMailer
                 break;
             default:
                 //Catches case 'plain': and case '':
-            $result .= $this->textLine('Content-Type: ' . $this->ContentType . '; charset=' . $this->CharSet);
+                $result .= $this->textLine('Content-Type: ' . $this->ContentType . '; charset=' . $this->CharSet);
                 $ismultipart = false;
                 break;
         }
@@ -3195,10 +3248,10 @@ class PHPMailer
      * Explicitly *does not* support passing URLs; PHPMailer is not an HTTP client.
      * If you need to do that, fetch the resource yourself and pass it in via a local file or string.
      *
-     * @param string $path Path to the attachment
-     * @param string $name Overrides the attachment name
-     * @param string $encoding File encoding (see $Encoding)
-     * @param string $type MIME type, e.g. `image/jpeg`; determined automatically from $path if not specified
+     * @param string $path        Path to the attachment
+     * @param string $name        Overrides the attachment name
+     * @param string $encoding    File encoding (see $Encoding)
+     * @param string $type        MIME type, e.g. `image/jpeg`; determined automatically from $path if not specified
      * @param string $disposition Disposition to use
      *
      * @throws Exception
@@ -3434,7 +3487,7 @@ class PHPMailer
             case static::ENCODING_8BIT:
                 $encoded = static::normalizeBreaks($str);
                 //Make sure it ends with a line break
-            if (substr($encoded, -(strlen(static::$LE))) !== static::$LE) {
+                if (substr($encoded, -(strlen(static::$LE))) !== static::$LE) {
                     $encoded .= static::$LE;
                 }
                 break;
@@ -3652,7 +3705,7 @@ class PHPMailer
         switch (strtolower($position)) {
             case 'phrase':
                 //RFC 2047 section 5.3
-            $pattern = '^A-Za-z0-9!*+\/ -';
+                $pattern = '^A-Za-z0-9!*+\/ -';
                 break;
             /*
              * RFC 2047 section 5.2.
@@ -3752,12 +3805,12 @@ class PHPMailer
      * the HTML refers to using the `$cid` value in `img` tags, for example `<img src="cid:mylogo">`.
      * Never use a user-supplied path to a file!
      *
-     * @param string $path Path to the attachment
-     * @param string $cid Content ID of the attachment; Use this to reference
+     * @param string $path        Path to the attachment
+     * @param string $cid         Content ID of the attachment; Use this to reference
      *                            the content when using an embedded image in HTML
-     * @param string $name Overrides the attachment filename
-     * @param string $encoding File encoding (see $Encoding) defaults to `base64`
-     * @param string $type File MIME type (by default mapped from the `$path` filename's extension)
+     * @param string $name        Overrides the attachment filename
+     * @param string $encoding    File encoding (see $Encoding) defaults to `base64`
+     * @param string $type        File MIME type (by default mapped from the `$path` filename's extension)
      * @param string $disposition Disposition to use: `inline` (default) or `attachment`
      *                            (unlikely you want this – {@see `addAttachment()`} instead)
      *
@@ -4048,6 +4101,79 @@ class PHPMailer
     }
 
     /**
+     * Clear a specific custom header by name or name and value.
+     * $name value can be overloaded to contain
+     * both header name and value (name:value).
+     *
+     * @param string      $name  Custom header name
+     * @param string|null $value Header value
+     *
+     * @return bool True if a header was replaced successfully
+     */
+    public function clearCustomHeader($name, $value = null)
+    {
+        if (null === $value && strpos($name, ':') !== false) {
+            //Value passed in as name:value
+            list($name, $value) = explode(':', $name, 2);
+        }
+        $name = trim($name);
+        $value = (null === $value) ? null : trim($value);
+
+        foreach ($this->CustomHeader as $k => $pair) {
+            if ($pair[0] == $name) {
+                // We remove the header if the value is not provided or it matches.
+                if (null === $value ||  $pair[1] == $value) {
+                    unset($this->CustomHeader[$k]);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Replace a custom header.
+     * $name value can be overloaded to contain
+     * both header name and value (name:value).
+     *
+     * @param string      $name  Custom header name
+     * @param string|null $value Header value
+     *
+     * @return bool True if a header was replaced successfully
+     * @throws Exception
+     */
+    public function replaceCustomHeader($name, $value = null)
+    {
+        if (null === $value && strpos($name, ':') !== false) {
+            //Value passed in as name:value
+            list($name, $value) = explode(':', $name, 2);
+        }
+        $name = trim($name);
+        $value = (null === $value) ? '' : trim($value);
+
+        $replaced = false;
+        foreach ($this->CustomHeader as $k => $pair) {
+            if ($pair[0] == $name) {
+                if ($replaced) {
+                    unset($this->CustomHeader[$k]);
+                    continue;
+                }
+                if (strpbrk($name . $value, "\r\n") !== false) {
+                    if ($this->exceptions) {
+                        throw new Exception($this->lang('invalid_header'));
+                    }
+
+                    return false;
+                }
+                $this->CustomHeader[$k] = [$name, $value];
+                $replaced = true;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Add an error message to the error container.
      *
      * @param string $msg
@@ -4208,7 +4334,7 @@ class PHPMailer
      * $name value can be overloaded to contain
      * both header name and value (name:value).
      *
-     * @param string $name Custom header name
+     * @param string      $name  Custom header name
      * @param string|null $value Header value
      *
      * @return bool True if a header was set successfully
@@ -4336,7 +4462,7 @@ class PHPMailer
                             $cid,
                             $filename,
                             static::ENCODING_BASE64,
-                            static::_mime_types((string)static::mb_pathinfo($filename, PATHINFO_EXTENSION))
+                            static::_mime_types((string) static::mb_pathinfo($filename, PATHINFO_EXTENSION))
                         )
                     ) {
                         $message = preg_replace(
@@ -4377,7 +4503,7 @@ class PHPMailer
      * });
      * ```
      *
-     * @param string $html The HTML text to convert
+     * @param string        $html     The HTML text to convert
      * @param bool|callable $advanced Any boolean value to use the internal converter,
      *                                or provide your own callable for custom conversion.
      *                                *Never* pass user-supplied data into this parameter

@@ -46,7 +46,7 @@ class POP3
      *
      * @var string
      */
-    const VERSION = '6.7.1';
+    const VERSION = '6.9.1';
 
     /**
      * Default POP3 port number.
@@ -160,12 +160,12 @@ class POP3
     /**
      * Simple static wrapper for all-in-one POP before SMTP.
      *
-     * @param string $host The hostname to connect to
-     * @param int|bool $port The port number to connect to
-     * @param int|bool $timeout The timeout value
-     * @param string $username
-     * @param string $password
-     * @param int $debug_level
+     * @param string   $host        The hostname to connect to
+     * @param int|bool $port        The port number to connect to
+     * @param int|bool $timeout     The timeout value
+     * @param string   $username
+     * @param string   $password
+     * @param int      $debug_level
      *
      * @return bool
      */
@@ -362,7 +362,7 @@ class POP3
 
         // Clean up attributes.
         $this->connected = false;
-        $this->pop_conn = false;
+        $this->pop_conn  = false;
     }
 
     /**

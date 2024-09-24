@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2024 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,18 +26,18 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
+use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
+use Kigkonsult\Icalcreator\Formatter\Property\Property;
+use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\StringFactory;
 use Kigkonsult\Icalcreator\Util\Util;
 
 use function bin2hex;
 use function chr;
-use function openssl_random_pseudo_bytes;
 use function ord;
 use function str_split;
 use function vsprintf;
@@ -45,128 +45,96 @@ use function vsprintf;
 /**
  * UID property functions
  *
- * @since 2.29.14 2019-09-03
+ * @since 2.41.85 2024-01-18
  */
 trait UIDrfc7986trait
 {
     /**
-     * @var array component property UID value
+     * @var Pc component property UID value
      */
-    protected $uid = null;
+    protected Pc $uid;
 
     /**
      * Return formatted output for calendar component property uid
      *
      * If uid is missing, uid is created
      * @return string
-     * @since 2.29.5 2019-06-17
-     */
-    public function createUid(): string
+     * @throws Exception
+     * @since 2.41.55 2022-08-13
+s     */
+    public function createUid() : string
     {
-        if (self::isUidEmpty($this->uid)) {
-            $this->uid = self::makeUid();
-        }
-        return StringFactory::createElement(
+        return Property::format(
             self::UID,
-            ParameterFactory::createParams($this->uid[Util::$LCparams]),
-            $this->uid[Util::$LCvalue]
+            $this->uid,
+            $this->getConfig( self::ALLOWEMPTY )
         );
-    }
-
-    /**
-     * Delete calendar component property uid
-     *
-     * @return bool
-     * @since 2.29.5 2019-06-17
-     */
-    public function deleteUid(): bool
-    {
-        $this->uid = null;
-        return true;
     }
 
     /**
      * Get calendar component property uid
      *
      * @param null|bool $inclParam
-     * @return bool|array
-     * @since 2.29.5 2019-06-17
+     * @return string|Pc
+     * @throws Exception
+     * @since 2.41.85 2024-01-18
      */
-    public function getUid($inclParam = false)
+    public function getUid( ? bool $inclParam = false ) : string | Pc
     {
-        if (self::isUidEmpty($this->uid)) {
-            $this->uid = self::makeUid();
-        }
-        return ($inclParam) ? $this->uid : $this->uid[Util::$LCvalue];
+        return $inclParam ? clone $this->uid : $this->uid->getValue();
     }
 
     /**
-     * Return bool true if uid is empty
+     * Return bool true if set (and ignore empty property)
      *
-     * @param null|array $array
      * @return bool
-     * @since 2.29.5 2019-06-17
+     * @since 2.41.35 2022-03-28
      */
-    private static function isUidEmpty(array $array = null): bool
+    public function isUidSet() : bool
     {
-        if (empty($array)) {
-            return true;
-        }
-        if (empty($array[Util::$LCvalue]) &&
-            (Util::$ZERO != $array[Util::$LCvalue])) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /**
-     * Return an unique id for a calendar component object instance
+     * Return an unique id for a calendar/component object instance
      *
-     * @return array
+     * @return Pc
+     * @throws Exception
+     * @since 2.41.36 2022-04-03
      * @see https://www.php.net/manual/en/function.com-create-guid.php#117893
-     * @since 2.29.5 2019-06-17
      */
-    private static function makeUid(): array
+    private static function makeUid() : Pc
     {
         static $FMT = '%s%s-%s-%s-%s-%s%s%s';
-        static $MAX = 10;
-        $cnt = 0;
-        do {
-            do {
-                $bytes = openssl_random_pseudo_bytes(16, $cStrong);
-            } while (false === $bytes);
-            $cnt += 1;
-        } while (($MAX > $cnt) && (false === $cStrong));
-        $bytes[6] = chr(ord($bytes[6]) & 0x0f | 0x40); // set version to 0100
+        $bytes    = StringFactory::getRandChars( 32 ); // i.e. 16
+        $bytes[6] = chr(ord( $bytes[6] ) & 0x0f | 0x40 ); // set version to 0100
         $bytes[8] = chr(ord( $bytes[8] ) & 0x3f | 0x80 ); // set bits 6-7 to 10
         $uid      = vsprintf( $FMT, str_split( bin2hex( $bytes ), 4 ));
-        return [
-            Util::$LCvalue  => $uid,
-            Util::$LCparams => null,
-        ];
+        return Pc::factory( $uid );
     }
 
     /**
      * Set calendar component property uid
      *
      * If empty input, male one
-     * @param null|int|string $value
-     * @param null|array $params
+     * @param null|int|string|Pc $value
+     * @param null|mixed[] $params
      * @return static
      * @throws InvalidArgumentException
-     * @since 2.29.14 2019-09-03
+     * @throws Exception
+     * @since 2.41.85 2024-01-18
      */
-    public function setUid($value = null, $params = []): self
+    public function setUid( null|int|string|Pc $value = null, ? array $params = [] ) : static
     {
-        if (empty($value) && (Util::$ZERO != $value)) {
+        $pc      = Pc::factory( $value, $params );
+        $pcValue = $pc->getValue();
+        if( empty( $pcValue ) && ( StringFactory::$ZERO !== (string) $pcValue )) {
             $this->uid = self::makeUid();
             return $this;
         } // no allowEmpty check here !!!!
-        $value = Util::assertString($value, self::UID);
-        $this->uid = [
-            Util::$LCvalue => StringFactory::trimTrailNL($value),
-            Util::$LCparams => ParameterFactory::setParams($params ?? []),
-        ];
+        $pcValue   = Util::assertString( $pcValue, self::UID );
+        $pcValue   = StringFactory::trimTrailNL( $pcValue );
+        $this->uid = $pc->setValue( $pcValue );
         return $this;
     }
 }

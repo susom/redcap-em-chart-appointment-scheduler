@@ -14,9 +14,6 @@ if (file_exists(__DIR__ . '../vendor/autoload.php')) {
 }
 
 use Twilio\Rest\Client;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
 /**
  * Constants where appointment  is located
  */

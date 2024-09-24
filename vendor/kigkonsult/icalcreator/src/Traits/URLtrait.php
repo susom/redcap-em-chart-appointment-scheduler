@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2024 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,47 +26,43 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
+use Kigkonsult\Icalcreator\Formatter\Property\Property;
+use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\HttpFactory;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use Kigkonsult\Icalcreator\Util\StringFactory;
 use Kigkonsult\Icalcreator\Util\Util;
 use InvalidArgumentException;
 
+use function stripos;
+use function strtolower;
+use function substr;
+
 /**
  * URL property functions
  *
- * @since  2.30.2 - 2021-02-04
+ * @since 2.41.85 2024-01-18
  */
 trait URLtrait
 {
     /**
-     * @var array component property URL value
+     * @var null|Pc component property URL value
      */
-    protected $url = null;
+    protected ? Pc $url = null;
 
     /**
      * Return formatted output for calendar component property url
      *
      * @return string
      */
-    public function createUrl(): string
+    public function createUrl() : string
     {
-        if (empty($this->url)) {
-            return Util::$SP0;
-        }
-        if (empty($this->url[Util::$LCvalue])) {
-            return $this->getConfig(self::ALLOWEMPTY)
-                ? StringFactory::createElement(self::URL)
-                : Util::$SP0;
-        }
-        return StringFactory::createElement(
+        return Property::format(
             self::URL,
-            ParameterFactory::createParams( $this->url[Util::$LCparams] ),
-            $this->url[Util::$LCvalue]
+            $this->url,
+            $this->getConfig( self::ALLOWEMPTY )
         );
     }
 
@@ -76,7 +72,7 @@ trait URLtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteUrl(): bool
+    public function deleteUrl() : bool
     {
         $this->url = null;
         return true;
@@ -85,38 +81,63 @@ trait URLtrait
     /**
      * Get calendar component property url
      *
-     * @param null|bool $inclParam
-     * @return bool|array
-     * @since  2.27.1 - 2018-12-12
+     * @param null|bool   $inclParam
+     * @return bool|string|Pc
+     * @since 2.41.85 2024-01-18
      */
-    public function getUrl($inclParam = false)
+    public function getUrl( ? bool $inclParam = false ) : bool | string | Pc
     {
-        if (empty($this->url)) {
+        if( empty( $this->url )) {
             return false;
         }
-        return ($inclParam) ? $this->url : $this->url[Util::$LCvalue];
+        return $inclParam ? clone $this->url : $this->url->getValue();
+    }
+
+    /**
+     * Return bool true if set (and ignore empty property)
+     *
+     * @return bool
+     * @since 2.41.88 2024-01-19
+     */
+    public function isUrlSet() : bool
+    {
+        return self::isPropSet( $this->url );
     }
 
     /**
      * Set calendar component property url
      *
-     * @param null|string $value
-     * @param null|array $params
+     * 2.41.12
+     * rfc5870 Uniform Resource Identifier for Geographic Locations ('geo' URI)
+     *   rfc9073 (7.2. Location) defines VLOCATION with a GEO property
+     *   rfc9074 (8.  Alarm Proximity Trigger) add VLOCATION(s) to VALARM
+     *   with an URL 'geo' URI [RFC5870] property
+     *  As for now, accept 'global' URL with 'geo' URI "as is"
+     *  Ex. 'URL:geo:40.443,-79.945;u=10'
+     *
+     * @param null|string|Pc   $value
+     * @param null|mixed[] $params
      * @return static
      * @throws InvalidArgumentException
-     * @since  2.30.2 - 2021-02-04
+     * @since 2.41.85 2024-01-18
      */
-    public function setUrl($value = null, $params = []): self
+    public function setUrl( null|string|Pc $value = null, ? array $params = [] ) : static
     {
-        if (empty($value)) {
-            $this->assertEmptyValue($value, self::URL);
-            $this->url = [
-                Util::$LCvalue => Util::$SP0,
-                Util::$LCparams => [],
-            ];
-            return $this;
+        $pc      = Pc::factory( $value, $params );
+        $pcValue = rtrim((string) $pc->getValue());
+        if( empty( $pcValue )) {
+            $this->assertEmptyValue( $pcValue, self::URL );
+            $this->url = $pc->setEmpty();
         }
-        HttpFactory::urlSet($this->url, $value, $params);
+        elseif( 0 === stripos( $pcValue, self::GEO )) {
+            $pcValue = strtolower( self::GEO ) . substr( $pcValue, 3 );
+            $this->url = $pc->setValue( StringFactory::trimTrailNL( $pcValue ))
+                ->removeParam(self::VALUE );
+        }
+        else {
+            $pcValue = Util::assertString( $pcValue, self::URL );
+            HttpFactory::urlSet( $this->url, $pc->setValue( $pcValue ));
+        }
         return $this;
     }
 }

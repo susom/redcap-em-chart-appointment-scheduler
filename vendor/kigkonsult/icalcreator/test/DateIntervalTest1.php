@@ -1,11 +1,13 @@
 <?php
+/** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2023 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -43,66 +45,49 @@ use Kigkonsult\Icalcreator\Util\Util;
 class DateIntervalTest1 extends DtBase
 {
     /**
-     * set and restore local timezone from const
-     */
-    public static $oldTimeZone = null;
-
-    public static function setUpBeforeClass()
-    {
-        self::$oldTimeZone = date_default_timezone_get();
-        date_default_timezone_set(LTZ);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        date_default_timezone_set(self::$oldTimeZone);
-    }
-
-    /**
      * DateInterval123Provider Generator
      *
      * @param bool $inclYearMonth
-     * @return array
+     * @return mixed[]
      * @throws Exception
      * @static
      * @todo replace with DateInterval properties, remove durationArray2string()
      */
-    public static function DateIntervalArrayGenerator($inclYearMonth = true)
+    public static function DateIntervalArrayGenerator( bool $inclYearMonth = true ) : array
     {
         $base = [
-            RecurFactory::$LCYEAR => array_rand(array_flip([1, 2])),
-            RecurFactory::$LCMONTH => array_rand(array_flip([1, 12])),
-            RecurFactory::$LCDAY => array_rand(array_flip([1, 28])),
-            RecurFactory::$LCWEEK => array_rand(array_flip([1, 4])),
-            RecurFactory::$LCHOUR => array_rand(array_flip([1, 23])),
-            RecurFactory::$LCMIN => array_rand(array_flip([1, 59])),
-            RecurFactory::$LCSEC => array_rand(array_flip([1, 59]))
+            RecurFactory::$LCYEAR => array_rand( array_flip( [ 1, 2 ] ) ),
+            RecurFactory::$LCMONTH => array_rand( array_flip( [ 1, 12 ] ) ),
+            RecurFactory::$LCDAY => array_rand( array_flip( [ 1, 28 ] ) ),
+            RecurFactory::$LCWEEK => array_rand( array_flip( [ 1, 4 ] ) ),
+            RecurFactory::$LCHOUR => array_rand( array_flip( [ 1, 23 ] ) ),
+            RecurFactory::$LCMIN => array_rand( array_flip( [ 1, 59 ] ) ),
+            RecurFactory::$LCSEC => array_rand( array_flip( [ 1, 59 ] ) )
         ];
 
         do {
             $random = [];
-            $cnt = array_rand(array_flip([1, 7]));
+            $cnt = array_rand( array_flip( [ 1, 7 ] ) );
             for( $x = 0; $x < $cnt; $x++ ) {
-                $random = array_merge(
-                    $random,
-                    array_slice($base, array_rand(array_flip([1, 7])), 1, true)
-                );
+                foreach( array_slice( $base, array_rand( array_flip( [ 1, 7 ] ) ), 1, true ) as $k => $v ) {
+                    $random[$k] = $v;
+                }
             }
-            if (1 == array_rand([1 => 1, 2 => 2])) {
-                unset($random[RecurFactory::$LCWEEK]);
-                $random = array_filter($random);
+            if( 1 === array_rand( [ 1 => 1, 2 => 2 ] ) ) {
+                unset( $random[RecurFactory::$LCWEEK] );
+                $random = array_filter( $random );
             }
-            if (!$inclYearMonth) {
-                unset($random[RecurFactory::$LCYEAR], $random[RecurFactory::$LCMONTH]);
-                $random = array_filter($random);
+            if( ! $inclYearMonth ) {
+                unset( $random[RecurFactory::$LCYEAR], $random[RecurFactory::$LCMONTH] );
+                $random = array_filter( $random );
             }
-        } while( 1 > count( $random ));
-        if( isset( $random[RecurFactory::$LCWEEK] )) {
+        } while( 1 > count( $random ) );
+        if( isset( $random[RecurFactory::$LCWEEK] ) ) {
             $random = [ RecurFactory::$LCWEEK => $random[RecurFactory::$LCWEEK] ];
         }
         $random2 = [];
         foreach( array_keys( $base ) as $key ) {
-            if( isset( $random[$key] )) {
+            if( isset( $random[$key] ) ) {
                 $random2[$key] = $random[$key];
             }
         }
@@ -112,12 +97,12 @@ class DateIntervalTest1 extends DtBase
     /**
      * Return an iCal formatted string from (internal array) duration
      *
-     * @param array $duration , array( year, month, day, week, day, hour, min, sec )
+     * @param mixed[] $duration , array( year, month, day, week, day, hour, min, sec )
      * @return string
      * @static
      * @since  2.26.14 - 2019-02-12
      */
-    public static function durationArray2string(array $duration): string
+    public static function durationArray2string( array $duration ) : string
     {
         static $PT0H0M0S = 'PT0H0M0S';
         static $Y = 'Y';
@@ -127,31 +112,31 @@ class DateIntervalTest1 extends DtBase
         static $H = 'H';
         static $M = 'M';
         static $S = 'S';
-        if (!isset($duration[RecurFactory::$LCYEAR]) &&
-            !isset($duration[RecurFactory::$LCMONTH]) &&
-            ! isset( $duration[RecurFactory::$LCDAY] )   &&
-            ! isset( $duration[RecurFactory::$LCWEEK] )  &&
-            ! isset( $duration[RecurFactory::$LCHOUR] )  &&
-            ! isset( $duration[RecurFactory::$LCMIN] )   &&
-            ! isset( $duration[RecurFactory::$LCSEC] )) {
-            return Util::$SP0;
+        if( ! isset( $duration[RecurFactory::$LCYEAR] ) &&
+            ! isset( $duration[RecurFactory::$LCMONTH] ) &&
+            ! isset( $duration[RecurFactory::$LCDAY] ) &&
+            ! isset( $duration[RecurFactory::$LCWEEK] ) &&
+            ! isset( $duration[RecurFactory::$LCHOUR] ) &&
+            ! isset( $duration[RecurFactory::$LCMIN] ) &&
+            ! isset( $duration[RecurFactory::$LCSEC] ) ) {
+            return StringFactory::$SP0;
         }
-        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCWEEK )) {
+        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCWEEK ) ) {
             return DateIntervalFactory::$P . $duration[RecurFactory::$LCWEEK] . $W;
         }
         $result = DateIntervalFactory::$P;
-        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCYEAR )) {
+        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCYEAR ) ) {
             $result .= $duration[RecurFactory::$LCYEAR] . $Y;
         }
-        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCMONTH )) {
+        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCMONTH ) ) {
             $result .= $duration[RecurFactory::$LCMONTH] . $M;
         }
-        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCDAY )) {
+        if( Util::issetAndNotEmpty( $duration, RecurFactory::$LCDAY ) ) {
             $result .= $duration[RecurFactory::$LCDAY] . $D;
         }
-        $hourIsSet = ( Util::issetAndNotEmpty( $duration, RecurFactory::$LCHOUR ));
-        $minIsSet  = ( Util::issetAndNotEmpty( $duration, RecurFactory::$LCMIN ));
-        $secIsSet  = ( Util::issetAndNotEmpty( $duration, RecurFactory::$LCSEC ));
+        $hourIsSet = ( Util::issetAndNotEmpty( $duration, RecurFactory::$LCHOUR ) );
+        $minIsSet = ( Util::issetAndNotEmpty( $duration, RecurFactory::$LCMIN ) );
+        $secIsSet = ( Util::issetAndNotEmpty( $duration, RecurFactory::$LCSEC ) );
         if( $hourIsSet || $minIsSet || $secIsSet ) {
             $result .= $T;
         }
@@ -164,7 +149,7 @@ class DateIntervalTest1 extends DtBase
         if( $secIsSet ) {
             $result .= $duration[RecurFactory::$LCSEC] . $S;
         }
-        if( DateIntervalFactory::$P == $result ) {
+        if( DateIntervalFactory::$P === $result ) {
             $result = $PT0H0M0S;
         }
         return $result;
@@ -173,25 +158,23 @@ class DateIntervalTest1 extends DtBase
     /**
      * DateInterval123ProviderDateInterval sub-provider
      *
-     * @param array $input
+     * @param mixed[] $input
      * @param int $cnt
-     * @return array
+     * @return mixed[]
      * @throws Exception
      */
-    public static function DateInterval123ProviderDateInterval(array $input, $cnt)
+    public static function DateInterval123ProviderDateInterval( array $input, int $cnt ) : array
     {
-        $dateIntervalArray = $input;
-        $dateInterval = (array)DateIntervalFactory::factory(
-            self::durationArray2string($dateIntervalArray)
-        );
-        $getValue = DateIntervalFactory::DateIntervalArr2DateInterval($dateInterval);
+        $durationStr  = self::durationArray2string( $input );
+        if( 'P12M' === $durationStr ) {
+            $durationStr = 'P1Y';
+        }
+        $dateInterval = (array)DateIntervalFactory::factory( $durationStr );
+        $getValue = DateIntervalFactory::DateIntervalArr2DateInterval( $dateInterval );
         return [
             1000 + $cnt,
-            DateIntervalFactory::DateIntervalArr2DateInterval($dateInterval),
-            [
-                Util::$LCvalue => $getValue,
-                Util::$LCparams => []
-            ],
+            DateIntervalFactory::DateIntervalArr2DateInterval( $dateInterval ),
+            Pc::factory( $getValue ),
             ':' . DateIntervalFactory::dateInterval2String(
                 DateIntervalFactory::conformDateInterval(
                     DateIntervalFactory::DateIntervalArr2DateInterval( $dateInterval )
@@ -203,24 +186,23 @@ class DateIntervalTest1 extends DtBase
     /**
      * DateInterval123Provider DateIntervalString sub-provider
      *
-     * @param array $input
+     * @param mixed[] $input
      * @param int $cnt
-     * @return array
+     * @return mixed[]
      * @throws Exception
      */
-    public static function DateInterval123ProviderDateIntervalString(array $input, $cnt)
+    public static function DateInterval123ProviderDateIntervalString( array $input, int $cnt ) : array
     {
         $dateIntervalArray = $input;
-        $getValue = DateIntervalFactory::factory(
-            self::durationArray2string($dateIntervalArray)
-        );
+        $durationStr  = self::durationArray2string( $dateIntervalArray );
+        if( 'P12M' === $durationStr ) {
+            $durationStr = 'P1Y';
+        }
+        $getValue = DateIntervalFactory::factory( $durationStr );
         return [
             3000 + $cnt,
-            self::durationArray2string($dateIntervalArray),
-            [
-                Util::$LCvalue => $getValue,
-                Util::$LCparams => [],
-            ],
+            $durationStr,
+            Pc::factory( $getValue ),
             ':' . DateIntervalFactory::dateInterval2String(
                 DateIntervalFactory::conformDateInterval(
                     DateIntervalFactory::factory(
@@ -234,10 +216,10 @@ class DateIntervalTest1 extends DtBase
     /**
      * testDateInterval123 provider
      *
-     * @return array
+     * @return mixed[]
      * @throws Exception
      */
-    public function DateInterval123Provider()
+    public static function dateInterval123TestProvider() : array
     {
         $zeroInput = [
             RecurFactory::$LCHOUR => 0,
@@ -253,7 +235,7 @@ class DateIntervalTest1 extends DtBase
 
         // DateInterval non-zero input
         while( 300 > $cnt ) {
-            $cnt += 1;
+            ++$cnt;
             $dataArr[] = self::DateInterval123ProviderDateInterval( self::DateIntervalArrayGenerator(), $cnt );
         }
 
@@ -263,7 +245,7 @@ class DateIntervalTest1 extends DtBase
 
         // string non-zero input
         while( 300 > $cnt ) {
-            $cnt += 1;
+            ++$cnt;
             $dataArr[] = self::DateInterval123ProviderDateIntervalString( self::DateIntervalArrayGenerator(), $cnt );
         }
 
@@ -274,101 +256,153 @@ class DateIntervalTest1 extends DtBase
      * Testing DateInterval for REFRESH_INTERVAL, DURATION and TRIGGER, input DateInterval and string
      *
      * @test
-     * @dataProvider DateInterval123Provider
+     * @dataProvider dateInterval123TestProvider
      * @param int|string $case
      * @param mixed $value
-     * @param array $expectedGet
+     * @param pc $expectedGet
      * @param string $expectedString
      * @throws Exception
      */
-    public function testDateInterval123($case, $value, $expectedGet, $expectedString)
+    public function dateInterval123Test( int | string $case, mixed $value, pc $expectedGet, string $expectedString ) : void
     {
         static $compProp = [
-            Vcalendar::VEVENT => [Vcalendar::DURATION],
-            Vcalendar::VTODO => [Vcalendar::DURATION],
-            Vcalendar::VFREEBUSY => [Vcalendar::DURATION],
-            Vcalendar::VALARM => [Vcalendar::DURATION, Vcalendar::TRIGGER],
+            IcalInterface::VEVENT        => [ IcalInterface::DURATION ],
+            IcalInterface::VTODO         => [ IcalInterface::DURATION ],
+            IcalInterface::VFREEBUSY     => [ IcalInterface::DURATION ],
+            IcalInterface::VALARM        => [ IcalInterface::DURATION, IcalInterface::TRIGGER ],
+            IcalInterface::AVAILABLE     => [ IcalInterface::DURATION ],
+            IcalInterface::VAVAILABILITY => [ IcalInterface::DURATION ]
         ];
         $c = new Vcalendar();
-        $propName = Vcalendar::REFRESH_INTERVAL;
-        $getMethod = StringFactory::getGetMethodName($propName);
-        $createMethod = StringFactory::getCreateMethodName($propName);
-        $deleteMethod = StringFactory::getDeleteMethodName($propName);
-        $setMethod = StringFactory::getSetMethodName($propName);
-        $c->{$setMethod}($value);
+        $this->DateInterval123RefreshintervalTest( $case, $c, $value, $expectedGet, $expectedString );
 
-        $getValue = $c->{$getMethod}(true);
-        $expGet = $expectedGet;
-        $expGet[Util::$LCparams] += [Vcalendar::VALUE => Vcalendar::DURATION];
-        $this->assertEquals(
-            $expGet,
-            $getValue,
-            "get error in case #{$case}-cal1, Vcalendar::{$getMethod}"
-        );
-        $this->assertEquals(
-            strtoupper( $propName ) . ';VALUE=DURATION' . $expectedString,
-            trim( $c->{$createMethod}()),
-            "create error in case #{$case}-cal2, Vcalendar::{$createMethod}"
-        );
-        $c->{$deleteMethod}();
-        $this->assertFalse(
-            $c->{$getMethod}( true ),
-            "get (after delete) error in case #{$case}-cal3, Vcalendar::{$deleteMethod}"
-        );
-        $c->{$setMethod}( $value ); // test ###
-
+        $pcInput = false;
         foreach( $compProp as $theComp => $props ) {
             $newMethod = 'new' . $theComp;
-            if( Vcalendar::VALARM == $theComp ) {
-                $comp   = $c->newVevent()->{$newMethod}();
-            }
-            else {
-                $comp   = $c->{$newMethod}();
-            }
+            $comp = match ( true ) {
+                IcalInterface::AVAILABLE === $theComp => $c->newVavailability()->{$newMethod}(),
+                IcalInterface::VALARM === $theComp => $c->newVevent()->{$newMethod}(),
+                default => $c->{$newMethod}(),
+            };
             foreach( $props as $propName ) {
-                $getMethod = StringFactory::getGetMethodName($propName);
-                $createMethod = StringFactory::getCreateMethodName($propName);
-                $deleteMethod = StringFactory::getDeleteMethodName($propName);
-                $setMethod = StringFactory::getSetMethodName($propName);
+                [ $createMethod, $deleteMethod, $getMethod, $isMethod, $setMethod ] = self::getPropMethodnames( $propName );
                 // error_log( __FUNCTION__ . ' #' . $case . ' in ' . var_export( $value, true )); // test ###
-                $comp->{$setMethod}($value);
 
-                $getValue = $comp->{$getMethod}(true);
-                // error_log( __FUNCTION__ . ' #' . $case . ' get ' . var_export( $getValue, true )); // test ###
-                /*
-                if( Vcalendar::TRIGGER == $propName ) {
-                    $expectedGet[Util::$LCvalue]['relatedStart'] = true;
-                    unset( $expectedGet[Util::$LCvalue]['before'], $getValue[Util::$LCvalue]['before'] );
+                $this->assertFalse(
+                    $comp->{$isMethod}(),
+                    "error in case #{$case}-comp1, <{$theComp}>->{$isMethod}"
+                );
+                if( $pcInput ) {
+                    $comp->{$setMethod}( Pc::factory( $value ) );
                 }
-                */
-                $this->assertEquals(
-                    $expectedGet,
-                    $getValue,
-                    "get error in case #{$case}-comp1, <{$theComp}>->{$createMethod}"
+                else {
+                    $comp->{$setMethod}( $value );
+                }
+                $pcInput = ! $pcInput;
+                $this->assertTrue(
+                    $comp->{$isMethod}(),
+                    "error in case #{$case}-comp2, <{$theComp}>->{$isMethod}"
                 );
 
+
+                $getValue = $comp->{$getMethod}( true );
+                // error_log( __FUNCTION__ . ' #' . $case . ' get ' . var_export( $getValue, true )); // test ###
+                $comp3Exp = DateIntervalFactory::dateInterval2String( $expectedGet->getValue(), true ) .
+                    ' ' . var_export( $expectedGet->params, true );
+                $comp3act = DateIntervalFactory::dateInterval2String( $getValue->value, true ) .
+                    ' ' . var_export( $getValue->params, true );
                 $this->assertEquals(
-                    strtoupper($propName) . $expectedString,
-                    trim($comp->{$createMethod}()),
-                    "create error in case #{$case}-comp2, <{$theComp}>->{$createMethod}"
+                    $comp3Exp,
+                    $comp3act,
+                    "get error in case #{$case}-comp3, <{$theComp}>->{$createMethod}"
+                    . PHP_EOL . ' exp : ' . $comp3Exp
+                    . PHP_EOL . ' act : ' . $comp3act
+                );
+
+                $comp4exp = strtoupper( $propName ) . $expectedString;
+                $comp4act = trim( $comp->{$createMethod}() );
+                $this->assertEquals(
+                    $comp4exp,
+                    $comp4act,
+                    "create error in case #{$case}-comp4, <{$theComp}>->{$createMethod}" .
+                    ' exp : ' . $comp4exp .
+                    ' act : ' . $comp4act
                 );
                 $comp->{$deleteMethod}();
                 $this->assertFalse(
-                    $comp->{$getMethod}(true),
-                    "get (after delete) error in case #{$case}-comp3, <{$theComp}>->{$createMethod}"
+                    $comp->{$getMethod}( true ),
+                    "get (after delete) error in case #{$case}-comp5, <{$theComp}>->{$createMethod}"
                 );
-                $comp->{$setMethod}($value); // test ###
+                $comp->{$setMethod}( $value ); // test ###
             } // end foreach
-            if (Vcalendar::VALARM != $theComp) {
-                $comp->setDtstart('20190101T080000 UTC');
+            if( IcalInterface::VALARM !== $theComp ) {
+                $comp->setDtstart( '20190101T080000 UTC' );
                 $this->assertGreaterThanOrEqual(
                     '20190101080000',
-                    $comp->getDuration(false, true)->format('YmdHis'),
-                    "error in case #{$case}-comp5, <{$theComp}>->getDuration()"
+                    $comp->getDuration( false, true )->format( 'YmdHis' ),
+                    "error in case #{$case}-comp6, <{$theComp}>->getDuration()"
                 );
             }
         } // end foreach
 
-        $this->parseCalendarTest($case, $c, $expectedString);
+        $this->parseCalendarTest( $case, $c, $expectedString );
+    }
+
+    /**
+     * Test Vcalendar REFRESH_INTERVAL
+     *
+     * @param int|string $case
+     * @param Vcalendar $c
+     * @param mixed $value
+     * @param pc $expectedGet
+     * @param string $expectedString
+     */
+    public function DateInterval123RefreshintervalTest(
+        int | string $case,
+        Vcalendar $c,
+        mixed $value,
+        pc $expectedGet,
+        string $expectedString
+    ) : void {
+        $propName = IcalInterface::REFRESH_INTERVAL;
+        [ $createMethod, $deleteMethod, $getMethod, $isMethod, $setMethod ] = self::getPropMethodnames( $propName );
+        $this->assertFalse(
+            $c->{$isMethod}(),
+            "error in case #{$case}-cal_rf1, Vcalendar::{$isMethod}"
+        );
+        $c->{$setMethod}( $value );
+        $this->assertTrue(
+            $c->{$isMethod}(),
+            "error in case #{$case}-cal_rf2, Vcalendar::{$isMethod}"
+        );
+
+        $getValue = $c->{$getMethod}( true );
+        if( $getValue->value instanceof \DateInterval ) {
+            $getValue->value->days = false;
+        }
+        $expGet     = clone $expectedGet;
+        $expGet->params += [ IcalInterface::VALUE => IcalInterface::DURATION ];
+        $cal_rf3exp = DateIntervalFactory::dateInterval2String( $expGet->getValue(), true ) .
+            ' ' . var_export( $expGet->params, true );
+        $cal_rf3act = DateIntervalFactory::dateInterval2String( $getValue->value, true ) .
+            ' ' . var_export( $getValue->params, true );
+            $this->assertEquals(
+                $cal_rf3exp,
+                $cal_rf3act,
+            "get error in case #{$case}-cal_rf3, Vcalendar::{$getMethod}"
+            . PHP_EOL . ' exp : ' . $cal_rf3exp
+            . PHP_EOL . ' act : ' . $cal_rf3act
+        );
+        $this->assertEquals(
+            strtoupper( $propName ) . ';VALUE=DURATION' . $expectedString,
+            trim( $c->{$createMethod}() ),
+            "create error in case #{$case}-cal_rf4, Vcalendar::{$createMethod}"
+        );
+        $c->{$deleteMethod}();
+        $this->assertFalse(
+            $c->{$getMethod}( true ),
+            "get (after delete) error in case #{$case}-cal_rf5, Vcalendar::{$deleteMethod}"
+        );
+        $c->{$setMethod}( $value );
     }
 }

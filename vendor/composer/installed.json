@@ -2,32 +2,38 @@
   "packages": [
     {
       "name": "kigkonsult/icalcreator",
-      "version": "v2.39.2",
-      "version_normalized": "2.39.2.0",
+      "version": "v2.41.90",
+      "version_normalized": "2.41.90.0",
       "source": {
         "type": "git",
         "url": "https://github.com/iCalcreator/iCalcreator.git",
-        "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9"
+        "reference": "c62c46f5f5a10afeb1c5b93ae973fb4332d4c0ea"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/722e161d1a25c3ceec1692642d64a7f2cf5faee9",
-        "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9",
+        "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/c62c46f5f5a10afeb1c5b93ae973fb4332d4c0ea",
+        "reference": "c62c46f5f5a10afeb1c5b93ae973fb4332d4c0ea",
         "shasum": ""
       },
       "require": {
+        "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-simplexml": "*",
         "ext-zlib": "*",
-        "php": ">=7.0"
+        "php": ">=8.0"
       },
       "require-dev": {
+        "degraciamathieu/php-arguments-detector": ">=0.5.0",
+        "ext-xdebug": "*",
         "phpcompatibility/php-compatibility": ">=9.3.5",
+        "phpmd/phpmd": ">=2.13.0",
         "phpstan/phpstan": ">=0.9.3",
         "phpunit/phpunit": ">=6.5.13",
-        "squizlabs/php_codesniffer": ">=3.5.5"
+        "squizlabs/php_codesniffer": ">=3.5.5",
+        "vimeo/psalm": "*"
       },
-      "time": "2021-06-28T09:19:24+00:00",
+      "time": "2024-01-22T10:28:44+00:00",
       "type": "library",
       "installation-source": "dist",
       "autoload": {
@@ -36,11 +42,12 @@
         ],
         "psr-4": {
           "Kigkonsult\\Icalcreator\\": [
-            "src/",
-            "src/Util/",
-            "src/Traits/"
+            "src/"
           ]
-        }
+        },
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
       "license": [
@@ -52,17 +59,30 @@
           "email": "ical@kigkonsult.se"
         }
       ],
-      "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545, management of calendar information",
+      "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545 and rfc updates, management of calendar information",
       "keywords": [
         "alarm",
+        "availability",
         "calendar",
         "daylight",
         "event",
+        "ical",
+        "json",
+        "location",
         "management",
+        "participant",
+        "resource",
         "rfc2445",
         "rfc5545",
+        "rfc5870",
         "rfc6321",
+        "rfc6868",
+        "rfc7529",
+        "rfc7808",
+        "rfc7953",
         "rfc7986",
+        "rfc9073",
+        "rfc9074",
         "standard",
         "todo",
         "vCalendar",
@@ -71,122 +91,38 @@
         "vfreebusy",
         "vjournal",
         "vtimezone",
-        "vtodo"
+        "vtodo",
+        "xml"
       ],
       "support": {
         "issues": "https://github.com/iCalcreator/iCalcreator/issues",
-        "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.39.2"
+        "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.41.90"
       },
       "funding": [
         {
           "url": "https://paypal.me/kigkonsult",
+          "type": "other"
+        },
+        {
+          "url": "https://www.buymeacoffee.com/kigkonsult",
           "type": "other"
         }
       ],
       "install-path": "../kigkonsult/icalcreator"
     },
     {
-      "name": "monolog/monolog",
-      "version": "1.27.1",
-      "version_normalized": "1.27.1.0",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/Seldaek/monolog.git",
-        "reference": "904713c5929655dc9b97288b69cfeedad610c9a1"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/Seldaek/monolog/zipball/904713c5929655dc9b97288b69cfeedad610c9a1",
-        "reference": "904713c5929655dc9b97288b69cfeedad610c9a1",
-        "shasum": ""
-      },
-      "require": {
-        "php": ">=5.3.0",
-        "psr/log": "~1.0"
-      },
-      "provide": {
-        "psr/log-implementation": "1.0.0"
-      },
-      "require-dev": {
-        "aws/aws-sdk-php": "^2.4.9 || ^3.0",
-        "doctrine/couchdb": "~1.0@dev",
-        "graylog2/gelf-php": "~1.0",
-        "php-amqplib/php-amqplib": "~2.4",
-        "php-console/php-console": "^3.1.3",
-        "phpstan/phpstan": "^0.12.59",
-        "phpunit/phpunit": "~4.5",
-        "ruflin/elastica": ">=0.90 <3.0",
-        "sentry/sentry": "^0.13",
-        "swiftmailer/swiftmailer": "^5.3|^6.0"
-      },
-      "suggest": {
-        "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-        "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
-        "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-        "ext-mongo": "Allow sending log messages to a MongoDB server",
-        "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-        "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
-        "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
-        "php-console/php-console": "Allow sending log messages to Google Chrome",
-        "rollbar/rollbar": "Allow sending log messages to Rollbar",
-        "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-        "sentry/sentry": "Allow sending log messages to a Sentry server"
-      },
-      "time": "2022-06-09T08:53:42+00:00",
-      "type": "library",
-      "installation-source": "dist",
-      "autoload": {
-        "psr-4": {
-          "Monolog\\": "src/Monolog"
-        }
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "MIT"
-      ],
-      "authors": [
-        {
-          "name": "Jordi Boggiano",
-          "email": "j.boggiano@seld.be",
-          "homepage": "http://seld.be"
-        }
-      ],
-      "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-      "homepage": "http://github.com/Seldaek/monolog",
-      "keywords": [
-        "log",
-        "logging",
-        "psr-3"
-      ],
-      "support": {
-        "issues": "https://github.com/Seldaek/monolog/issues",
-        "source": "https://github.com/Seldaek/monolog/tree/1.27.1"
-      },
-      "funding": [
-        {
-          "url": "https://github.com/Seldaek",
-          "type": "github"
-        },
-        {
-          "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
-          "type": "tidelift"
-        }
-      ],
-      "install-path": "../monolog/monolog"
-    },
-    {
       "name": "phpmailer/phpmailer",
-      "version": "v6.7.1",
-      "version_normalized": "6.7.1.0",
+      "version": "v6.9.1",
+      "version_normalized": "6.9.1.0",
       "source": {
         "type": "git",
         "url": "https://github.com/PHPMailer/PHPMailer.git",
-        "reference": "49cd7ea3d2563f028d7811f06864a53b1f15ff55"
+        "reference": "039de174cd9c17a8389754d3b877a2ed22743e18"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/49cd7ea3d2563f028d7811f06864a53b1f15ff55",
-        "reference": "49cd7ea3d2563f028d7811f06864a53b1f15ff55",
+        "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/039de174cd9c17a8389754d3b877a2ed22743e18",
+        "reference": "039de174cd9c17a8389754d3b877a2ed22743e18",
         "shasum": ""
       },
       "require": {
@@ -196,16 +132,17 @@
         "php": ">=5.5.0"
       },
       "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "doctrine/annotations": "^1.2.6 || ^1.13.3",
         "php-parallel-lint/php-console-highlighter": "^1.0.0",
         "php-parallel-lint/php-parallel-lint": "^1.3.2",
         "phpcompatibility/php-compatibility": "^9.3.5",
         "roave/security-advisories": "dev-latest",
-        "squizlabs/php_codesniffer": "^3.7.1",
+        "squizlabs/php_codesniffer": "^3.7.2",
         "yoast/phpunit-polyfills": "^1.0.4"
       },
       "suggest": {
+        "decomplexity/SendOauth2": "Adapter for using XOAUTH2 authentication",
         "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
         "ext-openssl": "Needed for secure SMTP sending and DKIM signing",
         "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
@@ -215,7 +152,7 @@
         "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
         "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
       },
-      "time": "2022-12-08T13:30:06+00:00",
+      "time": "2023-11-25T22:23:28+00:00",
       "type": "library",
       "installation-source": "dist",
       "autoload": {
@@ -247,7 +184,7 @@
       "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
       "support": {
         "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-        "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.7.1"
+        "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.1"
       },
       "funding": [
         {

@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2024 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,30 +26,28 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Util\StringFactory;
-use Kigkonsult\Icalcreator\Util\Util;
+use Kigkonsult\Icalcreator\Formatter\Property\Dt1Property;
+use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\DateTimeFactory;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
 
 /**
  * RECURRENCE-ID property functions
  *
- * @since 2.29.16 2020-01-24
+ * @since 2.41.85 2024-01-18
  */
 trait RECURRENCE_IDtrait
 {
     /**
-     * @var array component property RECURRENCE_ID value
+     * @var null|Pc component property RECURRENCE_ID value
      */
-    protected $recurrenceid = null;
+    protected ? Pc $recurrenceid = null;
 
     /**
      * Return formatted output for calendar component property recurrence-id
@@ -57,31 +55,16 @@ trait RECURRENCE_IDtrait
      * @return string
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.29.1 2019-06-24
+     * @since 2.41.55 - 2022-08-13
      */
-    public function createRecurrenceid(): string
+    public function createRecurrenceid() : string
     {
-        if (empty($this->recurrenceid)) {
-            return Util::$SP0;
-        }
-        if (empty($this->recurrenceid[Util::$LCvalue])) {
-            return $this->getConfig(self::ALLOWEMPTY)
-                ? StringFactory::createElement(self::RECURRENCE_ID)
-                : Util::$SP0;
-        }
-        $isDATE = ParameterFactory::isParamsValueSet(
-            $this->recurrenceid,
-            self::DATE
-        );
-        $isLocalTime = isset($this->recurrenceid[Util::$LCparams][Util::$ISLOCALTIME]);
-        return StringFactory::createElement(
+        return  Dt1Property::format(
             self::RECURRENCE_ID,
-            ParameterFactory::createParams($this->recurrenceid[Util::$LCparams]),
-            DateTimeFactory::dateTime2Str(
-                $this->recurrenceid[Util::$LCvalue],
-                $isDATE,
-                $isLocalTime
-            )
+            $this->recurrenceid,
+            $this->getConfig( self::ALLOWEMPTY ),
+            Dt1Property::getIsDate( $this->dtstart, $this->recurrenceid ),
+            Dt1Property::getIsLocalTime( $this->recurrenceid )
         );
     }
 
@@ -91,7 +74,7 @@ trait RECURRENCE_IDtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteRecurrenceid(): bool
+    public function deleteRecurrenceid() : bool
     {
         $this->recurrenceid = null;
         return true;
@@ -100,47 +83,54 @@ trait RECURRENCE_IDtrait
     /**
      * Return calendar component property recurrence-id
      *
-     * @param null|bool $inclParam
-     * @return bool|DateTime|array
-     * @since 2.29.1 2019-06-22
+     * @param null|bool   $inclParam
+     * @return bool|string|DateTime|Pc
+     * @since 2.41.85 2024-01-18
      */
-    public function getRecurrenceid($inclParam = false)
+    public function getRecurrenceid( ? bool $inclParam = false ) : bool | string | DateTime | Pc
     {
-        if (empty($this->recurrenceid)) {
+        if( empty( $this->recurrenceid )) {
             return false;
         }
-        return ($inclParam)
-            ? $this->recurrenceid
-            : $this->recurrenceid[Util::$LCvalue];
+        return $inclParam ? clone $this->recurrenceid : $this->recurrenceid->getValue();
+    }
+
+    /**
+     * Return bool true if set (and ignore empty property)
+     *
+     * @return bool
+     * @since 2.41.88 2024-01-19
+     */
+    public function isRecurrenceidSet() : bool
+    {
+        return self::isPropSet( $this->recurrenceid );
     }
 
     /**
      * Set calendar component property recurrence-id
      *
-     * @param null|string|DateTimeInterface $value
-     * @param null|array $params
+     * @param null|string|Pc|DateTimeInterface $value
+     * @param null|mixed[] $params
      * @return static
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.29.16 2020-01-24
+     * @since 2.41.85 2024-01-18
      */
-    public function setRecurrenceid($value = null, $params = []): self
+    public function setRecurrenceid(
+        null|string|DateTimeInterface|Pc $value = null,
+        ? array $params = []
+    ) : static
     {
-        if (empty($value)) {
-            $this->assertEmptyValue($value, self::RECURRENCE_ID);
-            $this->recurrenceid = [
-                Util::$LCvalue => Util::$SP0,
-                Util::$LCparams => [],
-            ];
-            return $this;
+        $pc      = Pc::factory( $value, $params );
+        $pcValue = $pc->getValue();
+        if( empty( $pcValue )) {
+            $this->assertEmptyValue( $pcValue, self::RECURRENCE_ID );
+            $this->recurrenceid = $pc->setEmpty();
         }
-        $this->recurrenceid = DateTimeFactory::setDate(
-            $value,
-            ParameterFactory::setParams(
-                ($params ?? []),
-                DateTimeFactory::$DEFAULTVALUEDATETIME
-            )
-        );
+        else {
+            $pc->addParamValue( self::DATE_TIME, false ); // default
+            $this->recurrenceid = DateTimeFactory::setDate( $pc );
+        }
         return $this;
     }
 }

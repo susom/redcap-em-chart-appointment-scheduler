@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2023 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,6 +28,7 @@
  */
 namespace Kigkonsult\Icalcreator;
 
+use Exception;
 use Kigkonsult\Icalcreator\Util\CalAddressFactory;
 use PHPUnit\Framework\TestCase;
 use Kigkonsult\Icalcreator\Util\IcalvCardFactory;
@@ -44,9 +45,14 @@ include_once 'SelectComponentsTest.php';
 class IcalvCardFactoryTest extends TestCase
 {
     /**
+     * IcalvCardFactoryTest provider
+     * /**
      * SelectComponentsTest provider
+     *
+     * @return mixed[]
+     * @throws Exception
      */
-    public function IcalvCardFactoryTestProvider()
+    public static function IcalvCardTestProvider() : array
     {
         $dataArr = [];
 
@@ -95,37 +101,37 @@ class IcalvCardFactoryTest extends TestCase
      * Testing IcalvCardFactory::iCal2vCards (+iCal2vCard+...)
      *
      * @test
-     * @dataProvider IcalvCardFactoryTestProvider'
+     * @dataProvider IcalvCardTestProvider
      * @param int $case
      * @param Vcalendar $vcalendar
-     * @param string $version
+     * @param null|string $version
      */
-    public function IcalvCardFactoryTest($case, Vcalendar $vcalendar, $version)
+    public function IcalvCardTest( int $case, Vcalendar $vcalendar, ? string $version = null ) : void
     {
         static $ERRFMT1 = 'Error in #%d-1, version not found';
         static $ERRFMT2 = 'Error in #%d-2, count BEGIN not match, exp %d got %d';
         static $ERRFMT3 = 'Error in #%d-3, email not found : %s';
 
-        $vCards = IcalvCardFactory::iCal2vCards($vcalendar, $version, true, $count);
+        $vCards = IcalvCardFactory::iCal2vCards( $vcalendar, $version, true, $count );
 
-        if (!empty($version)) {
+        if( ! empty( $version )) {
             $this->assertNotFalse(
-                strpos($vCards, $version),
-                sprintf($ERRFMT1, $case)
+                strpos( $vCards, $version ),
+                sprintf( $ERRFMT1, $case )
             );
         }
 
-        $currentCnt = substr_count($vCards, 'BEGIN:VCARD');
+        $currentCnt = substr_count( $vCards,  'BEGIN:VCARD' );
         $this->assertEquals(
             $count,
             $currentCnt,
-            sprintf($ERRFMT2, $case, $count, $currentCnt)
+            sprintf( $ERRFMT2, $case, $count, $currentCnt )
         );
 
-        foreach (CalAddressFactory::getCalAddresses($vcalendar) as $eMail) {
-            $this->assertNotFalse(
-                strpos($vCards, $eMail),
-                sprintf($ERRFMT3, $case, $eMail)
+        foreach( CalAddressFactory::getCalAddresses( $vcalendar ) as $eMail ) {
+            $this->assertNotFalse (
+                strpos( $vCards, $eMail ),
+                sprintf( $ERRFMT3, $case, $eMail )
             );
         } // end foreach
     }

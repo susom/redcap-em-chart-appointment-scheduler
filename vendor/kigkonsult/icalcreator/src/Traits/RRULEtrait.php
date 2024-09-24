@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2024 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,26 +26,26 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use Exception;
 use InvalidArgumentException;
+use Kigkonsult\Icalcreator\Formatter\Property\Recur;
+use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\RecurFactory;
-use Kigkonsult\Icalcreator\Util\Util;
 
 /**
  * RRULE property functions
  *
- * @since 2.29.6 2019-06-23
+ * @since 2.41.85 2024-01-18
  */
 trait RRULEtrait
 {
     /**
-     * @var array component property RRULE value
+     * @var null|Pc component property RRULE value
      */
-    protected $rrule = null;
+    protected ? Pc $rrule = null;
 
     /**
      * Return formatted output for calendar component property rrule
@@ -54,14 +54,14 @@ trait RRULEtrait
      * @return string
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since  2.27.13 - 2019-01-09
+     * @since 2.41.55 - 2022-08-13
      */
-    public function createRrule(): string
+    public function createRrule() : string
     {
-        return RecurFactory::formatRecur(
+        return Recur::format(
             self::RRULE,
             $this->rrule,
-            $this->getConfig(self::ALLOWEMPTY)
+            $this->getConfig( self::ALLOWEMPTY )
         );
     }
 
@@ -71,7 +71,7 @@ trait RRULEtrait
      * @return static
      * @since 2.29.6 2019-06-23
      */
-    public function deleteRrule(): self
+    public function deleteRrule() : static
     {
         $this->rrule = null;
         return $this;
@@ -80,39 +80,53 @@ trait RRULEtrait
     /**
      * Get calendar component property rrule
      *
-     * @param null|bool $inclParam
-     * @return bool|array
-     * @since 2.29.6 2019-06-23
+     * @param null|bool   $inclParam
+     * @return bool|array|Pc
+     * @since 2.41.85 2024-01-18
      */
-    public function getRrule($inclParam = false)
+    public function getRrule( ? bool $inclParam = false ) : bool | array | Pc
     {
-        if (empty($this->rrule)) {
+        if( empty( $this->rrule )) {
             return false;
         }
-        return ($inclParam) ? $this->rrule : $this->rrule[Util::$LCvalue];
+        return $inclParam ? clone $this->rrule : $this->rrule->getValue();
+    }
+
+    /**
+     * Return bool true if set (and ignore empty property)
+     *
+     * @return bool
+     * @since 2.41.38 2024-01-19
+     */
+    public function isRruleSet() : bool
+    {
+        return self::isPropSet( $this->rrule );
     }
 
     /**
      * Set calendar component property rrule
      *
-     * @param null|array $rruleset
-     * @param null|array $params
+     * @param null|array|Pc  $rruleset  string[]
+     * @param null|mixed[] $params
      * @return static
      * @throws InvalidArgumentException
      * @throws Exception
-     * @since 2.29.6 2019-06-23
+     * @since 2.41.85 2024-01-18
      */
-    public function setRrule($rruleset = null, $params = []): self
+    public function setRrule( null|array|Pc $rruleset = null, ? array $params = [] ) : static
     {
-        if (empty($rruleset)) {
-            $this->assertEmptyValue($rruleset, self::RRULE);
-            $rruleset = [];
-            $params = [];
+        $pc      = Pc::factory( $rruleset, $params );
+        $pcValue = $pc->getValue();
+        if( empty( $pcValue )) {
+            $this->assertEmptyValue( $pcValue, self::RRULE );
+            $pc->setEmpty();
         }
-        $this->rrule = RecurFactory::setRexrule(
-            $rruleset,
-            array_merge((array)$params, $this->getDtstartParams())
-        );
+        elseif( $this->isDtstartSet()) {
+            foreach( $this->getDtstartParams() as $k => $v ) {
+                $pc->addParam( $k, $v );
+            }
+        }
+        $this->rrule = RecurFactory::setRexrule( $pc );
         return $this;
     }
 }

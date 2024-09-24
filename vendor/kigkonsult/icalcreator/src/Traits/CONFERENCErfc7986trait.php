@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2024 Kjell-Inge Gustafsson, kigkonsult AB, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -26,68 +26,52 @@
  *            You should have received a copy of the GNU Lesser General Public License
  *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
+use Kigkonsult\Icalcreator\Formatter\Property\MultiProps;
+use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\StringFactory;
-use Kigkonsult\Icalcreator\Util\Util;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use InvalidArgumentException;
-use function array_change_key_case;
+use Kigkonsult\Icalcreator\Util\Util;
 
 /**
  * CONFERENCE property functions
  *
- * @since 2.29.21 2019-06-17
+ * @since 2.41.85 2024-01-18
  */
 trait CONFERENCErfc7986trait
 {
     /**
-     * @var array component property CONFERENCE value
+     * @var null|Pc[] component property CONFERENCE value
      */
-    protected $conference = null;
+    protected ? array $conference = null;
 
     /**
      * Return formatted output for calendar component property conference
      *
      * @return string
      */
-    public function createConference(): string
+    public function createConference() : string
     {
-        if (empty($this->conference)) {
-            return Util::$SP0;
-        }
-        $output = Util::$SP0;
-        $lang = $this->getConfig(self::LANGUAGE);
-        foreach ($this->conference as $aix => $conferencePart) {
-            if (!empty($conferencePart[Util::$LCvalue])) {
-                $output .= StringFactory::createElement(
-                    self::CONFERENCE,
-                    ParameterFactory::createParams(
-                        $conferencePart[Util::$LCparams],
-                        [self::FEATURE, self::LABEL, self::LANGUAGE],
-                        $lang
-                    ),
-                    $conferencePart[Util::$LCvalue]
-                );
-            } elseif ($this->getConfig(self::ALLOWEMPTY)) {
-                $output .= StringFactory::createElement(self::CONFERENCE);
-            }
-        } // end foreach
-        return $output;
+        return MultiProps::format(
+            self::CONFERENCE,
+            $this->conference ?? [],
+            $this->getConfig( self::ALLOWEMPTY ),
+            $this->getConfig( self::LANGUAGE )
+        );
     }
 
     /**
      * Delete calendar component property conference
      *
-     * @param null|int $propDelIx specific property in case of multiply occurrence
+     * @param null|int   $propDelIx   specific property in case of multiply occurrence
      * @return bool
      */
-    public function deleteConference($propDelIx = null): bool
+    public function deleteConference( ? int $propDelIx = null ) : bool
     {
-        if (empty($this->conference)) {
-            unset($this->propDelIx[self::CONFERENCE]);
+        if( empty( $this->conference )) {
+            unset( $this->propDelIx[self::CONFERENCE] );
             return false;
         }
         return self::deletePropertyM(
@@ -101,17 +85,17 @@ trait CONFERENCErfc7986trait
     /**
      * Get calendar component property conference
      *
-     * @param null|int $propIx specific property in case of multiply occurrence
-     * @param null|bool $inclParam
-     * @return bool|array
+     * @param null|int    $propIx specific property in case of multiply occurrence
+     * @param null|bool   $inclParam
+     * @return bool|string|Pc
      */
-    public function getConference($propIx = null, $inclParam = false)
+    public function getConference( ? int $propIx = null, ?bool $inclParam = false ) : bool | string | Pc
     {
-        if (empty($this->conference)) {
-            unset($this->propIx[self::CONFERENCE]);
+        if( empty( $this->conference )) {
+            unset( $this->propIx[self::CONFERENCE] );
             return false;
         }
-        return self::getPropertyM(
+        return self::getMvalProperty(
             $this->conference,
             self::CONFERENCE,
             $this,
@@ -121,29 +105,58 @@ trait CONFERENCErfc7986trait
     }
 
     /**
+     * Return array, all calendar component property conference
+     *
+     * @param null|bool   $inclParam
+     * @return Pc[]
+     * @since 2.41.58 2022-08-24
+     */
+    public function getAllConference( ? bool $inclParam = false ) : array
+    {
+        return self::getMvalProperties( $this->conference, $inclParam );
+    }
+
+    /**
+     * Return bool true if set (and ignore empty property)
+     *
+     * @return bool
+     * @since 2.41.35 2022-03-28
+     */
+    public function isConferenceSet() : bool
+    {
+        return self::isMvalSet( $this->conference );
+    }
+
+    /**
      * Set calendar component property conference
      *
-     * @param null|string $value
-     * @param null|array $params
-     * @param null|integer $index
+     * @param null|string|Pc   $value
+     * @param null|int|array $params
+     * @param null|int      $index
      * @return static
      * @throws InvalidArgumentException
-     * @todo fix featureparam - AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO, x-name, iana-token
-     * @todo fix labelparam   - LABEL
+     * @since 2.41.85 2024-01-18
+     * @todo fix featureparam - AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO, x-name, iana-token ??
+     * @todo fix labelparam   - LABEL ??
      */
-    public function setConference($value = null, $params = [], $index = null): self
+    public function setConference(
+        null|string|Pc $value = null,
+        null|int|array $params = [],
+        ? int $index = null
+    ) : static
     {
-        if (empty($value)) {
-            $this->assertEmptyValue($value, self::CONFERENCE);
-            $value = Util::$SP0;
-            $params = [];
-        } else {
-            $params = array_change_key_case(($params ?? []), CASE_UPPER);
-            if (!isset($params[self::VALUE])) { // required
-                $params[self::VALUE] = self::URI;
-            }
+        $pc      = self::marshallInputMval( $value, $params, $index );
+        $pcValue = $pc->getValue();
+        if( empty( $pcValue )) {
+            $this->assertEmptyValue( $pcValue, self::CONFERENCE );
+            $pc->setEmpty();
         }
-        self::setMval($this->conference, $value, $params, null, $index);
+        else {
+            $pcValue = Util::assertString( $pcValue, self::CONFERENCE );
+            $pc->setValue( StringFactory::trimTrailNL( $pcValue ));
+            $pc->addParamValue( self::URI, false ); // VALUE required
+        }
+         self::setMval( $this->conference, $pc, $index );
         return $this;
     }
 }
