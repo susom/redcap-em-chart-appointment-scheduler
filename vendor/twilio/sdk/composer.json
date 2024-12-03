@@ -3,7 +3,7 @@
     "type": "library",
     "description": "A PHP wrapper for Twilio's API",
     "keywords": ["twilio", "sms", "api"],
-    "homepage": "http://github.com/twilio/twilio-php",
+    "homepage": "https://github.com/twilio/twilio-php",
     "license": "MIT",
     "authors": [
         {
@@ -12,12 +12,11 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=7.1.0"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
-        "apigen/apigen": "^4.1",
-        "phpunit/phpunit": ">=4.5"
+        "guzzlehttp/guzzle": "^6.3 || ^7.0",
+        "phpunit/phpunit": ">=7.0 < 10"
     },
     "suggest": {
         "guzzlehttp/guzzle": "An HTTP client to execute the API requests"
@@ -29,7 +28,11 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "": "src/Twilio/",
             "Twilio\\Tests\\": "tests/Twilio/"
         }
+    },
+    "config": {
+        "lock": false
     }
 }
