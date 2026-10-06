@@ -4,42 +4,42 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6095a62b8733817031c957f1857c2673
+class ComposerStaticInitf23a244e1074b81f923db1e36b4a521d
 {
     public static $files = array (
         '47b18101462cdeb25f661813113e3182' => __DIR__ . '/..' . '/kigkonsult/icalcreator/autoload.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'T' =>
         array (
             'Twilio\\' => 7,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Log\\' => 8,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'K' => 
+        'K' =>
         array (
             'Kigkonsult\\Icalcreator\\' => 23,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Twilio\\' => 
+        'Twilio\\' =>
         array (
             0 => __DIR__ . '/..' . '/twilio/sdk/src/Twilio',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'PHPMailer\\PHPMailer\\' => 
+        'PHPMailer\\PHPMailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'Kigkonsult\\Icalcreator\\' => 
+        'Kigkonsult\\Icalcreator\\' =>
         array (
             0 => __DIR__ . '/..' . '/kigkonsult/icalcreator/src',
         ),
@@ -198,9 +198,9 @@ class ComposerStaticInit6095a62b8733817031c957f1857c2673
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6095a62b8733817031c957f1857c2673::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6095a62b8733817031c957f1857c2673::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6095a62b8733817031c957f1857c2673::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf23a244e1074b81f923db1e36b4a521d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf23a244e1074b81f923db1e36b4a521d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitf23a244e1074b81f923db1e36b4a521d::$classMap;
 
         }, null, ClassLoader::class);
     }
